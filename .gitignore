@@ -3,7 +3,9 @@ core/build/*
 desktop/build/*
 android/build/*
 ios/build/*
+html/build/*
 core/build
 desktop/build
 android/build
 ios/build
+html/build
