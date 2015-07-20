@@ -1,8 +1,9 @@
-import com.badlogic.gdx.Application.ApplicationType;
+package com.DramaCow.game;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends ScreenAdapter{
 	static final int GAME_READY = 0;
@@ -14,12 +15,10 @@ public class GameScreen extends ScreenAdapter{
 	OrthographicCamera cam;
 	GDXgame game;
 
-
 	public GameScreen(GDXgame game){
 		cam = new OrthographicCamera(Gdx.graphics.getHeight(), Gdx.graphics.getWidth());
 		cam.position.set(320 / 2, 480 / 2, 0);
 		this.game = game;
-
 	}
 
 	public void update(){
@@ -38,13 +37,5 @@ public class GameScreen extends ScreenAdapter{
 	public void render(float delta){
 		update();
 		draw();
-
-
 	}
-
-	
-
-
-
-
 }
