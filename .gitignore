@@ -1,0 +1,9 @@
+.DS_Store
+core/build/*
+desktop/build/*
+android/build/*
+ios/build/*
+core/build
+desktop/build
+android/build
+ios/build
