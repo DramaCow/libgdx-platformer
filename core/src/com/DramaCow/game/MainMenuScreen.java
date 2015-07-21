@@ -10,11 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class MainMenuScreen extends ScreenAdapter {
 
-	GDXgame game;
-	OrthographicCamera cam;
-	Rectangle goToGameScreen;
-	Vector3 touchPoint;
-	Button startButton;
+	private final GDXgame game;
+	private OrthographicCamera cam;
+	private Rectangle goToGameScreen;
+	private Vector3 touchPoint;
+	private Button startButton;
 
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
@@ -31,7 +31,6 @@ public class MainMenuScreen extends ScreenAdapter {
 	public void update() {
 		if(startButton.isClicked()) game.setScreen(new GameScreen(game));
 		startButton.update();
-		
 	}
 
 	public void	draw () {
