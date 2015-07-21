@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.Texture;
 
 public class MainMenuScreen extends ScreenAdapter {
 
@@ -13,6 +14,8 @@ public class MainMenuScreen extends ScreenAdapter {
 	OrthographicCamera cam;
 	Rectangle goToGameScreen;
 	Vector3 touchPoint;
+
+	Texture testButton;
 
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
@@ -22,13 +25,14 @@ public class MainMenuScreen extends ScreenAdapter {
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
 		touchPoint = new Vector3();
-		goToGameScreen = new Rectangle(20, 100, 50, 50);
-	}
+		goToGameScreen = new Rectangle(32, 32, 96, 64);
 
+		testButton = new Texture("tempStartButton.png");
+	}
 
 	public void update() {
 		if(Gdx.input.justTouched()){
-			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+			cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
 			if(goToGameScreen.contains(touchPoint.x, touchPoint.y)){
 				game.setScreen(new GameScreen(game));
@@ -40,6 +44,10 @@ public class MainMenuScreen extends ScreenAdapter {
 	public void	draw () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		game.batch.begin();
+		game.batch.draw(testButton,32,32);
+		game.batch.end();
 	}
 
 	@Override
@@ -60,5 +68,4 @@ public class MainMenuScreen extends ScreenAdapter {
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
 	}
-
 }
