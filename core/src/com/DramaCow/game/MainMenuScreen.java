@@ -14,8 +14,7 @@ public class MainMenuScreen extends ScreenAdapter {
 	OrthographicCamera cam;
 	Rectangle goToGameScreen;
 	Vector3 touchPoint;
-
-	Texture testButton;
+	Button startButton;
 
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
@@ -24,20 +23,14 @@ public class MainMenuScreen extends ScreenAdapter {
 		cam = new OrthographicCamera(w, h);
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
-		touchPoint = new Vector3();
-		goToGameScreen = new Rectangle(32, 32, 96, 64);
 
-		testButton = new Texture("tempStartButton.png");
+		TextureManager.loadTexture("startButtonTiles","tempStartButton.png");
+		startButton = new Button("startButtonTiles",32,32,64,32,cam);
 	}
 
 	public void update() {
-		if(Gdx.input.justTouched()){
-			cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-
-			if(goToGameScreen.contains(touchPoint.x, touchPoint.y)){
-				game.setScreen(new GameScreen(game));
-			}
-		}
+		if(startButton.isClicked()) game.setScreen(new GameScreen(game));
+		startButton.update();
 		
 	}
 
@@ -46,7 +39,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		game.batch.begin();
-		game.batch.draw(testButton,32,32);
+		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY());
 		game.batch.end();
 	}
 
