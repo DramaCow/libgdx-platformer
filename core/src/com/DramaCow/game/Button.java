@@ -9,14 +9,14 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Button {
 
-	public static enum State {
+	public static enum ButtonState {
 		IDLE, HOVER, CLICK
 	}
 
 	private String textureId;
 	private Rectangle bounds;
 	private OrthographicCamera cam;
-	private State state;
+	private ButtonState state;
 	private	Vector3 touchPoint;
 	private Tileset tiles;
 	private int x;
@@ -26,7 +26,7 @@ public class Button {
 		this.bounds = new Rectangle(x,y,width,height);
 		this.textureId = textureId;
 		this.cam = cam;
-		this.state = State.IDLE;
+		this.state = ButtonState.IDLE;
 		this.tiles = new Tileset(TextureManager.getTexture(textureId),width,height);
 		this.x = x;
 		this.y = y;
@@ -42,12 +42,12 @@ public class Button {
 		if(bounds.contains(touchPoint.x, touchPoint.y)){
 			//Check if it was just clicked
 			if(Gdx.input.justTouched()){		//CHECK IF THIS WORKS
-				state = State.CLICK;
+				state = ButtonState.CLICK;
 			} else {
-				state = State.HOVER;
+				state = ButtonState.HOVER;
 			}
 		} else {
-			state = State.IDLE;
+			state = ButtonState.IDLE;
 		}
 	}
 
@@ -61,7 +61,7 @@ public class Button {
 	}
 
 	public Boolean isClicked(){
-		return state == State.CLICK ? true : false;
+		return state == ButtonState.CLICK ? true : false;
 	}
 
 	public int getX(){
