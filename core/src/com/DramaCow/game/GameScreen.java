@@ -31,7 +31,7 @@ public class GameScreen extends ScreenAdapter{
 		// define: WORLD, WORLD_RENDERER, WORLD_LISTENER, RECTs, SCORE; here
 	}
 
-	public void update(){
+	public void update(float deltaTime){
 		// WHAT SHOULD THE DELTA TIME COMPARISON BE???
 		if (deltaTime > 0.1f) deltaTime = 0.1f;
 
@@ -65,7 +65,7 @@ public class GameScreen extends ScreenAdapter{
 
 	@Override
 	public void render(float delta){
-		update();
+		update(delta);
 		draw();
 	}
 }
