@@ -6,18 +6,23 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends ScreenAdapter{
-	static final int GAME_READY = 0;
-	static final int GAME_RUNNING = 1;
-	static final int GAME_PAUSED = 2;
-	static final int GAME_LEVEL_END = 3;
-	static final int GAME_OVER = 4;
+
+	public static enum State {
+		INIT, 
+		RUNNING, 
+		PAUSE,
+		GAME_OVER
+	}
 
 	OrthographicCamera cam;
 	GDXgame game;
 
 	public GameScreen(GDXgame game){
-		cam = new OrthographicCamera(Gdx.graphics.getHeight(), Gdx.graphics.getWidth());
-		cam.position.set(320 / 2, 480 / 2, 0);
+		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		cam = new OrthographicCamera(w, h);
+		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		cam.update();
+
 		this.game = game;
 	}
 
@@ -25,12 +30,9 @@ public class GameScreen extends ScreenAdapter{
 
 	}
 
-
 	public void draw(){
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-
 	}
 
 	@Override

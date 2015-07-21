@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Button {
 
-	public enum State {
+	public static enum State {
 		IDLE, HOVER, CLICK
 	}
 
