@@ -15,6 +15,15 @@ public class MainMenuScreen extends ScreenAdapter {
 	private Rectangle goToGameScreen;
 	private Vector3 touchPoint;
 	private Button startButton;
+	private Tileset menuTiles;
+	private float tileOffset;
+	private float bgOffset;
+	private Tileset runAnimationTiles;
+	private Animation runAnimation;
+	private float animationTime;
+
+	private final float bgWidth = 20.0f;
+	private final float bgHeight = 10.0f;
 
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
@@ -28,10 +37,23 @@ public class MainMenuScreen extends ScreenAdapter {
 		touchPoint = new Vector3();
 
 		TextureManager.loadTexture("startBtnTiles","tempStartButton.png");
-		startButton = new Button("startBtnTiles",64,32,0.0f,0.0f,5.0f,2.5f);
+		startButton = new Button("startBtnTiles",64,32,8.0f,5.0f,4.0f,2.0f);
+
+		//Load temple menu tiles and bg
+		TextureManager.loadTexture("tempGrassTiles","tempGrassTileSet.png");
+		menuTiles = new Tileset(TextureManager.getTexture("tempGrassTiles"),32,32);
+		TextureManager.loadTexture("tempBackground","tempBackground.png");
+		//Init offsets
+		tileOffset = 0.0f;
+		bgOffset = 0.0f;
+		//Load and create running animation
+		TextureManager.loadTexture("runAnimationTiles","tempAnimation.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),32,32);
+		runAnimation = new Animation(0.2f,runAnimationTiles.getTile(0),runAnimationTiles.getTile(1));
+
 	}
 
-	public void update() {
+	public void update(float delta) {
 		if(startButton.isClicked()) game.setScreen(new GameScreen(game));
 
 		// Get mouse/touch point
@@ -42,6 +64,14 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		// Update buttons
 		startButton.update(touchPoint.x, touchPoint.y, down);
+
+		//Update tile and background offsets
+		tileOffset -= delta * 2.0f;
+		if(tileOffset < -1.0f) tileOffset = 0.0f;
+		bgOffset -= delta * 1.0f;
+		if(bgOffset < -bgWidth) bgOffset = 0.0f;
+
+		animationTime += delta;
 	}
 
 	public void	draw () {
@@ -52,13 +82,32 @@ public class MainMenuScreen extends ScreenAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		game.batch.begin();
+		game.batch.disableBlending();
+
+		//Draw background
+		for(float i = 0.0f; i < cam.viewportWidth + bgWidth ; i += bgWidth){
+			game.batch.draw(TextureManager.getTexture("tempBackground"),i+bgOffset,0.0f,bgWidth,bgHeight);
+		}
+
+		//Draw tiles
+		for(float i = 0.0f; i < cam.viewportWidth + 1.0f ; i += 1.0f){
+			game.batch.draw(menuTiles.getTile(5),i+tileOffset,0.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(1),i+tileOffset,1.0f,1.0f,1.0f);
+		}
+
+		//Draw buttons
 		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY(), startButton.getW(), startButton.getH());
+
+		//Draw running animation
+		game.batch.enableBlending();
+		game.batch.draw(runAnimation.getKeyFrame(animationTime,0),2.0f,2.0f,1.0f,1.0f);
+
 		game.batch.end();
 	}
 
 	@Override
 	public void render (float delta) {
-		update();
+		update(delta);
 		draw();
 	}
 
