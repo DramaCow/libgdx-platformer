@@ -1,58 +1,55 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 
 public class Button {
 
 	public static enum ButtonState {
-		IDLE, HOVER, CLICK
+		IDLE, 
+		HOVER, 
+		CLICK
 	}
 
-	private String textureId;
-	private Rectangle bounds;
-	private OrthographicCamera cam;
 	private ButtonState state;
-	private	Vector3 touchPoint;
-	private Tileset tiles;
-	private int x;
-	private int y;
+	private float x, y;
+	private float w, h;
 
-	public Button(String textureId, int x, int y, int width, int height, OrthographicCamera cam){
-		this.bounds = new Rectangle(x,y,width,height);
-		this.textureId = textureId;
-		this.cam = cam;
+	private Rectangle bounds;
+
+	private String texId;
+	private Tileset tiles;
+
+	public Button(String texId, int texw, int texh, float x, float y, float w, float h) {
 		this.state = ButtonState.IDLE;
-		this.tiles = new Tileset(TextureManager.getTexture(textureId),width,height);
-		this.x = x;
-		this.y = y;
-		this.touchPoint = new Vector3();
+		this.x = x; this.y = y;
+		this.w = w; this.h = h;
+
+		this.bounds = new Rectangle(x,y,w,h);
+
+		this.texId = texId;
+		this.tiles = new Tileset(TextureManager.getTexture(texId), texw, texh);
 	}
 
 	//To be called in the update function of the screen class
-	public void update(){
-		//Get mouse/ touch point
-		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-
+	public void update(float x, float y, boolean down) {
 		//If the mouse/touchscreen is on the button
-		if(bounds.contains(touchPoint.x, touchPoint.y)){
-			//Check if it was just clicked
-			if(Gdx.input.justTouched()){		//CHECK IF THIS WORKS
+		if(bounds.contains(x, y)) {
+			//Check if touched or hovered
+			if(down) {
 				state = ButtonState.CLICK;
 			} else {
 				state = ButtonState.HOVER;
 			}
-		} else {
+		} 
+		else {
 			state = ButtonState.IDLE;
 		}
 	}
 
-	public TextureRegion getTexture(){
-		switch(state){
+	public TextureRegion getTexture() {
+		switch(state) {
 			case IDLE: return tiles.getTile(0);
 			case HOVER: return tiles.getTile(1);
 			case CLICK: return tiles.getTile(2);
@@ -60,15 +57,23 @@ public class Button {
 		return tiles.getTile(0);
 	}
 
-	public Boolean isClicked(){
+	public Boolean isClicked() {
 		return state == ButtonState.CLICK ? true : false;
 	}
 
-	public int getX(){
+	public float getX() {
 		return x;
 	}
 
-	public int getY(){
+	public float getY() {
 		return y;
+	}
+	
+	public float getW() {
+		return w;
+	}
+
+	public float getH() {
+		return h;
 	}
 }

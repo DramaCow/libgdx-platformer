@@ -20,25 +20,39 @@ public class MainMenuScreen extends ScreenAdapter {
 		this.game = game;
 
 		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		cam = new OrthographicCamera(w, h);
+		cam = new OrthographicCamera(10.0f * ((float) w/h), 10.0f);
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
+		System.out.println(cam.viewportWidth + ", " + cam.viewportHeight);
 
-		TextureManager.loadTexture("startButtonTiles","tempStartButton.png");
-		startButton = new Button("startButtonTiles",32,32,64,32,cam);
+		touchPoint = new Vector3();
+
+		TextureManager.loadTexture("startBtnTiles","tempStartButton.png");
+		startButton = new Button("startBtnTiles",64,32,0.0f,0.0f,5.0f,2.5f);
 	}
 
 	public void update() {
 		if(startButton.isClicked()) game.setScreen(new GameScreen(game));
-		startButton.update();
+
+		// Get mouse/touch point
+		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+		// Get whether screen has been clicked/touched
+		boolean down = Gdx.input.justTouched();
+		
+		// Update buttons
+		startButton.update(touchPoint.x, touchPoint.y, down);
 	}
 
 	public void	draw () {
+		cam.update();
+		game.batch.setProjectionMatrix(cam.combined);
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		game.batch.begin();
-		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY());
+		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY(), startButton.getW(), startButton.getH());
 		game.batch.end();
 	}
 
@@ -54,9 +68,9 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		cam.viewportWidth = (float) width;
-		cam.viewportHeight = (float) height;
+	public void resize(int w, int h) {
+		cam.viewportWidth = 10.0f * ((float) w/h);
+		cam.viewportHeight = 10.0f;
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
 	}
