@@ -1,7 +1,5 @@
 package com.DramaCow.game;
 
-import com.badlogic.gdx.math.Vector2;
-
 public class Player extends DynamicGameObject{
 
 	static public enum PlayerState {
@@ -42,6 +40,10 @@ public class Player extends DynamicGameObject{
 	private void setState (PlayerState s){
 		state = s;
 		timeInState = 0;
+	}
+
+	private float getTimeInState(){
+		return timeInState;
 	}
 
 	//CLASS IS WORK IN PROGRESS

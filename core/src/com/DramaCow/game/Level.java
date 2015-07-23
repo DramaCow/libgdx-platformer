@@ -1,12 +1,15 @@
 package com.DramaCow.game;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Level {
 	public final String BIOME_ID; 
 
 	public final int LEVEL_WIDTH, LEVEL_HEIGHT;
 	private final int[][] REGION_MAP;
 
-	// private List<GameObjects> objects;
+	private List<GameObject> objects;
 	// private Player player;
 
 	private boolean isReady;
@@ -18,6 +21,8 @@ public class Level {
 		this.REGION_MAP = new int[h][w];
 
 		this.isReady = false;
+
+		this.objects = new ArrayList<GameObject>();
 	}
 
 	private boolean generate() {
@@ -32,14 +37,18 @@ public class Level {
 	}
 
 	private boolean populate() {
-
+		// Proper population to be implemented here
+		for(int i = 0; i < 3; i++){
+			objects.add(new GameObject("Test",3.0f + i*5.0f,5.0f,1.0f,1.0f));
+		}
+		return true;
 	}
 
 	// INTERFACES FOR GENERATING LEVEL MAP
 	public static void generateMap(final Level level) {
 		level.generate();
 		level.populate();
-		level.isReady = truel
+		level.isReady = true;
 	}
 
 	public static void generateMapInBackground(final Level level) {
@@ -56,6 +65,10 @@ public class Level {
 
 	public int[][] getMap() {	
 		return REGION_MAP;
+	}
+
+	public List<GameObject> getObjects() {
+		return objects;
 	}
 
 	public boolean isReady() {

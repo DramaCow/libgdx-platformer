@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import java.util.List;
 
 public class WorldRenderer {
 	
@@ -27,6 +28,8 @@ public class WorldRenderer {
 
 		TextureManager.loadTexture("tiles", "tempGrassTileSet.png");
 		this.tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
+
+		TextureManager.loadTexture("tempEnemy","tempEnemy.png");
 	}	
 	
 	public void render() {
@@ -51,7 +54,7 @@ public class WorldRenderer {
 				break;
 
 			case RUNNING:
-				System.out.println("Draw shit");
+				//System.out.println("Draw shit");
 
 				batch.disableBlending();
 				batch.begin();
@@ -99,7 +102,11 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelObjects() {
-		// TODO
+		List<GameObject> objects = world.getCurrentLevel().getObjects();
+		for(GameObject object: objects){
+			batch.draw(TextureManager.getTexture("tempEnemy"), object.getX(), 
+				object.getY(), object.getWidth(), object.getHeight());
+		}
 	}
 
 	public void resize(int w, int h) {
