@@ -26,6 +26,14 @@ public class MainMenuScreen extends ScreenAdapter {
 
 		TextureManager.loadTexture("startButtonTiles","tempStartButton.png");
 		startButton = new Button("startButtonTiles",32,32,64,32,cam);
+
+		/*System.out.println(XReader.getLevelSongName("levelmaster.xml", "hell") + " " + XReader.getLevelTileSet("levelmaster.xml", "hell"));
+		System.out.println(XReader.getLevelSongName("levelmaster.xml", "grassland") + " " + XReader.getLevelTileSet("levelmaster.xml", "grassland"));
+		System.out.println(XReader.getLevelSongName("levelmaster.xml", "mountains") + " " + XReader.getLevelTileSet("levelmaster.xml", "mountains"));
+		System.out.println(XReader.getLevelSongName("levelmaster.xml", "cave") + " " + XReader.getLevelTileSet("levelmaster.xml", "cave"));
+		System.out.println(XReader.getLevelSongName("levelmaster.xml", "forest") + " " + XReader.getLevelTileSet("levelmaster.xml", "forest"));
+		System.out.println(XReader.getLevelSongName("levelmaster.xml", "ruins") + " " + XReader.getLevelTileSet("levelmaster.xml", "ruins"));*/
+		System.out.println(XReader.getLevelEnemies("levelmaster.xml", "hell"));
 	}
 
 	public void update() {

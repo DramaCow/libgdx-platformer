@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <CAVE>
-	tileset="cavetileset.png"
-	music="cavemusic.ogg"
+	<music>cavemusic.ogg</music>
+	<tileset>cavetileset.png</tileset>
 	<ENEMIES>
-		enemy1=""
-		enemy2=""
+		<ENEMY1>id2</ENEMY1>
+		<ENEMY2>id4</ENEMY2>
 	</ENEMIES>
 </CAVE>	
