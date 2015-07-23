@@ -61,7 +61,7 @@ public class WorldRenderer {
 				batch.enableBlending();
 				batch.begin();
 					renderLevelTiles();
-					renderLevelEnemies();
+					renderLevelObjects();
 				batch.end();
 				break;
 
@@ -98,7 +98,7 @@ public class WorldRenderer {
 		}
 	}
 
-	private void renderLevelEnemies() {
+	private void renderLevelObjects() {
 		// TODO
 	}
 

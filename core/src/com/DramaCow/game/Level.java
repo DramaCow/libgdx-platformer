@@ -6,7 +6,7 @@ public class Level {
 	public final int LEVEL_WIDTH, LEVEL_HEIGHT;
 	private final int[][] REGION_MAP;
 
-	// private List<GameObjects> enemies;
+	// private List<GameObjects> objects;
 	// private Player player;
 
 	private boolean isReady;
@@ -27,12 +27,19 @@ public class Level {
 				REGION_MAP[r][c] = r < 5 ? 1 : 0;
 			}
 		}
+
 		return true;
+	}
+
+	private boolean populate() {
+
 	}
 
 	// INTERFACES FOR GENERATING LEVEL MAP
 	public static void generateMap(final Level level) {
-		level.isReady = level.generate();
+		level.generate();
+		level.populate();
+		level.isReady = truel
 	}
 
 	public static void generateMapInBackground(final Level level) {
@@ -40,6 +47,7 @@ public class Level {
 		Thread t = new Thread(new Runnable() {
 		  public void run() {
 			level.generate();
+			level.populate();
 			level.isReady = true;
 		  }
 		});

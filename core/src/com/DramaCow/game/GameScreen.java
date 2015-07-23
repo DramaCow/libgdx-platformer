@@ -30,8 +30,6 @@ public class GameScreen extends ScreenAdapter{
 		//cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		//cam.update();
 
-		System.out.println("Do shit");
-
 		this.world = new World();
 		this.worldRenderer = new WorldRenderer(game.batch, this.world);
 	}
