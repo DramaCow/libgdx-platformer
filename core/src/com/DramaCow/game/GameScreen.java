@@ -6,36 +6,66 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends ScreenAdapter{
-	static final int GAME_READY = 0;
-	static final int GAME_RUNNING = 1;
-	static final int GAME_PAUSED = 2;
-	static final int GAME_LEVEL_END = 3;
-	static final int GAME_OVER = 4;
 
-	OrthographicCamera cam;
-	GDXgame game;
+	public static enum GameState {
+		INIT, 
+		RUNNING, 
+		PAUSE,
+		GAME_OVER
+	}
+
+	private final GDXgame game;
+	private GameState state;
+	private OrthographicCamera cam;
 
 	public GameScreen(GDXgame game){
-		cam = new OrthographicCamera(Gdx.graphics.getHeight(), Gdx.graphics.getWidth());
-		cam.position.set(320 / 2, 480 / 2, 0);
 		this.game = game;
+
+		this.state = GameState.INIT;
+
+		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		cam = new OrthographicCamera(w, h);
+		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		cam.update();
+
+		// define: WORLD, WORLD_RENDERER, WORLD_LISTENER, RECTs, SCORE; here
 	}
 
-	public void update(){
+	public void update(float deltaTime){
+		// WHAT SHOULD THE DELTA TIME COMPARISON BE???
+		if (deltaTime > 0.1f) deltaTime = 0.1f;
 
+		switch (state) {
+			case INIT:
+				// initialise world here
+				// when world has been initialised, goto RUNNING state
+				break;
+			case RUNNING:
+				// deal with game input here and adjust world state accordingly
+				// otherwise let world state decide what is happening (has its own states)
+				break;
+			case PAUSE:
+				// don't update world 
+				// Display pause text and dull screen
+
+				// or
+
+				// go back to RUNNING state
+				break;
+			case GAME_OVER:
+				// pass the score and goto game over screen 
+				break;
+		}
 	}
-
 
 	public void draw(){
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-
 	}
 
 	@Override
 	public void render(float delta){
-		update();
+		update(delta);
 		draw();
 	}
 }

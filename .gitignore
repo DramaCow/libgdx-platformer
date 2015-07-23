@@ -1,4 +1,5 @@
 .DS_Store
+.gradle/2.4/taskArtifacts/*
 core/build/*
 desktop/build/*
 android/build/*
