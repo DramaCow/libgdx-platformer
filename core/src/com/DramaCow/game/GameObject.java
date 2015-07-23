@@ -3,7 +3,7 @@ package com.DramaCow.game;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class GameObject {
+abstract public class GameObject {
 	public final Vector2 position;
 	public final Rectangle bounds;
 	public final String id;
@@ -13,6 +13,8 @@ public class GameObject {
 		this.bounds = new Rectangle(x, y, width, height);
 		this.id = id;
 	}
+
+	abstract public void update(float deltaTime);
 
 	public Vector2 getPosition(){
 		return position;

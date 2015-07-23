@@ -37,10 +37,17 @@ public class Level {
 	}
 
 	private boolean populate() {
-		// Proper population to be implemented here
+		/* Proper population to be implemented here
 		for(int i = 0; i < 3; i++){
 			objects.add(new GameObject("Test",3.0f + i*5.0f,5.0f,1.0f,1.0f));
+		}*/
+
+		for(int i = 0; i<5; i++){
+			Ai test = Ai.getAI("test",i*2);
+			Enemy testEnemy = new Enemy("testEnemy",10.0f + i*10.0f,5.0f,1.0f,1.0f,test);
+			objects.add(testEnemy);
 		}
+
 		return true;
 	}
 
@@ -75,10 +82,13 @@ public class Level {
 		return isReady;
 	}
 
-	public void update() {
+	public void update(float delta) {
 		// TODO
 		/*	Check collisions???
 		 *	Update enemies
 		 */
+		for(GameObject object: objects){
+			object.update(delta);
+		}
 	}		
 }

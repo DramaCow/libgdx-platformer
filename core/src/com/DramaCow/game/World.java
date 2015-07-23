@@ -51,7 +51,7 @@ public class World {
 		return currentLevel;
 	}
 
-	public void update() {
+	public void update(float delta) {
 		// Call each update method in here
 
 		switch (state) {
@@ -71,6 +71,7 @@ public class World {
 
 			case RUNNING:
 				// Check level stuff here
+				currentLevel.update(delta);
 				break;
 		
 			case TRANSITION:

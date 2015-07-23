@@ -41,7 +41,7 @@ public class GameScreen extends ScreenAdapter{
 		switch (state) {
 			case WORLD:
 				// Let world deal with its state
-				world.update();
+				world.update(deltaTime);
 				break;
 
 			case PAUSE:

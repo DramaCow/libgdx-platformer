@@ -2,7 +2,7 @@ package com.DramaCow.game;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class DynamicGameObject extends GameObject {
+abstract public class DynamicGameObject extends GameObject {
 	public final Vector2 velocity;
 	public final Vector2 accel;
 	
@@ -12,6 +12,7 @@ public class DynamicGameObject extends GameObject {
 		accel = new Vector2();
 	}
 
+	@Override
 	public void update(float deltaTime){
 		velocity.add(accel.x * deltaTime, accel.y * deltaTime);
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
