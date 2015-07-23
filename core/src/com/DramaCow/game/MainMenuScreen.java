@@ -137,7 +137,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
 	@Override
 	public void hide() {
-		SoundManager.disposeAllMusic();
-		TextureManager.disposeAllTextures();
+		//SoundManager.disposeAllMusic();
+		//TextureManager.disposeAllTextures(); // <-- 
 	}
 }

@@ -8,27 +8,32 @@ import com.badlogic.gdx.graphics.GL20;
 public class GameScreen extends ScreenAdapter{
 
 	public static enum GameState {
-		INIT, 
-		RUNNING, 
+		WORLD,
 		PAUSE,
 		GAME_OVER
 	}
 
 	private final GDXgame game;
 	private GameState state;
-	private OrthographicCamera cam;
+	//private OrthographicCamera cam;
+
+	private final World world;
+	private final WorldRenderer worldRenderer;
 
 	public GameScreen(GDXgame game){
 		this.game = game;
 
-		this.state = GameState.INIT;
+		this.state = GameState.WORLD;
 
-		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		cam = new OrthographicCamera(w, h);
-		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
-		cam.update();
+		//float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		//cam = new OrthographicCamera(10.0f * ((float) w/h), 10.0f);
+		//cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		//cam.update();
 
-		// define: WORLD, WORLD_RENDERER, WORLD_LISTENER, RECTs, SCORE; here
+		System.out.println("Do shit");
+
+		this.world = new World();
+		this.worldRenderer = new WorldRenderer(game.batch, this.world);
 	}
 
 	public void update(float deltaTime){
@@ -36,14 +41,11 @@ public class GameScreen extends ScreenAdapter{
 		if (deltaTime > 0.1f) deltaTime = 0.1f;
 
 		switch (state) {
-			case INIT:
-				// initialise world here
-				// when world has been initialised, goto RUNNING state
+			case WORLD:
+				// Let world deal with its state
+				world.update();
 				break;
-			case RUNNING:
-				// deal with game input here and adjust world state accordingly
-				// otherwise let world state decide what is happening (has its own states)
-				break;
+
 			case PAUSE:
 				// don't update world 
 				// Display pause text and dull screen
@@ -52,6 +54,7 @@ public class GameScreen extends ScreenAdapter{
 
 				// go back to RUNNING state
 				break;
+
 			case GAME_OVER:
 				// pass the score and goto game over screen 
 				break;
@@ -61,11 +64,18 @@ public class GameScreen extends ScreenAdapter{
 	public void draw(){
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		worldRenderer.render();
 	}
 
 	@Override
 	public void render(float delta){
 		update(delta);
 		draw();
+	}
+
+	@Override
+	public void resize(int w, int h) {
+		worldRenderer.resize(w, h);
 	}
 }
