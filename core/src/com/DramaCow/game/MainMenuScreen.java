@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Music;
 
 public class MainMenuScreen extends ScreenAdapter {
 
@@ -24,6 +25,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
 	private final float bgWidth = 20.0f;
 	private final float bgHeight = 10.0f;
+	private final float buttonsX = 5.0f;
 
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
@@ -36,21 +38,9 @@ public class MainMenuScreen extends ScreenAdapter {
 
 		touchPoint = new Vector3();
 
-		TextureManager.loadTexture("startBtnTiles","tempStartButton.png");
-		startButton = new Button("startBtnTiles",64,32,8.0f,5.0f,4.0f,2.0f);
-
-		//Load temple menu tiles and bg
-		TextureManager.loadTexture("tempGrassTiles","tempGrassTileSet.png");
-		menuTiles = new Tileset(TextureManager.getTexture("tempGrassTiles"),32,32);
-		TextureManager.loadTexture("tempBackground","tempBackground.png");
 		//Init offsets
 		tileOffset = 0.0f;
 		bgOffset = 0.0f;
-		//Load and create running animation
-		TextureManager.loadTexture("runAnimationTiles","tempAnimation.png");
-		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),32,32);
-		runAnimation = new Animation(0.2f,runAnimationTiles.getTile(0),runAnimationTiles.getTile(1));
-
 	}
 
 	public void update(float delta) {
@@ -85,12 +75,12 @@ public class MainMenuScreen extends ScreenAdapter {
 		game.batch.disableBlending();
 
 		//Draw background
-		for(float i = 0.0f; i < cam.viewportWidth + bgWidth ; i += bgWidth){
+		for(float i = 0.0f; i < cam.viewportWidth + bgWidth ; i += bgWidth) {
 			game.batch.draw(TextureManager.getTexture("tempBackground"),i+bgOffset,0.0f,bgWidth,bgHeight);
 		}
 
 		//Draw tiles
-		for(float i = 0.0f; i < cam.viewportWidth + 1.0f ; i += 1.0f){
+		for(float i = 0.0f; i < cam.viewportWidth + 1.0f ; i += 1.0f) {
 			game.batch.draw(menuTiles.getTile(5),i+tileOffset,0.0f,1.0f,1.0f);
 			game.batch.draw(menuTiles.getTile(1),i+tileOffset,1.0f,1.0f,1.0f);
 		}
@@ -121,6 +111,33 @@ public class MainMenuScreen extends ScreenAdapter {
 		cam.viewportWidth = 10.0f * ((float) w/h);
 		cam.viewportHeight = 10.0f;
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		startButton.setX(cam.viewportWidth - buttonsX);
 		cam.update();
+	}
+
+	@Override
+	public void show() {
+		TextureManager.loadTexture("startBtnTiles","tempStartButton.png");
+		startButton = new Button("startBtnTiles",64,32,buttonsX,5.0f,4.0f,2.0f);
+
+		//Load temp menu tiles and bg
+		TextureManager.loadTexture("tempGrassTiles","tempGrassTileSet.png");
+		menuTiles = new Tileset(TextureManager.getTexture("tempGrassTiles"),32,32);
+		TextureManager.loadTexture("tempBackground","tempBackground.png");
+
+		//Load and create running animation
+		TextureManager.loadTexture("runAnimationTiles","tempAnimation.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),32,32);
+		runAnimation = new Animation(0.2f,runAnimationTiles.getTile(0),runAnimationTiles.getTile(1));
+
+		//Menu music
+		SoundManager.loadMusic("menuMusic","tempMenuLoop.ogg", true);
+		SoundManager.getMusic("menuMusic").play();
+	}
+
+	@Override
+	public void hide() {
+		SoundManager.disposeAllMusic();
+		TextureManager.disposeAllTextures();
 	}
 }

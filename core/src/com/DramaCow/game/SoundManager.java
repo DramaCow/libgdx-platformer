@@ -18,9 +18,10 @@ public class SoundManager{
 		return true;
 	}
 
-	public static boolean loadMusic(String id, String fileName){
+	public static boolean loadMusic(String id, String fileName, Boolean looping){
 		if(musicMap.containsKey(id)) return false;
 		musicMap.put(id, Gdx.audio.newMusic(Gdx.files.internal(fileName)));
+		getMusic(id).setLooping(looping);
 		return true;
 	}
 

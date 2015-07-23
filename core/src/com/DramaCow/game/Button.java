@@ -76,4 +76,14 @@ public class Button {
 	public float getH() {
 		return h;
 	}
+
+	public void setX(float x) {
+		this.x = x;
+		bounds.setPosition(x, this.y);
+	}
+
+	public void setY(float y) {
+		this.y = y;
+		bounds.setPosition(this.x,y);
+	}
 }
