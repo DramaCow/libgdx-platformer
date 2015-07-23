@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <HELL>
+	tileset="helltileset.png"
+	music="hellmusic.ogg"
+	<ENEMIES>
+		enemy1=""
+		enemy2=""
+	</ENEMIES>
 </HELL>	

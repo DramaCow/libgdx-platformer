@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <GRASSLAND>
+	tileset="grasslandtileset.png"
+	music="grasslandmusic.ogg"
+	<ENEMIES>
+		enemy1=""
+		enemy2=""
+	</ENEMIES>	
 </GRASSLAND>	

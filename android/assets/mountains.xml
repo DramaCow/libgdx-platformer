@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <MOUNTAINS>
+	tileset="mountainstileset.png"
+	music="mountainsmusic.ogg"
+	<ENEMIES>
+		enemy1=""
+		enemy2=""
+	</ENEMIES>
 </MOUNTAINS>	

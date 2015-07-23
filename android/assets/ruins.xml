@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <RUINS>
+	tileset="ruinstileset.png"
+	music="ruinsmusic.ogg"
+	<ENEMIES>
+		enemy1=""
+		enemy2=""
+	</ENEMIES>
 </RUINS>
