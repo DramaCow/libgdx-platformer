@@ -13,9 +13,11 @@ abstract public class DynamicGameObject extends GameObject {
 	}
 
 	@Override
-	public void update(float deltaTime){
-		velocity.add(accel.x * deltaTime, accel.y * deltaTime);
-		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
+	public void update(float dt){
+		super.update(dt);
+
+		velocity.add(accel.x * dt, accel.y * dt);
+		position.add(velocity.x * dt, velocity.y * dt);
 		bounds.x = position.x;
 		bounds.y = position.y;
 	}

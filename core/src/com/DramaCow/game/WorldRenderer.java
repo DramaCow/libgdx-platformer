@@ -31,7 +31,9 @@ public class WorldRenderer {
 		TextureManager.loadTexture("tiles", "tempGrassTileSet.png");
 		this.tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
 
-		TextureManager.loadTexture("tempEnemy","tempEnemy.png");
+		TextureManager.loadTexture("tempEnemy","parasprite.png");
+		AnimationManager.loadAnimation("tempEnemy", 
+			new Animation(0.0625f, (new Tileset(TextureManager.getTexture("tempEnemy"), 58, 44)).getTiles()));
 	}	
 	
 	public void render() {
@@ -107,8 +109,8 @@ public class WorldRenderer {
 	private void renderLevelObjects() {
 		List<GameObject> objects = world.getCurrentLevel().getObjects();
 		for(GameObject object: objects){
-			batch.draw(TextureManager.getTexture("tempEnemy"), object.getX(), 
-				object.getY(), object.getWidth(), object.getHeight());
+			batch.draw(AnimationManager.getAnimation("tempEnemy").getKeyFrame(object.getTime(), 0), object.getX(), 
+				object.getY(), (float) 58/32, (float) 44/32); //object.getWidth(), object.getHeight());
 		}
 	}
 

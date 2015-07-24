@@ -8,31 +8,39 @@ abstract public class GameObject {
 	public final Rectangle bounds;
 	public final String id;
 
+	private float t = 0.0f;
+	
 	public GameObject (String id, float x, float y, float width, float height) {
 		this.position = new Vector2(x, y);
 		this.bounds = new Rectangle(x, y, width, height);
 		this.id = id;
 	}
 
-	abstract public void update(float deltaTime);
+	public void update(float dt) {
+		t += dt;
+	}
 
-	public Vector2 getPosition(){
+	public Vector2 getPosition() {
 		return position;
 	}
 
-	public float getX(){
+	public float getX() {
 		return position.x;
 	}
 
-	public float getY(){
+	public float getY() {
 		return position.y;
 	}
 
-	public float getWidth(){
+	public float getWidth() {
 		return bounds.getWidth();
 	}
 
-	public float getHeight(){
+	public float getHeight() {
 		return bounds.getHeight();
+	}
+
+	public float getTime() {
+		return t;
 	}
 }

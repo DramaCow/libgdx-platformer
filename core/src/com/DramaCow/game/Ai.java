@@ -6,7 +6,7 @@ abstract public class Ai {
 
 	int difficulty;
 
-	abstract public void update(Enemy enemy, float deltaTime);
+	abstract public void update(Enemy enemy, float dt);
 
 	abstract public void create(Enemy enemy);
 

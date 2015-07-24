@@ -6,5 +6,8 @@ public class Coin extends GameObject{
 	 	super("Coin", x, y, 1.0f, 1.0f);
 	}
 
-	public void update(float deltaTime){};
+	@Override
+	public void update(float dt) {
+		super.update(dt);	
+	};
 }

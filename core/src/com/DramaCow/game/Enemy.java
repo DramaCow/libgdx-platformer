@@ -13,9 +13,9 @@ public class Enemy extends DynamicGameObject{
 	}
 
 	@Override
-	public void update(float deltaTime){
-		super.update(deltaTime);
-		ai.update(this, deltaTime);
+	public void update(float dt){
+		super.update(dt);
+		ai.update(this, dt);
 	}
 
 	// Copies the enemy to a new position

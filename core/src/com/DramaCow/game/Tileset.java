@@ -36,8 +36,8 @@ public class Tileset {
 		return tiles.get(i);
 	}
 
-	public List<TextureRegion> getTiles() {
-		return tiles;
+	public TextureRegion[] getTiles() {
+		return tiles.toArray(new TextureRegion[tiles.size()]);
 	}
 
 	public int getNumberOfTiles() {

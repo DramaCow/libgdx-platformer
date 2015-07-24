@@ -6,5 +6,8 @@ public class Heart extends GameObject{
 		super("Heart", x, y, 1.0f, 1.0f);
 	}
 
-	public void update(float deltaTime){};
+	@Override
+	public void update(float dt) {
+		super.update(dt);
+	};
 }

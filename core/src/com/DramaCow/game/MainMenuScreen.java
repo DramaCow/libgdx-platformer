@@ -132,8 +132,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		//Load and create running animation
 		TextureManager.loadTexture("runAnimationTiles","frog.png");
 		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),70,52);
-		runAnimation = new Animation(0.15625f,
-			runAnimationTiles.getTiles().toArray(new TextureRegion[runAnimationTiles.getTiles().size()]));
+		runAnimation = new Animation(0.15625f, runAnimationTiles.getTiles());
 
 		//Menu music
 		SoundManager.loadMusic("menuMusic","tempMenuLoop.ogg", true);
