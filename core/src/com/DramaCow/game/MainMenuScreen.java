@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.audio.Music;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MainMenuScreen extends ScreenAdapter {
 
@@ -42,6 +44,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		//Init offsets
 		tileOffset = 0.0f;
 		bgOffset = 0.0f;
+
 	}
 
 	public void update(float delta) {

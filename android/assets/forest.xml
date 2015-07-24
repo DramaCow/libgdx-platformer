@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <FOREST>
+	<music>forestmusic.ogg</music>
+	<tileset>foresttileset.png</tileset>
+	<ENEMIES>
+		<ENEMY1>3</ENEMY1>
+		<ENEMY2>4</ENEMY2>
+	</ENEMIES>
 </FOREST>	

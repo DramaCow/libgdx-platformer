@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <RUINS>
+	<music>ruinsmusic.ogg</music>
+	<tileset>ruinstileset.png</tileset>
+	<ENEMIES>
+		<ENEMY1>1</ENEMY1>
+		<ENEMY2>3</ENEMY2>
+	</ENEMIES>
 </RUINS>

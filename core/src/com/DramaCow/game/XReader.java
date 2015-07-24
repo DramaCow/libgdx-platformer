@@ -1,15 +1,12 @@
 package com.DramaCow.game;
 
-import java.util.Iterator;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.XmlReader.Element;
-import com.badlogic.gdx.files.FileHandle;
-
 
 
 public class XReader {
@@ -29,24 +26,6 @@ public class XReader {
 		return root;
 	}
 
-	/*public static Map<Integer, String> getMap(String filename){
-		Map<Integer, String> map = new HashMap<Integer, String>();
-		XmlReader.Element root = parsing(filename);
-		Array<Element> levels = root.getChildrenByName("levels");
-
-		System.out.println(levels.first().getChildCount());
-		for(int i = 0; i<levels.first().getChildCount(); i++){
-     		XmlReader.Element level_element = levels.first().getChild(i);
-     		Integer level_number = Integer.parseInt(level_element.getAttribute("level_number"));
-     		String level_name = level_element.getName();
-     		System.out.println(level_name);
-     		System.out.println(level_number);
-     		map.put(level_number, level_name);
- 		}
-
-		return map;
-	}*/
-
 	public static String getFileName(String filename, String levelname){
 		XmlReader.Element root = parsing(filename);
 		Array<Element> levels = root.getChildrenByName("levels");
@@ -54,6 +33,52 @@ public class XReader {
 		return level.get(0).getAttribute("level_file");
 	}
 
+	public static String getLevelSongName(String filename, String levelname){
+		String levelFile = getFileName(filename, levelname);
+		XmlReader.Element root = parsing(levelFile);
+		String musicName = root.getChildByName("music").getText();
+		return musicName;
+	}
+
+	public static String getLevelTileSet(String filename, String levelname){
+		String levelFile = getFileName(filename, levelname);
+		XmlReader.Element root = parsing(levelFile);
+		String tileSetName = root.getChildByName("tileset").getText();
+		return tileSetName;
+	}
+
+	public static Map<String, Enemy> getLevelEnemies(String filename, String level){
+		Map<String, Enemy> enemies = new HashMap<String, Enemy>();
+		String levelFile = getFileName(filename, level);
+		XmlReader.Element root = parsing(levelFile);
+		XmlReader.Element enemys = root.getChildByName("ENEMIES");
+		int childCount = enemys.getChildCount();
+		for(int i = 0;i<childCount;i++){
+			String enemyID = enemys.getChild(i).getText();
+			Enemy enemy = getEnemy("enemies.xml", enemyID);
+			enemies.put(enemyID, enemy);
+		}
+		return enemies;
+	}
+
+	public static Enemy getEnemy(String enemyFile, String enemyID){
+		XmlReader.Element root = parsing(enemyFile);
+		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
+		String aiType = enemy.getChildByName("AI").getText();
+		Integer diff = Integer.parseInt(enemy.getChildByName("DIFF").getText());
+		Ai ai = Ai.getAI("test", diff);													//This code needs to be replaced when multiple ai's are created
+		Texture enemySprite = new Texture(Gdx.files.internal("tempEnemy.png"));         //This code needs to be replaced when multiple enemy sprites are created
+		float enemyWidth = enemySprite.getWidth();
+		float enemyHeight = enemySprite.getHeight();
+		enemySprite.dispose();
+		return new Enemy(enemyID, 0, 0, enemyWidth/32, enemyHeight/32, ai);
+	}
+
+	public static String getEnemySprite(String enemyFile, String enemyID){
+		XmlReader.Element root = parsing(enemyFile);
+		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
+		return enemy.getChildByName("SPRITE").getText();
+	}
 
 
 }
