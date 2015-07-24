@@ -3,7 +3,7 @@
 	<music>forestmusic.ogg</music>
 	<tileset>foresttileset.png</tileset>
 	<ENEMIES>
-		<ENEMY1>id2</ENEMY1>
-		<ENEMY2>id4</ENEMY2>
+		<ENEMY1>3</ENEMY1>
+		<ENEMY2>4</ENEMY2>
 	</ENEMIES>
 </FOREST>	

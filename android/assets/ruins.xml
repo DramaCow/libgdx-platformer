@@ -3,7 +3,7 @@
 	<music>ruinsmusic.ogg</music>
 	<tileset>ruinstileset.png</tileset>
 	<ENEMIES>
-		<ENEMY1>id2</ENEMY1>
-		<ENEMY2>id4</ENEMY2>
+		<ENEMY1>1</ENEMY1>
+		<ENEMY2>3</ENEMY2>
 	</ENEMIES>
 </RUINS>

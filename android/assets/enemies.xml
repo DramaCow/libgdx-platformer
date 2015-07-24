@@ -2,7 +2,7 @@
 <ALLENEMIES>
 	<ENEMY1>
 		<ID>1</ID>
-		<SRITE>tempEnemy1.png</SPRITE>
+		<SPRITE>tempEnemy1.png</SPRITE>
 		<AI>goomba</AI>
 		<DIFF>2</DIFF>
 		<SOUND>goombaSound.ogg</SOUND>
@@ -10,7 +10,7 @@
 	
 	<ENEMY2>
 		<ID>2</ID>
-		<SRITE>tempEnemy2.png</SPRITE>
+		<SPRITE>tempEnemy2.png</SPRITE>
 		<AI>boo</AI>
 		<DIFF>5</DIFF>
 		<SOUND>booSound.ogg</SOUND>
@@ -18,7 +18,7 @@
 
 	<ENEMY3>
 		<ID>3</ID>
-		<SRITE>tempEnemy3.png</SPRITE>
+		<SPRITE>tempEnemy3.png</SPRITE>
 		<AI>bulletBill</AI>
 		<DIFF>3</DIFF>
 		<SOUND>bulletBill.ogg</SOUND>
@@ -26,7 +26,7 @@
 
 	<ENEMY4>
 		<ID>4</ID>
-		<SRITE>tempEnemy4.png</SPRITE>
+		<SPRITE>tempEnemy4.png</SPRITE>
 		<AI>thwomp</AI>
 		<DIFF>7</DIFF>
 		<SOUND>thwomp.ogg</SOUND>

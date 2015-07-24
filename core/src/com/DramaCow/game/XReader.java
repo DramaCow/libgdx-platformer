@@ -1,15 +1,13 @@
 package com.DramaCow.game;
 
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.XmlReader.Element;
+
 
 public class XReader {
 	
@@ -51,17 +49,36 @@ public class XReader {
 
 	public static Map<String, Enemy> getLevelEnemies(String filename, String level){
 		Map<String, Enemy> enemies = new HashMap<String, Enemy>();
-		Set<String> enemyIds = new HashSet<String>();
 		String levelFile = getFileName(filename, level);
 		XmlReader.Element root = parsing(levelFile);
 		XmlReader.Element enemys = root.getChildByName("ENEMIES");
 		int childCount = enemys.getChildCount();
 		for(int i = 0;i<childCount;i++){
-			enemys.getChild(i).getText();
-			System.out.println(enemys.getChild(i).getText());
+			String enemyID = enemys.getChild(i).getText();
+			Enemy enemy = getEnemy("enemies.xml", enemyID);
+			enemies.put(enemyID, enemy);
 		}
-		
-
 		return enemies;
 	}
+
+	public static Enemy getEnemy(String enemyFile, String enemyID){
+		XmlReader.Element root = parsing(enemyFile);
+		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
+		String aiType = enemy.getChildByName("AI").getText();
+		Integer diff = Integer.parseInt(enemy.getChildByName("DIFF").getText());
+		Ai ai = Ai.getAI("test", diff);													//This code needs to be replaced when multiple ai's are created
+		Texture enemySprite = new Texture(Gdx.files.internal("tempEnemy.png"));         //This code needs to be replaced when multiple enemy sprites are created
+		float enemyWidth = enemySprite.getWidth();
+		float enemyHeight = enemySprite.getHeight();
+		enemySprite.dispose();
+		return new Enemy(enemyID, 0, 0, enemyWidth/32, enemyHeight/32, ai);
+	}
+
+	public static String getEnemySprite(String enemyFile, String enemyID){
+		XmlReader.Element root = parsing(enemyFile);
+		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
+		return enemy.getChildByName("SPRITE").getText();
+	}
+
+
 }
