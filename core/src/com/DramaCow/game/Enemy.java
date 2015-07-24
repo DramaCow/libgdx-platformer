@@ -1,9 +1,5 @@
 package com.DramaCow.game;
 
-<<<<<<< HEAD
-public class Enemy{
-	public Enemy(){}
-=======
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends DynamicGameObject{
@@ -30,5 +26,4 @@ public class Enemy extends DynamicGameObject{
 	public Enemy copy(Vector2 loc){
 		return new Enemy(this.id, loc.x, loc.y, this.getWidth(), this.getHeight(), this.ai);
 	}
->>>>>>> 6651cd7080d64e4e6b40b49f0d572bcc4aa2baad
 }
