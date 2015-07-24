@@ -104,6 +104,11 @@ public class WorldRenderer {
 		}
 	}
 
+	private boolean loadNextLevelAssets(String levelID){
+		return true;
+	}
+
+
 	private void renderLevelObjects() {
 		List<GameObject> objects = world.getCurrentLevel().getObjects();
 		for(GameObject object: objects){

@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <LEVEL_MASTER>
 	<levels>
-		<grassland level_file="grassland.xml" level_number="0"/>	
-		<forest level_file="forest.xml" level_number="1"/>
-		<mountains  level_file="mountains.xml" level_number="2"/>
-		<cave level_file="cave.xml" level_number="3"/>
-		<ruins level_file="ruins.xml" level_number="4"/>
-		<hell level_file="hell.xml" level_number="5"/>
+		<grassland level_file="grassland.xml" level_number="1"/>	
+		<forest level_file="forest.xml" level_number="2"/>
+		<mountains  level_file="mountains.xml" level_number="3"/>
+		<cave level_file="cave.xml" level_number="4"/>
+		<ruins level_file="ruins.xml" level_number="5"/>
+		<hell level_file="hell.xml" level_number="6"/>
 	</levels>
-	<default>
-		level_file="hell.xml"
-	</default>	
+	<defaults>
+		<default ID="hell"/>
+	</defaults>	
 </LEVEL_MASTER>	
 
 

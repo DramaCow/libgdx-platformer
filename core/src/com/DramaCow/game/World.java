@@ -15,24 +15,24 @@ public class World {
 
 	private /*volatile*/ WorldState state;
 	
-	private Map<Integer, String> BIOMES;
+	private final Map<Integer, String> BIOMES;
+	private final String DEFAULT_BIOME; 
 	// private final Player player;
 
 	private Level currentLevel;
 	private /*volatile*/ Level nextLevel;
-
 	private int levelNumber;
 	private long elapsedTime;
 	private int score;
 
 	public World() {
 		this.state = WorldState.INIT;
-
+		this.DEFAULT_BIOME = XReader.getDefault("levelmaster.xml");
 		//Set world listener here
-		this.BIOMES = new HashMap<Integer, String>(); // <-- Replace with reading biomes from file
+		this.BIOMES = XReader.getLevels("levelmaster.xml"); //Done it m8 // <-- Replace with reading biomes from file
 		// this.player = new Player();
  
-		levelNumber = 1;
+		levelNumber = 0;
 		elapsedTime = 0L;
 		score = 0; 
 	}
@@ -43,6 +43,12 @@ public class World {
 
 	public Level getCurrentLevel() {
 		return currentLevel;
+	}
+
+	//May or may not need this
+	public String getNextBiome(){
+		if(BIOMES.containsKey(levelNumber+1)) return BIOMES.get(levelNumber+1); 
+		else return DEFAULT_BIOME;
 	}
 
 	public void update(float dt) {
@@ -57,6 +63,7 @@ public class World {
 				break;
 			
 			case READY:
+				levelNumber++;
 				currentLevel = nextLevel;
 				nextLevel = new Level("id", 1024, 16);
 				Level.generateMapInBackground(nextLevel);
