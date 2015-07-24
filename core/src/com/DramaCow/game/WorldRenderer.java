@@ -26,6 +26,8 @@ public class WorldRenderer {
 
 		TextureManager.loadTexture("loading", "loading.png");
 
+		TextureManager.loadTexture("background", "Background01.png");
+
 		TextureManager.loadTexture("tiles", "tempGrassTileSet.png");
 		this.tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
 
@@ -82,6 +84,7 @@ public class WorldRenderer {
 
 	private void renderLevelBackground() {
 		// TODO
+		batch.draw(TextureManager.getTexture("background"), 0.0f, 0.0f, cam.viewportWidth, cam.viewportHeight);
 	}
 
 	private void renderLevelTiles() {
@@ -94,7 +97,7 @@ public class WorldRenderer {
 			for (int c = 0; c < world.getCurrentLevel().LEVEL_WIDTH; c++) {
 				tile = world.getCurrentLevel().getMap()[r][c];
 				if (tile != 0) {
-					batch.draw(tileset.getTile(tile - 1), c * width, r * height, 
+					batch.draw(tileset.getTile(5), c * width, r * height, 
 						width, height);
 				}
 			}

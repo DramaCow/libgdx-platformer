@@ -36,6 +36,10 @@ public class Tileset {
 		return tiles.get(i);
 	}
 
+	public List<TextureRegion> getTiles() {
+		return tiles;
+	}
+
 	public int getNumberOfTiles() {
 		return tiles.size();
 	}

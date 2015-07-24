@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.audio.Music;
 
 public class MainMenuScreen extends ScreenAdapter {
@@ -90,7 +91,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
 		//Draw running animation
 		game.batch.enableBlending();
-		game.batch.draw(runAnimation.getKeyFrame(animationTime,0),2.0f,2.0f,1.0f,1.0f);
+		game.batch.draw(runAnimation.getKeyFrame(animationTime,0),2.0f,2.0f,(float) 70/32,(float) 52/32);
 
 		game.batch.end();
 	}
@@ -126,9 +127,10 @@ public class MainMenuScreen extends ScreenAdapter {
 		TextureManager.loadTexture("tempBackground","tempBackground.png");
 
 		//Load and create running animation
-		TextureManager.loadTexture("runAnimationTiles","tempAnimation.png");
-		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),32,32);
-		runAnimation = new Animation(0.2f,runAnimationTiles.getTile(0),runAnimationTiles.getTile(1));
+		TextureManager.loadTexture("runAnimationTiles","frog.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),70,52);
+		runAnimation = new Animation(0.15625f,
+			runAnimationTiles.getTiles().toArray(new TextureRegion[runAnimationTiles.getTiles().size()]));
 
 		//Menu music
 		SoundManager.loadMusic("menuMusic","tempMenuLoop.ogg", true);

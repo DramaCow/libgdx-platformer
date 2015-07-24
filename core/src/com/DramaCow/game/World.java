@@ -41,17 +41,11 @@ public class World {
 		return state;
 	}
 
-	private boolean nextLevel() {
-		// Boolean check to see if nextLevel is ready to assign to currentLevel
-		//currentLevel = nextLevel;
-		return true;
-	}
-
 	public Level getCurrentLevel() {
 		return currentLevel;
 	}
 
-	public void update(float delta) {
+	public void update(float dt) {
 		// Call each update method in here
 
 		switch (state) {
@@ -70,12 +64,11 @@ public class World {
 				break;
 
 			case RUNNING:
-				// Check level stuff here
-				currentLevel.update(delta);
+				currentLevel.update(dt);
 				break;
 		
 			case TRANSITION:
-				// Check to see if next level is ready. If not then stay in transition
+				// Stay in transition if next level isn't ready
 				if (nextLevel.isReady()) state = WorldState.READY;	
 				break;
 

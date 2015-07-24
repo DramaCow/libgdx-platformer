@@ -29,7 +29,7 @@ public class Level {
 		// Proper map generation will go here
 		for (int r = 0; r < LEVEL_HEIGHT; r++) {
 			for (int c = 0; c < LEVEL_WIDTH; c++) {
-				REGION_MAP[r][c] = r < 5 ? 1 : 0;
+				REGION_MAP[r][c] = r < 3 ? 1 : 0;
 			}
 		}
 
@@ -37,14 +37,10 @@ public class Level {
 	}
 
 	private boolean populate() {
-		/* Proper population to be implemented here
-		for(int i = 0; i < 3; i++){
-			objects.add(new GameObject("Test",3.0f + i*5.0f,5.0f,1.0f,1.0f));
-		}*/
-
+		// Proper population to be implemented here
 		for(int i = 0; i<5; i++){
-			Ai test = Ai.getAI("test",i*2);
-			Enemy testEnemy = new Enemy("testEnemy",10.0f + i*10.0f,5.0f,1.0f,1.0f,test);
+			Ai test = Ai.getAI("wave",i*10);
+			Enemy testEnemy = new Enemy("testEnemy",10.0f + i*10.0f,5.0f,2.0f,2.0f,test);
 			objects.add(testEnemy);
 		}
 
@@ -53,18 +49,18 @@ public class Level {
 
 	// INTERFACES FOR GENERATING LEVEL MAP
 	public static void generateMap(final Level level) {
+		System.out.println("Generating map");
+
+		level.isReady = false;
 		level.generate();
 		level.populate();
 		level.isReady = true;
 	}
 
 	public static void generateMapInBackground(final Level level) {
-		level.isReady = false;
 		Thread t = new Thread(new Runnable() {
 		  public void run() {
-			level.generate();
-			level.populate();
-			level.isReady = true;
+			Level.generateMap(level);
 		  }
 		});
 		t.start();
@@ -82,13 +78,13 @@ public class Level {
 		return isReady;
 	}
 
-	public void update(float delta) {
+	public void update(float dt) {
 		// TODO
 		/*	Check collisions???
 		 *	Update enemies
 		 */
 		for(GameObject object: objects){
-			object.update(delta);
+			object.update(dt);
 		}
 	}		
 }
