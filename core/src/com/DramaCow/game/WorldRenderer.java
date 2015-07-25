@@ -31,7 +31,7 @@ public class WorldRenderer {
 		TextureManager.loadTexture("tiles", "tempGrassTileSet.png");
 		this.tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
 
-		TextureManager.loadTexture("tempEnemy","tempEnemy.png");
+		TextureManager.loadTexture("tempEnemy", XReader.getEnemySprite("enemies.xml", "1"));
 	}	
 	
 	public void render() {

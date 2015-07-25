@@ -94,12 +94,11 @@ public class XReader {
 		return new Enemy(enemyID, 0, 0, enemyWidth/32, enemyHeight/32, ai);
 	}
 
-	public static Texture getEnemySprite(String enemyFile, String enemyID){
+	public static String getEnemySprite(String enemyFile, String enemyID){
 		XmlReader.Element root = parsing(enemyFile);
 		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
-		String spriteFile = enemy.getChildByName("SPRITE").getText();
-		Texture enemySprite = new Texture(Gdx.files.internal("tempEnemy.png"));   //This code needs to be replaced when multiple enemy sprites are created
-		return enemySprite;
+		String sheetName = enemy.getChildByName("SpriteSheet").getText();
+		return "tempEnemy.png";
 	}
 
 
