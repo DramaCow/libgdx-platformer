@@ -44,8 +44,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		//Init offsets
 		tileOffset = 0.0f;
 		bgOffset = 0.0f;
-
-	}
+	}	
 
 	public void update(float delta) {
 		if(startButton.isClicked()) game.setScreen(new GameScreen(game));

@@ -33,6 +33,26 @@ public class XReader {
 		return level.get(0).getAttribute("level_file");
 	}
 
+	public static Map<Integer, String> getLevels(String filename){
+		Map<Integer, String> levelMap = new HashMap<Integer, String>();
+		XmlReader.Element root = parsing(filename);
+		XmlReader.Element levels = root.getChildByName("levels");
+		for(int i = 0; i<levels.getChildCount(); i++){
+			Integer levelNumber = Integer.parseInt(levels.getChild(i).getAttribute("level_number"));
+			String levelName = levels.getChild(i).getName();
+			levelMap.put(levelNumber, levelName);
+		}
+
+		return levelMap;
+	}
+
+	public static String getDefault(String filename){
+		XmlReader.Element root = parsing(filename);
+		Array<Element> defs = root.getChildrenByName("defaults");
+		Element def = defs.first().getChildByName("default"); 
+		return def.getAttribute("ID");
+	}
+
 	public static String getLevelSongName(String filename, String levelname){
 		String levelFile = getFileName(filename, levelname);
 		XmlReader.Element root = parsing(levelFile);
@@ -77,7 +97,8 @@ public class XReader {
 	public static String getEnemySprite(String enemyFile, String enemyID){
 		XmlReader.Element root = parsing(enemyFile);
 		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
-		return enemy.getChildByName("SPRITE").getText();
+		String sheetName = enemy.getChildByName("SpriteSheet").getText();
+		return "tempEnemy.png";
 	}
 
 

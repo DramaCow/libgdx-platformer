@@ -34,6 +34,7 @@ public class WorldRenderer {
 		TextureManager.loadTexture("tempEnemy","parasprite.png");
 		AnimationManager.loadAnimation("tempEnemy", 
 			new Animation(0.0625f, (new Tileset(TextureManager.getTexture("tempEnemy"), 58, 44)).getTiles()));
+		//TextureManager.loadTexture("tempEnemy", XReader.getEnemySprite("enemies.xml", "1"));
 	}	
 	
 	public void render() {
@@ -105,6 +106,11 @@ public class WorldRenderer {
 			}
 		}
 	}
+
+	private boolean loadNextLevelAssets(String levelID){
+		return true;
+	}
+
 
 	private void renderLevelObjects() {
 		List<GameObject> objects = world.getCurrentLevel().getObjects();
