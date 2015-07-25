@@ -4,26 +4,32 @@ import java.lang.Math;
 
 abstract public class Ai {
 
-	int difficulty;
+	protected int difficulty;
 
+	abstract public String ID();
 	abstract public void update(Enemy enemy, float dt);
-
 	abstract public void create(Enemy enemy);
 
 	public static Ai getAI(String aiType, int difficulty){
-		if (aiType == "test") return new TestAi(difficulty);
-		else if (aiType == "wave") return new WaveAI(difficulty);
+		// Josh, you must use equals() to test string value rather than reference value -Sam
+		if 		(aiType.equals(TestAi.ID))		return new TestAi(difficulty);
+		else if (aiType.equals(WaveAI.ID))		return new WaveAI(difficulty);
+
 		return null;
 	}
 
 	//Test AIs
-	public static class TestAi extends Ai{
+	public static class TestAi extends Ai {
 		public TestAi(int difficulty){
 			this.difficulty = difficulty;
 		}
+		
+		@Override
+		public String ID() { return ID; }
+		public static String ID = "test";
 
 		@Override
-		public void create(Enemy enemy){
+		public void create(Enemy enemy) {
 			enemy.velocity.x = -1.0f * difficulty;
 		}
 
@@ -33,7 +39,7 @@ abstract public class Ai {
 
 	// EXPERIMENTAL - Do not function precisely due to loss of accuracy using floating-point values
 	// PERFORMANCE HEAVY
-	public static class WaveAI extends Ai{
+	public static class WaveAI extends Ai {
 		float t = 0.0f;	   	// time
 		final double A; 	// amplitude of displacement	
 		final double T; 	// period of wave
@@ -46,6 +52,10 @@ abstract public class Ai {
 			T = difficulty < 775 ? 8.0f - ((float) difficulty/100) : 0.25f; // Have at least 4 frames per wave
 			B = (2 * Math.PI * A) / T; // where T * sin(pi/2) == T
 		}
+
+		@Override
+		public String ID() { return ID; }
+		public static String ID = "wave";
 
 		@Override
 		public void create(Enemy enemy){

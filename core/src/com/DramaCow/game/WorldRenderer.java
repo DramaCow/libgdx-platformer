@@ -24,18 +24,29 @@ public class WorldRenderer {
 
 		this.batch = batch;
 
-		TextureManager.loadTexture("loading", "loading.png");
+		// Loading screen texture
+		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER));
 
-		TextureManager.loadTexture("background", "Background01.png");
+		loadNextLevelAssets();
 
-		TextureManager.loadTexture("tiles", "tempGrassTileSet.png");
-		this.tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
-
-		TextureManager.loadTexture("tempEnemy","parasprite.png");
-		AnimationManager.loadAnimation("tempEnemy", 
-			new Animation(0.0625f, (new Tileset(TextureManager.getTexture("tempEnemy"), 58, 44)).getTiles()));
+		TextureManager.loadTexture("parasprite","parasprite.png");
+		AnimationManager.loadAnimation("parasprite", 
+			new Animation(0.0625f, (new Tileset(TextureManager.getTexture("parasprite"), 58, 44)).getTiles()));
 		//TextureManager.loadTexture("tempEnemy", XReader.getEnemySprite("enemies.xml", "1"));
 	}	
+
+	private boolean loadNextLevelAssets(){
+		// Boolean check needed to see if current biomeId matches next level biomeId to prevent reloading of the same assets
+
+		String levelFilename = XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, world.getNextBiome());
+		
+		TextureManager.loadTexture("tiles", XReader.getLevelTileset(levelFilename));
+			tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
+		TextureManager.loadTexture("background", XReader.getLevelBackground(levelFilename));
+		SoundManager.loadMusic("bgm", XReader.getLevelBGM(levelFilename), true);
+
+		return true;
+	}
 	
 	public void render() {
 		cam.update();
@@ -43,8 +54,6 @@ public class WorldRenderer {
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Depending on world state, call different render routines here
 
 		switch (world.getState()) {
 			case INIT:
@@ -59,8 +68,6 @@ public class WorldRenderer {
 				break;
 
 			case RUNNING:
-				//System.out.println("Draw shit");
-
 				batch.disableBlending();
 				batch.begin();
 					renderLevelBackground();
@@ -100,23 +107,18 @@ public class WorldRenderer {
 			for (int c = 0; c < world.getCurrentLevel().LEVEL_WIDTH; c++) {
 				tile = world.getCurrentLevel().getMap()[r][c];
 				if (tile != 0) {
-					batch.draw(tileset.getTile(5), c * width, r * height, 
+					batch.draw(tileset.getTile(tile-1), c * width, r * height, 
 						width, height);
 				}
 			}
 		}
 	}
 
-	private boolean loadNextLevelAssets(String levelID){
-		return true;
-	}
-
-
 	private void renderLevelObjects() {
 		List<GameObject> objects = world.getCurrentLevel().getObjects();
 		for(GameObject object: objects){
-			batch.draw(AnimationManager.getAnimation("tempEnemy").getKeyFrame(object.getTime(), 0), object.getX(), 
-				object.getY(), (float) 58/32, (float) 44/32); //object.getWidth(), object.getHeight());
+			batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
+				object.getY(), object.getWidth(), object.getHeight());
 		}
 	}
 

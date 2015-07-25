@@ -1,105 +1,130 @@
 package com.DramaCow.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+
 import java.util.Map;
 import java.util.HashMap;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.Gdx;
-
+import java.util.Set;
+import java.util.HashSet;
 
 public class XReader {
 	
 	private XReader() {}
 
-	public static XmlReader.Element parsing(String filename){
+	public static XmlReader.Element getRoot(String filename) {
 		XmlReader.Element root = null;
 		try{
 			XmlReader reader = new XmlReader();
 			root = reader.parse(Gdx.files.internal(filename));
 		}	
-		catch(Exception e){
+		catch(Exception e) {
 			System.out.println(e);
 		}
 
 		return root;
 	}
 
-	public static String getFileName(String filename, String levelname){
-		XmlReader.Element root = parsing(filename);
-		Array<Element> levels = root.getChildrenByName("levels");
-		Array<Element> level = levels.first().getChildrenByName(levelname);
-		return level.get(0).getAttribute("level_file");
+	// Level master parser
+	public static String getLoadingScreen(String filename) {
+		return getRoot(filename).getChildByName("default").getAttribute("loading");
 	}
 
-	public static Map<Integer, String> getLevels(String filename){
-		Map<Integer, String> levelMap = new HashMap<Integer, String>();
-		XmlReader.Element root = parsing(filename);
-		XmlReader.Element levels = root.getChildByName("levels");
-		for(int i = 0; i<levels.getChildCount(); i++){
-			Integer levelNumber = Integer.parseInt(levels.getChild(i).getAttribute("level_number"));
-			String levelName = levels.getChild(i).getName();
-			levelMap.put(levelNumber, levelName);
-		}
+	public static String getFilenameOfLevel(String filename, String levelname) {
+		return getRoot(filename).getChildByName("levels")
+			.getChildByName(levelname).getAttribute("level_file");
+	}
 
+	public static Map<Integer, String> getAllLevels(String filename) {
+		XmlReader.Element levels = getRoot(filename).getChildByName("levels");
+	
+		Map<Integer, String> levelMap = new HashMap<Integer, String>();
+		for(int i = 0; i < levels.getChildCount(); i++) {
+			levelMap.put(levels.getChild(i).getIntAttribute("level_number"), levels.getChild(i).getName());
+		}
 		return levelMap;
 	}
 
-	public static String getDefault(String filename){
-		XmlReader.Element root = parsing(filename);
-		Array<Element> defs = root.getChildrenByName("defaults");
-		Element def = defs.first().getChildByName("default"); 
-		return def.getAttribute("ID");
+	public static String getDefaultLevel(String filename) {
+		return getRoot(filename).getChildByName("default").getAttribute("id");
 	}
 
-	public static String getLevelSongName(String filename, String levelname){
-		String levelFile = getFileName(filename, levelname);
-		XmlReader.Element root = parsing(levelFile);
-		String musicName = root.getChildByName("music").getText();
-		return musicName;
+	// Level parser
+	public static String getLevelTileset(String filename) {
+		return getRoot(filename).getChildByName("assets").getAttribute("tileset");
 	}
 
-	public static String getLevelTileSet(String filename, String levelname){
-		String levelFile = getFileName(filename, levelname);
-		XmlReader.Element root = parsing(levelFile);
-		String tileSetName = root.getChildByName("tileset").getText();
-		return tileSetName;
+	public static String getLevelBackground(String filename) {
+		return getRoot(filename).getChildByName("assets").getAttribute("background");
 	}
 
-	public static Map<String, Enemy> getLevelEnemies(String filename, String level){
-		Map<String, Enemy> enemies = new HashMap<String, Enemy>();
-		String levelFile = getFileName(filename, level);
-		XmlReader.Element root = parsing(levelFile);
-		XmlReader.Element enemys = root.getChildByName("ENEMIES");
-		int childCount = enemys.getChildCount();
-		for(int i = 0;i<childCount;i++){
-			String enemyID = enemys.getChild(i).getText();
-			Enemy enemy = getEnemy("enemies.xml", enemyID);
-			enemies.put(enemyID, enemy);
+	public static String getLevelBGM(String filename) {
+		return getRoot(filename).getChildByName("assets").getAttribute("bgm");
+	}
+
+	public static Map<String, GameObject> getLevelObstacles(String filename) {
+		XmlReader.Element node = getRoot(filename).getChildByName("obstacles");
+
+		Map<String, GameObject> obstacles = new HashMap<String, GameObject>();
+		for(String obstacleId : node.getAttributes().values()) {
+			System.out.println(obstacleId);
+			obstacles.put(obstacleId, getObstacleAttributes(Terms.OBSTACLES, obstacleId));
 		}
-		return enemies;
+		return obstacles;
 	}
 
-	public static Enemy getEnemy(String enemyFile, String enemyID){
-		XmlReader.Element root = parsing(enemyFile);
-		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
-		String aiType = enemy.getChildByName("AI").getText();
-		Integer diff = Integer.parseInt(enemy.getChildByName("DIFF").getText());
-		Ai ai = Ai.getAI("test", diff);													//This code needs to be replaced when multiple ai's are created
-		Texture enemySprite = new Texture(Gdx.files.internal("tempEnemy.png"));         //This code needs to be replaced when multiple enemy sprites are created
-		float enemyWidth = enemySprite.getWidth();
-		float enemyHeight = enemySprite.getHeight();
-		enemySprite.dispose();
-		return new Enemy(enemyID, 0, 0, enemyWidth/32, enemyHeight/32, ai);
+	// Enemy parser
+	/* // Has been broken into two seperate functions for attributes and assets
+	public static Enemy getObstacle(String filename, String obstacleId) {
+		XmlReader.Element root = getRoot(filename);
+		XmlReader.Element assets = root.getChildByName("assets");
+		XmlReader.Element attributes = root.getChildByName("attributes");
+
+		// Load assets into memory (uses obstacleId for id in all managers)
+		TextureManager.loadTexture(obstacleId, assets.getAttribute("spritesheet"));
+		AnimationManager.loadAnimation(obstacleId, new Animation(assets.getFloatAttribute("animspeed"),
+			(new Tileset(TextureManager.getTexture(obstacleId), assets.getIntAttribute("width"), 
+						 assets.getIntAttribute("height"))).getTiles()));
+		SoundManager.loadSound(obstacleId, assets.getAttribute("sound"));
+
+		// Create (and return) obstacle
+		return new Enemy(obstacleId, 0.0f, 0.0f, attributes.getIntAttribute("width"), attributes.getIntAttribute("height"),
+			Ai.getAI(attributes.getAttribute("ai"), attributes.getIntAttribute("difficulty")));
 	}
+	*/
 
-	public static String getEnemySprite(String enemyFile, String enemyID){
-		XmlReader.Element root = parsing(enemyFile);
-		XmlReader.Element enemy = root.getChildByName("ENEMY" + enemyID);
-		String sheetName = enemy.getChildByName("SpriteSheet").getText();
-		return "tempEnemy.png";
+	public static void loadObstacleAssets(String filename, String obstacleId) {
+		// Load assets into memory (uses obstacleId for id in all managers)
+		XmlReader.Element assets = getRoot(filename).getChildByName(obstacleId).getChildByName("assets");
+
+		TextureManager.loadTexture(obstacleId, assets.getAttribute("spritesheet"));
+		AnimationManager.loadAnimation(obstacleId, new Animation(assets.getFloatAttribute("animspeed"),
+			(new Tileset(TextureManager.getTexture(obstacleId), assets.getIntAttribute("width"), 
+						 assets.getIntAttribute("height"))).getTiles()));
+		SoundManager.loadSound(obstacleId, assets.getAttribute("sound"));
+	} /*
+	public static void loadObstacleAssets(String filename, Set<String> obstacleIds) {
+		// Load assets into memory (uses obstacleId for id in all managers)
+		XmlReader.Element root = getRoot(filename);
+
+		for(int i = 0; i < root.getChildCount(); i++) {
+			if (obstacleIds.contains(root.getChild(i).getName())) {
+				XmlReader.Element assets = root.getChildByName(obstacleId).getChildByName("assets");
+
+				TextureManager.loadTexture(obstacleId, assets.getAttribute("spritesheet"));
+				AnimationManager.loadAnimation(obstacleId, new Animation(assets.getFloatAttribute("animspeed"),
+					(new Tileset(TextureManager.getTexture(obstacleId), assets.getIntAttribute("width"), 
+								 assets.getIntAttribute("height"))).getTiles()));
+				SoundManager.loadSound(obstacleId, assets.getAttribute("sound"));
+			}
+		}		
+	} */
+
+	public static GameObject getObstacleAttributes(String filename, String obstacleId) {
+		XmlReader.Element attributes = getRoot(filename).getChildByName(obstacleId).getChildByName("attributes");
+
+		return new Enemy(obstacleId, 0.0f, 0.0f, attributes.getFloatAttribute("width"), attributes.getFloatAttribute("height"),
+			Ai.getAI(attributes.getAttribute("ai"), attributes.getIntAttribute("difficulty")));
 	}
-
-
 }

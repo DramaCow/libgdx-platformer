@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='us-ascii'?> 
-<HELL>
-	<music>hellmusic.ogg</music>
-	<tileset>helltileset.png</tileset>
-	<ENEMIES>
-		<ENEMY1>2</ENEMY1>
-		<ENEMY2>4</ENEMY2>	
-	</ENEMIES>
-</HELL>	

@@ -9,6 +9,7 @@ public class World {
 		INIT, 
 		READY,			// \ 
 		RUNNING, 		// |-- Loop between these states
+		
 		TRANSITION,		// /
 		GAME_OVER
 	}
@@ -27,9 +28,12 @@ public class World {
 
 	public World() {
 		this.state = WorldState.INIT;
-		this.DEFAULT_BIOME = XReader.getDefault("levelmaster.xml");
-		//Set world listener here
-		this.BIOMES = XReader.getLevels("levelmaster.xml"); //Done it m8 // <-- Replace with reading biomes from file
+
+		// Change to pass in string and map references and set values within function
+		// to prevent multiple parses of the same file?
+		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
+		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
+
 		// this.player = new Player();
  
 		levelNumber = 0;
@@ -45,18 +49,15 @@ public class World {
 		return currentLevel;
 	}
 
-	//May or may not need this
 	public String getNextBiome(){
 		if(BIOMES.containsKey(levelNumber+1)) return BIOMES.get(levelNumber+1); 
 		else return DEFAULT_BIOME;
 	}
 
 	public void update(float dt) {
-		// Call each update method in here
-
 		switch (state) {
 			case INIT:
-				nextLevel = new Level("id", 1024, 16);
+				nextLevel = new Level(getNextBiome(), 1024, 16);
 				Level.generateMap(nextLevel);
 				state = WorldState.READY;
 				System.out.println("ready");
@@ -65,7 +66,7 @@ public class World {
 			case READY:
 				levelNumber++;
 				currentLevel = nextLevel;
-				nextLevel = new Level("id", 1024, 16);
+				nextLevel = new Level(getNextBiome(), 1024, 16);
 				Level.generateMapInBackground(nextLevel);
 				state = WorldState.RUNNING;
 				break;
@@ -76,11 +77,20 @@ public class World {
 		
 			case TRANSITION:
 				// Stay in transition if next level isn't ready
+				//disposeLevelAssets(); // Should be in world???
 				if (nextLevel.isReady()) state = WorldState.READY;	
 				break;
 
 			case GAME_OVER:
 				break;
+		}
+	}
+
+	private void disposeLevelAssets() {
+		for (String assetId : currentLevel.getBlueprintIDs()) {
+			TextureManager.disposeTexture(assetId);
+			//AnimationManager.disposeAnimation(assetId);
+			SoundManager.disposeSound(assetId);
 		}
 	}
 }

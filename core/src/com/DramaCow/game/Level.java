@@ -2,6 +2,10 @@ package com.DramaCow.game;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Random;
 
 public class Level {
 	public final String BIOME_ID; 
@@ -9,6 +13,7 @@ public class Level {
 	public final int LEVEL_WIDTH, LEVEL_HEIGHT;
 	private final int[][] REGION_MAP;
 
+	private Map<String, GameObject> obstacleBlueprints;
 	private List<GameObject> objects;
 	// private Player player;
 
@@ -21,8 +26,6 @@ public class Level {
 		this.REGION_MAP = new int[h][w];
 
 		this.isReady = false;
-
-		this.objects = new ArrayList<GameObject>();
 	}
 
 	private boolean generate() {
@@ -38,10 +41,20 @@ public class Level {
 
 	private boolean populate() {
 		// Proper population to be implemented here
-		for(int i = 0; i<5; i++){
-			Ai test = Ai.getAI("wave",i*10);
-			Enemy testEnemy = new Enemy("testEnemy",10.0f + i*10.0f,5.0f,2.0f,2.0f,test);
-			objects.add(testEnemy);
+		objects = new ArrayList<GameObject>();
+
+		List<String> obstacleHat = new ArrayList<String>(getBlueprintIDs());
+		System.out.println("Obstacle Hat: " + obstacleHat);
+
+		Random rn = new Random();
+
+		int pick; GameObject obstacle;
+		for (int i = 0; i < 5; i++) {
+			pick = rn.nextInt(obstacleHat.size());
+			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
+			if (obstacle instanceof Enemy) {
+				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*10.0f, 5.0f));
+			}
 		}
 
 		return true;
@@ -53,6 +66,7 @@ public class Level {
 
 		level.isReady = false;
 		level.generate();
+		level.obstacleBlueprints = XReader.getLevelObstacles(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, level.BIOME_ID));
 		level.populate();
 		level.isReady = true;
 	}
@@ -68,6 +82,10 @@ public class Level {
 
 	public int[][] getMap() {	
 		return REGION_MAP;
+	}
+
+	public Set<String> getBlueprintIDs() {
+		return obstacleBlueprints.keySet();
 	}
 
 	public List<GameObject> getObjects() {
