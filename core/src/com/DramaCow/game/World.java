@@ -32,17 +32,19 @@ public class World {
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
-		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER)); // loading screen texture	
-
 		// this.player = new Player();
 
 		nextLevel = new Level(getNextBiome(), 1024, 16);
-		Level.generateMap(nextLevel);
-		loadNextLevelAssets();	
+		Level.generateMap(nextLevel);	
  
 		levelNumber = 0;
 		elapsedTime = 0L;
 		score = 0; 
+	}
+
+	public void init() {
+		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER)); // loading screen texture	
+		loadNextLevelAssets();
 	}
 
 	public WorldState getState() {

@@ -1,11 +1,10 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.GL20;
 
-public class GameScreen extends ScreenAdapter{
+public class GameScreen implements Screen {
 
 	public static enum GameState {
 		WORLD,
@@ -34,6 +33,13 @@ public class GameScreen extends ScreenAdapter{
 		this.worldRenderer = new WorldRenderer(game.batch, this.world);
 	}
 
+	@Override
+	public void show() {
+		world.init();
+		worldRenderer.init();
+	}
+
+	@Override
 	public void update(float deltaTime){
 		// WHAT SHOULD THE DELTA TIME COMPARISON BE???
 		if (deltaTime > 0.1f) deltaTime = 0.1f;
@@ -59,6 +65,7 @@ public class GameScreen extends ScreenAdapter{
 		}
 	}
 
+	@Override
 	public void draw(){
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -67,13 +74,27 @@ public class GameScreen extends ScreenAdapter{
 	}
 
 	@Override
-	public void render(float delta){
-		update(delta);
-		draw();
+	public void resize(int w, int h) {
+		worldRenderer.resize(w, h);
 	}
 
 	@Override
-	public void resize(int w, int h) {
-		worldRenderer.resize(w, h);
+	public void pause() {
+
+	}
+
+	@Override
+	public void resume() {
+
+	}
+
+	@Override
+	public void hide() {
+		
+	}
+
+	@Override
+	public void dispose() {
+		
 	}
 }

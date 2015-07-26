@@ -2,7 +2,7 @@
 <GRASSLAND>
 	<assets
 		tileset="tileset.png"
-		background="tempBackground.png"
+		background="background.png"
 		bgm="bgm.ogg"
 	/>
 	<obstacles>

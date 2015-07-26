@@ -23,9 +23,11 @@ public class WorldRenderer {
 		this.cam.update();
 
 		this.batch = batch;
-
-		tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
 	}	
+
+	public void init() {
+		tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
+	}
 
 	public void render() {
 		cam.update();
@@ -75,7 +77,6 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelBackground() {
-		// TODO
 		batch.draw(TextureManager.getTexture("background"), 0.0f, 0.0f, cam.viewportWidth, cam.viewportHeight);
 	}
 

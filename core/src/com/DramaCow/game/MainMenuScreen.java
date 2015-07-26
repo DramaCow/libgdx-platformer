@@ -1,7 +1,6 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,7 +11,7 @@ import com.badlogic.gdx.audio.Music;
 import java.util.Map;
 import java.util.HashMap;
 
-public class MainMenuScreen extends ScreenAdapter {
+public class MainMenuScreen implements Screen {
 
 	private final GDXgame game;
 	private OrthographicCamera cam;
@@ -47,6 +46,48 @@ public class MainMenuScreen extends ScreenAdapter {
 		bgOffset = 0.0f;
 	}	
 
+	@Override
+	public void show() {
+		TextureManager.loadTexture("button","startbutton.png");
+		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
+			@Override 
+			public void onClick() {
+				game.setScreen(new GameScreen(game));
+			}
+		};
+
+		musicButton = new Button("button",64,32,buttonsX,3.0f,4.0f,2.0f) {
+			private boolean musicOff = false;
+
+			@Override 
+			public void onClick() {
+				if (!musicOff) {
+					SoundManager.getMusic("bgm").pause();
+					musicOff = true;
+				}
+				else {
+					SoundManager.getMusic("bgm").play();
+					musicOff = false;
+				}
+			}
+		};
+
+		//Load temp menu tiles and bg
+		TextureManager.loadTexture("tiles","tileset.png");
+		menuTiles = new Tileset(TextureManager.getTexture("tiles"),32,32);
+		TextureManager.loadTexture("background","background2.png");
+
+		//Load and create running animation
+		TextureManager.loadTexture("run","frog.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("run"),70,52);
+		runAnimation = new Animation(0.15625f, runAnimationTiles.getTiles());
+
+		//Menu music
+		SoundManager.loadMusic("bgm","bgm.ogg", true);
+		SoundManager.getMusic("bgm").play();
+	}
+
+	@Override
 	public void update(float delta) {
 		// Get mouse/touch point
 		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -64,6 +105,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		animationTime += delta;
 	}
 
+	@Override
 	public void	draw () {
 		cam.update();
 		game.batch.setProjectionMatrix(cam.combined);
@@ -97,17 +139,6 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 
 	@Override
-	public void render(float dt) {
-		update(dt);
-		draw();
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
 	public void resize(int w, int h) {
 		cam.viewportWidth = 10.0f * ((float) w/h);
 		cam.viewportHeight = 10.0f;
@@ -117,56 +148,28 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 
 	@Override
-	public void show() {
-		TextureManager.loadTexture("button","tempStartButton.png");
-		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
-			@Override 
-			public void onClick() {
-				SoundManager.getMusic("bgm").stop();
+	public void pause() {
 
-				TextureManager.disposeTexture("button");
-				TextureManager.disposeTexture("tiles");
-				TextureManager.disposeTexture("background");
-				TextureManager.disposeTexture("run");
-				SoundManager.disposeMusic("bgm");
+	}
 
-				game.setScreen(new GameScreen(game));
-			}
-		};
+	@Override
+	public void resume() {
 
-		musicButton = new Button("button",64,32,buttonsX,3.0f,4.0f,2.0f) {
-			private boolean musicOff = false;
-
-			@Override 
-			public void onClick() {
-				if (!musicOff) {
-					SoundManager.getMusic("bgm").pause();
-					musicOff = true;
-				}
-				else {
-					SoundManager.getMusic("bgm").play();
-					musicOff = false;
-				}
-			}
-		};
-
-		//Load temp menu tiles and bg
-		TextureManager.loadTexture("tiles","tempGrassTileSet.png");
-		menuTiles = new Tileset(TextureManager.getTexture("tiles"),32,32);
-		TextureManager.loadTexture("background","tempBackground.png");
-
-		//Load and create running animation
-		TextureManager.loadTexture("run","frog.png");
-		runAnimationTiles = new Tileset(TextureManager.getTexture("run"),70,52);
-		runAnimation = new Animation(0.15625f, runAnimationTiles.getTiles());
-
-		//Menu music
-		SoundManager.loadMusic("bgm","tempMenuLoop.ogg", true);
-		SoundManager.getMusic("bgm").play();
 	}
 
 	@Override
 	public void hide() {
-		// ???
+		dispose();
+	}
+
+	@Override
+	public void dispose() {
+		SoundManager.getMusic("bgm").stop();
+
+		TextureManager.disposeTexture("button");
+		TextureManager.disposeTexture("tiles");
+		TextureManager.disposeTexture("background");
+		TextureManager.disposeTexture("run");
+		SoundManager.disposeMusic("bgm");
 	}
 }
