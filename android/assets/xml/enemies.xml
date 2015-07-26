@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<ENEMIES>
+	<parasprite>
+		<assets
+			spritesheet="parasprite.png"
+			width="58" height="44"
+			animspeed="0.0625"		
+			sound="buzz.ogg" 
+		/>
+		<attributes
+			width="1.8125" height="1.375"
+			ai="linear"
+			difficulty="3"
+		/>
+	</parasprite>
+
+	<parasprite2>
+		<assets
+			spritesheet="parasprite.png"
+			width="58" height="44"
+			animspeed="0.03125"		
+			sound="buzz.ogg" 
+		/>
+		<attributes
+			width="1.8125" height="1.375"
+			ai="wave"
+			difficulty="5"
+		/>
+	</parasprite2>
+
+	<ninja>
+		<assets
+			spritesheet="ninja.png"
+			width="64" height="64"
+			animspeed="0.015625"		
+			sound="chingchong.ogg" 
+		/>
+		<attributes
+			width="4.0" height="4.0"
+			ai="linear"
+			difficulty="1"
+		/>
+	</ninja>
+
+	<helldog>
+		<assets
+			spritesheet="helldog.png"
+			width="64" height="64"
+			animspeed="0.125"		
+			sound="bark.ogg" 
+		/>
+		<attributes
+			width="4.0" height="4.0"
+			ai="linear"
+			difficulty="7"
+		/>
+	</helldog>
+	
+	<sonic>
+		<assets
+			spritesheet="sonic.png"
+			width="500" height="486"
+			animspeed="0.015625"		
+			sound="fast.ogg" 
+		/>
+		<attributes
+			width="2.50" height="2.43"
+			ai="linear"
+			difficulty="12"
+		/>
+	</sonic>
+
+	<sonic2>
+		<assets
+			spritesheet="sonic2.png"
+			width="500" height="515"
+			animspeed="0.25"		
+			sound="slow.ogg" 
+		/>
+		<attributes
+			width="2.50" height="2.575"
+			ai="linear"
+			difficulty="1"
+		/>
+	</sonic2>
+</ENEMIES>	

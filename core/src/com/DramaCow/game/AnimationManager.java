@@ -20,4 +20,9 @@ public class AnimationManager {
 		if(animations.containsKey(id)) return animations.get(id);
 		else return null;
 	}
+
+	public static boolean disposeAnimation(String animId) {
+		animations.remove(animId);
+		return true;
+	}
 }

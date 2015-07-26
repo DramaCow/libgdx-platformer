@@ -25,17 +25,9 @@ public class TextureManager {
 
 	public static boolean disposeTexture(String texId) {
 		Texture tex = getTexture(texId);
-		if (tex == null) {
-			return false;
-		}
+		if (tex == null) return false;
 		tex.dispose();
-		return true;
-	}
-
-	public static boolean disposeAllTextures() {
-		for (Texture tex : textures.values()) {
-			tex.dispose();
-		}
+		textures.remove(texId);
 		return true;
 	}
 	

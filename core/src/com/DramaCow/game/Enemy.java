@@ -22,5 +22,6 @@ public class Enemy extends DynamicGameObject{
 	public Enemy(Enemy that, float x, float y) {
 		super(that.id, x, y, that.bounds.getWidth(), that.bounds.getHeight());
 		this.ai = Ai.getAI(that.ai.ID(), that.ai.difficulty);
+		this.ai.create(this);
 	}
 }

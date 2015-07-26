@@ -46,10 +46,12 @@ public class Level {
 		List<String> obstacleHat = new ArrayList<String>(getBlueprintIDs());
 		System.out.println("Obstacle Hat: " + obstacleHat);
 
+		if (obstacleHat.isEmpty()) return false;
+
 		Random rn = new Random();
 
 		int pick; GameObject obstacle;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 50; i++) {
 			pick = rn.nextInt(obstacleHat.size());
 			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
 			if (obstacle instanceof Enemy) {

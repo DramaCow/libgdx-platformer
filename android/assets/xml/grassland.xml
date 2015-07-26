@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<GRASSLAND>
+	<assets
+		tileset="tileset.png"
+		background="tempBackground.png"
+		bgm="bgm.ogg"
+	/>
+	<obstacles>
+		<obstacle id="parasprite" 	priority="10"/>
+		<obstacle id="parasprite2" 	priority="10"/>
+		<obstacle id="ninja" 		priority="7"/>
+		<obstacle id="helldog"		priority="5 "/>
+		<obstacle id="sonic"		priority="3 "/>
+		<obstacle id="sonic2"		priority="3 "/>
+	</obstacles>	
+</GRASSLAND>	

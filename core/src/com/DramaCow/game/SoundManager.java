@@ -39,6 +39,7 @@ public class SoundManager{
 		Music music = getMusic(id);
 		if(music == null) return false;
 		music.dispose();
+		musicMap.remove(id);
 		return true;
 	}
 
@@ -46,22 +47,7 @@ public class SoundManager{
 		Sound sound = getSound(id);
 		if(sound == null) return false;
 		sound.dispose();
+		soundMap.remove(id);
 		return true;
 	}
-
-	public static boolean disposeAllMusic(){
-		for(Music music : musicMap.values()){
-			music.dispose();
-		}
-		return true;
-	}
-
-	public static boolean diposeAllSound(){
-		for(Sound sound : soundMap.values()){
-			sound.dispose();
-		}
-		return true;
-	}
-
-
 }

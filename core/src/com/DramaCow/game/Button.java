@@ -21,6 +21,8 @@ public class Button {
 	private String texId;
 	private Tileset tiles;
 
+	boolean hasClicked; // Used to prevent repeated onClick calls when button is held
+
 	public Button(String texId, int texw, int texh, float x, float y, float w, float h) {
 		this.state = ButtonState.IDLE;
 		this.x = x; this.y = y;
@@ -30,16 +32,25 @@ public class Button {
 
 		this.texId = texId;
 		this.tiles = new Tileset(TextureManager.getTexture(texId), texw, texh);
+
+		this.hasClicked = false;
 	}
 
 	//To be called in the update function of the screen class
-	public void update(float x, float y, boolean down) {
+	public final void update(float x, float y, boolean down) {
+		if (hasClicked && !down) hasClicked = false;
+		
 		//If the mouse/touchscreen is on the button
-		if(bounds.contains(x, y)) {
+		if (bounds.contains(x, y)) {
 			//Check if touched or hovered
-			if(down) {
+			if (down) {
 				state = ButtonState.CLICK;
-			} else {
+				if (!hasClicked) {
+					hasClicked = true;
+					onClick();
+				}
+			} 
+			else {
 				state = ButtonState.HOVER;
 			}
 		} 
@@ -48,41 +59,40 @@ public class Button {
 		}
 	}
 
-	public TextureRegion getTexture() {
+	public final TextureRegion getTexture() {
 		switch(state) {
-			case IDLE: return tiles.getTile(0);
+			case IDLE: 	return tiles.getTile(0);
 			case HOVER: return tiles.getTile(1);
 			case CLICK: return tiles.getTile(2);
 		}
 		return tiles.getTile(0);
 	}
 
-	public Boolean isClicked() {
-		return state == ButtonState.CLICK ? true : false;
-	}
+	// To be overidden
+	public void onClick() {}
 
-	public float getX() {
+	public final float getX() {
 		return x;
 	}
 
-	public float getY() {
+	public final float getY() {
 		return y;
 	}
 	
-	public float getW() {
+	public final float getW() {
 		return w;
 	}
 
-	public float getH() {
+	public final float getH() {
 		return h;
 	}
 
-	public void setX(float x) {
+	public final void setX(float x) {
 		this.x = x;
 		bounds.setPosition(x, this.y);
 	}
 
-	public void setY(float y) {
+	public final void setY(float y) {
 		this.y = y;
 		bounds.setPosition(this.x,y);
 	}

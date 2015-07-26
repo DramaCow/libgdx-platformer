@@ -9,7 +9,7 @@ public class World {
 		INIT, 
 		READY,			// \ 
 		RUNNING, 		// |-- Loop between these states
-		
+		END,			// |
 		TRANSITION,		// /
 		GAME_OVER
 	}
@@ -29,12 +29,16 @@ public class World {
 	public World() {
 		this.state = WorldState.INIT;
 
-		// Change to pass in string and map references and set values within function
-		// to prevent multiple parses of the same file?
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
+		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER)); // loading screen texture	
+
 		// this.player = new Player();
+
+		nextLevel = new Level(getNextBiome(), 1024, 16);
+		Level.generateMap(nextLevel);
+		loadNextLevelAssets();	
  
 		levelNumber = 0;
 		elapsedTime = 0L;
@@ -57,8 +61,9 @@ public class World {
 	public void update(float dt) {
 		switch (state) {
 			case INIT:
-				nextLevel = new Level(getNextBiome(), 1024, 16);
-				Level.generateMap(nextLevel);
+				// nextLevel = new Level(getNextBiome(), 1024, 16);
+				// Level.generateMap(nextLevel);
+				// loadNextLevelAssets();	
 				state = WorldState.READY;
 				System.out.println("ready");
 				break;
@@ -74,6 +79,9 @@ public class World {
 			case RUNNING:
 				currentLevel.update(dt);
 				break;
+
+			case END:
+				break;
 		
 			case TRANSITION:
 				// Stay in transition if next level isn't ready
@@ -85,6 +93,23 @@ public class World {
 				break;
 		}
 	}
+
+	private boolean loadNextLevelAssets(){
+		// Boolean check needed to see if current biomeId matches next level biomeId to prevent reloading of the same assets
+
+		String levelFilename = XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, getNextBiome());
+		
+		TextureManager.loadTexture("tiles", XReader.getLevelTileset(levelFilename));
+		TextureManager.loadTexture("background", XReader.getLevelBackground(levelFilename));
+		SoundManager.loadMusic("bgm", XReader.getLevelBGM(levelFilename), true);
+
+		for (String obstacleId : nextLevel.getBlueprintIDs()) {
+			XReader.loadObstacleAssets(Terms.OBSTACLES, obstacleId);
+		}
+
+		return true;
+	}
+	
 
 	private void disposeLevelAssets() {
 		for (String assetId : currentLevel.getBlueprintIDs()) {

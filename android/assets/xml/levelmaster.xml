@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<LEVEL_MASTER>
+	<default id="hell" loading="loading.png"/>
+
+	<levels>
+		<grassland 	level_file="xml/grassland.xml" 	level_number="1"/>	
+		<forest 	level_file="xml/grassland.xml" 	level_number="2"/>
+		<mountains  level_file="xml/grassland.xml" 	level_number="3"/>
+		<cave 		level_file="xml/grassland.xml" 	level_number="4"/>
+		<ruins 		level_file="xml/grassland.xml" 	level_number="5"/>
+		<hell 		level_file="xml/grassland.xml"	level_number="6"/>
+	</levels>
+</LEVEL_MASTER>	
+
+

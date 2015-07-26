@@ -12,21 +12,21 @@ abstract public class Ai {
 
 	public static Ai getAI(String aiType, int difficulty){
 		// Josh, you must use equals() to test string value rather than reference value -Sam
-		if 		(aiType.equals(TestAi.ID))		return new TestAi(difficulty);
+		if 		(aiType.equals(LinearAI.ID))	return new LinearAI(difficulty);
 		else if (aiType.equals(WaveAI.ID))		return new WaveAI(difficulty);
 
 		return null;
 	}
 
 	//Test AIs
-	public static class TestAi extends Ai {
-		public TestAi(int difficulty){
+	public static class LinearAI extends Ai {
+		public LinearAI(int difficulty){
 			this.difficulty = difficulty;
 		}
 		
 		@Override
 		public String ID() { return ID; }
-		public static String ID = "test";
+		public static String ID = "linear";
 
 		@Override
 		public void create(Enemy enemy) {
@@ -49,7 +49,7 @@ abstract public class Ai {
 			this.difficulty = difficulty;
 
 			A = 3.0 + ((float) difficulty/10);
-			T = difficulty < 775 ? 8.0f - ((float) difficulty/100) : 0.25f; // Have at least 4 frames per wave
+			T = difficulty < 125 ? 1.5f - ((float) difficulty/100) : 0.25f; // Have at least 4 frames per wave
 			B = (2 * Math.PI * A) / T; // where T * sin(pi/2) == T
 		}
 
@@ -59,7 +59,7 @@ abstract public class Ai {
 
 		@Override
 		public void create(Enemy enemy){
-			enemy.velocity.x = -0.1f * difficulty;
+			enemy.velocity.x = -1.0f * difficulty;
 		}
 
 		@Override

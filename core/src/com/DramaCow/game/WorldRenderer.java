@@ -24,30 +24,9 @@ public class WorldRenderer {
 
 		this.batch = batch;
 
-		// Loading screen texture
-		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER));
-
-		loadNextLevelAssets();
-
-		TextureManager.loadTexture("parasprite","parasprite.png");
-		AnimationManager.loadAnimation("parasprite", 
-			new Animation(0.0625f, (new Tileset(TextureManager.getTexture("parasprite"), 58, 44)).getTiles()));
-		//TextureManager.loadTexture("tempEnemy", XReader.getEnemySprite("enemies.xml", "1"));
+		tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
 	}	
 
-	private boolean loadNextLevelAssets(){
-		// Boolean check needed to see if current biomeId matches next level biomeId to prevent reloading of the same assets
-
-		String levelFilename = XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, world.getNextBiome());
-		
-		TextureManager.loadTexture("tiles", XReader.getLevelTileset(levelFilename));
-			tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
-		TextureManager.loadTexture("background", XReader.getLevelBackground(levelFilename));
-		SoundManager.loadMusic("bgm", XReader.getLevelBGM(levelFilename), true);
-
-		return true;
-	}
-	
 	public void render() {
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
@@ -82,6 +61,9 @@ public class WorldRenderer {
 
 			case TRANSITION:
 				// Render fade in/out sequence here (keep player animation on screen)
+				break;
+
+			case END:
 				break;
 
 			case GAME_OVER:

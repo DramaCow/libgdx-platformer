@@ -19,6 +19,7 @@ public class MainMenuScreen extends ScreenAdapter {
 	private Rectangle goToGameScreen;
 	private Vector3 touchPoint;
 	private Button startButton;
+	private Button musicButton;
 	private Tileset menuTiles;
 	private float tileOffset;
 	private float bgOffset;
@@ -47,16 +48,12 @@ public class MainMenuScreen extends ScreenAdapter {
 	}	
 
 	public void update(float delta) {
-		if(startButton.isClicked()) game.setScreen(new GameScreen(game));
-
 		// Get mouse/touch point
 		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
-		// Get whether screen has been clicked/touched
-		boolean down = Gdx.input.justTouched();
-		
 		// Update buttons
-		startButton.update(touchPoint.x, touchPoint.y, down);
+		startButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
+		musicButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
 
 		//Update tile and background offsets
 		tileOffset -= delta * 2.0f;
@@ -79,7 +76,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
 		//Draw background
 		for(float i = 0.0f; i < cam.viewportWidth + bgWidth ; i += bgWidth) {
-			game.batch.draw(TextureManager.getTexture("tempBackground"),i+bgOffset,0.0f,bgWidth,bgHeight);
+			game.batch.draw(TextureManager.getTexture("background"),i+bgOffset,0.0f,bgWidth,bgHeight);
 		}
 
 		//Draw tiles
@@ -90,6 +87,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
 		//Draw buttons
 		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY(), startButton.getW(), startButton.getH());
+		game.batch.draw(musicButton.getTexture(),musicButton.getX(),musicButton.getY(), musicButton.getW(), musicButton.getH());
 
 		//Draw running animation
 		game.batch.enableBlending();
@@ -99,13 +97,13 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 
 	@Override
-	public void render (float delta) {
-		update(delta);
+	public void render(float dt) {
+		update(dt);
 		draw();
 	}
 
 	@Override
-	public void pause () {
+	public void pause() {
 
 	}
 
@@ -120,27 +118,55 @@ public class MainMenuScreen extends ScreenAdapter {
 
 	@Override
 	public void show() {
-		TextureManager.loadTexture("startBtnTiles","tempStartButton.png");
-		startButton = new Button("startBtnTiles",64,32,buttonsX,5.0f,4.0f,2.0f);
+		TextureManager.loadTexture("button","tempStartButton.png");
+		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
+			@Override 
+			public void onClick() {
+				SoundManager.getMusic("bgm").stop();
+
+				TextureManager.disposeTexture("button");
+				TextureManager.disposeTexture("tiles");
+				TextureManager.disposeTexture("background");
+				TextureManager.disposeTexture("run");
+				SoundManager.disposeMusic("bgm");
+
+				game.setScreen(new GameScreen(game));
+			}
+		};
+
+		musicButton = new Button("button",64,32,buttonsX,3.0f,4.0f,2.0f) {
+			private boolean musicOff = false;
+
+			@Override 
+			public void onClick() {
+				if (!musicOff) {
+					SoundManager.getMusic("bgm").pause();
+					musicOff = true;
+				}
+				else {
+					SoundManager.getMusic("bgm").play();
+					musicOff = false;
+				}
+			}
+		};
 
 		//Load temp menu tiles and bg
-		TextureManager.loadTexture("tempGrassTiles","tempGrassTileSet.png");
-		menuTiles = new Tileset(TextureManager.getTexture("tempGrassTiles"),32,32);
-		TextureManager.loadTexture("tempBackground","tempBackground.png");
+		TextureManager.loadTexture("tiles","tempGrassTileSet.png");
+		menuTiles = new Tileset(TextureManager.getTexture("tiles"),32,32);
+		TextureManager.loadTexture("background","tempBackground.png");
 
 		//Load and create running animation
-		TextureManager.loadTexture("runAnimationTiles","frog.png");
-		runAnimationTiles = new Tileset(TextureManager.getTexture("runAnimationTiles"),70,52);
+		TextureManager.loadTexture("run","frog.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("run"),70,52);
 		runAnimation = new Animation(0.15625f, runAnimationTiles.getTiles());
 
 		//Menu music
-		SoundManager.loadMusic("menuMusic","tempMenuLoop.ogg", true);
-		SoundManager.getMusic("menuMusic").play();
+		SoundManager.loadMusic("bgm","tempMenuLoop.ogg", true);
+		SoundManager.getMusic("bgm").play();
 	}
 
 	@Override
 	public void hide() {
-		//SoundManager.disposeAllMusic();
-		//TextureManager.disposeAllTextures(); // <-- 
+		// ???
 	}
 }
