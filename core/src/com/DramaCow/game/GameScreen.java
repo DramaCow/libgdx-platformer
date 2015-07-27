@@ -3,6 +3,8 @@ package com.DramaCow.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.Preferences;
+
 
 public class GameScreen implements Screen {
 
@@ -48,6 +50,7 @@ public class GameScreen implements Screen {
 			case WORLD:
 				// Let world deal with its state
 				world.update(deltaTime);
+				if(world.isGameover()) state = GameState.GAME_OVER;
 				break;
 
 			case PAUSE:
@@ -60,8 +63,17 @@ public class GameScreen implements Screen {
 				break;
 
 			case GAME_OVER:
-				// pass the score and goto game over screen 
-				break;
+				// pass the score and goto game over screen
+				Preferences pref = Gdx.app.getPreferences("autorunner");
+				int score = world.getScore();
+				boolean beatHighScore = score > pref.getInteger("highscore");
+				if(beatHighScore){
+					pref.clear();
+					pref.putInteger("highscore", score);
+					pref.flush();
+				}
+				game.setScreen(new GameOverScreen(game, beatHighScore, score));
+				break;		 
 		}
 	}
 

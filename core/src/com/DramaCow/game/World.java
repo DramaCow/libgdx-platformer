@@ -19,7 +19,7 @@ public class World {
 	private final Map<Integer, String> BIOMES;
 	private final String DEFAULT_BIOME; 
 	// private final Player player;
-
+	private boolean gameover = false;
 	private Level currentLevel;
 	private /*volatile*/ Level nextLevel;
 	private int levelNumber;
@@ -45,6 +45,10 @@ public class World {
 	public void init() {
 		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER)); // loading screen texture	
 		loadNextLevelAssets();
+	}
+
+	public int getScore(){
+		return score;
 	}
 
 	public WorldState getState() {
@@ -76,6 +80,7 @@ public class World {
 				nextLevel = new Level(getNextBiome(), 1024, 16);
 				Level.generateMapInBackground(nextLevel);
 				state = WorldState.RUNNING;
+				state = WorldState.GAME_OVER;
 				break;
 
 			case RUNNING:
@@ -92,8 +97,13 @@ public class World {
 				break;
 
 			case GAME_OVER:
+				gameover = true;
 				break;
 		}
+	}
+
+	public boolean isGameover(){
+		return gameover;
 	}
 
 	private boolean loadNextLevelAssets(){
