@@ -12,28 +12,32 @@ public class World {
 		TRANSITION		// /
 	}
 
-	private /*volatile*/ WorldState state;
+	private WorldState state;
+
+	private Rect cambounds; 
 	
 	private final Map<Integer, String> BIOMES;
 	private final String DEFAULT_BIOME; 
-	// private final Player player;
+	public final Player PLAYER;
 
 	private Level currentLevel;
 	private /*volatile*/ Level nextLevel;
+
 	private int levelNumber;
 	private long elapsedTime;
 	private int score;
-	public final Player PLAYER;
 
 	private boolean gameover = false;
 
 	public World() {
+		this.cambounds = new Rect(0.0f, 0.0f, 16.0f, 16.0f);
+
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
 		this.PLAYER = new Player("Player",3.0f,3.0f,1.0f,1.5f);
 
-		nextLevel = new Level(getNextBiome(), PLAYER, 1024, 16);
+		nextLevel = new Level(getNextBiome(), PLAYER, 64, 16);
 		Level.generateMap(nextLevel);	
  
 		levelNumber = 0;
@@ -69,13 +73,13 @@ public class World {
 			case READY:
 				levelNumber++;
 				currentLevel = nextLevel;
-				nextLevel = new Level(getNextBiome(), PLAYER, 1024, 16);
+				nextLevel = new Level(getNextBiome(), PLAYER, 64, 16);
 				Level.generateMapInBackground(nextLevel);
 				state = WorldState.RUNNING;
 				break;
 
 			case RUNNING:
-				currentLevel.update(dt);
+				currentLevel.update(cambounds, dt);
 				// set game over here
 				break;
 
@@ -113,5 +117,9 @@ public class World {
 			//AnimationManager.disposeAnimation(assetId);
 			SoundManager.disposeSound(assetId);
 		}
+	}
+
+	public void resize(float w, float h) {
+		cambounds.setSize(w, h);
 	}
 }

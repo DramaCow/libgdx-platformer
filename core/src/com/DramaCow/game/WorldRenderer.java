@@ -15,10 +15,11 @@ public class WorldRenderer {
 	public WorldRenderer(GDXgame game, World world) {
 		this.world = world;
 	
-		float w = game.getScreenWidth(), h = game.getScreenHeight();
+		int w = game.getScreenWidth(), h = game.getScreenHeight();
 		this.cam = new OrthographicCamera(16.0f * ((float) w/h), 16.0f);
 		this.cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		this.cam.update();
+		this.world.resize(16.0f * ((float) w/h), 16.0f);
 
 		this.game = game;
 	}	
@@ -41,7 +42,7 @@ public class WorldRenderer {
 
 				game.batch.disableBlending();
 				game.batch.begin();
-					renderLevelBackground();
+					//renderLevelBackground();
 				game.batch.end();
 
 				game.batch.enableBlending();

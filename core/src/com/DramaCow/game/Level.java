@@ -99,13 +99,16 @@ public class Level {
 		return isReady;
 	}
 
-	public void update(float dt) {
+	public void update(Rect bounds, float dt) {
 		// TODO
 		/*	Check collisions???
 		 *	Update enemies
 		 */
 		for(GameObject object: objects){
-			object.update(dt);
+			if (bounds.contains(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+				System.out.println("Bounds in");
+				object.update(dt);
+			}
 		}
 		player.update(dt);
 	}		
