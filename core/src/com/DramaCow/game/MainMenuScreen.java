@@ -1,27 +1,31 @@
 package com.DramaCow.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+
+import java.util.Map;
+import java.util.HashMap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.audio.Music;
-import java.util.Map;
-import java.util.HashMap;
 
 public class MainMenuScreen implements Screen {
 
 	private final GDXgame game;
 	private OrthographicCamera cam;
+
 	private Rectangle goToGameScreen;
 	private Vector3 touchPoint;
+
 	private Button startButton;
 	private Button musicButton;
 	private Tileset menuTiles;
+
 	private float tileOffset;
 	private float bgOffset;
+
 	private Tileset runAnimationTiles;
 	private Animation runAnimation;
 	private float animationTime;
@@ -33,7 +37,7 @@ public class MainMenuScreen implements Screen {
 	public MainMenuScreen (GDXgame game) {
 		this.game = game;
 
-		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		float w = game.getScreenWidth(), h = game.getScreenHeight();
 		cam = new OrthographicCamera(10.0f * ((float) w/h), 10.0f);
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
@@ -90,11 +94,11 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void update(float delta) {
 		// Get mouse/touch point
-		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+		cam.unproject(touchPoint.set(game.getInputX(), game.getInputY(), 0));
 
 		// Update buttons
-		startButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
-		musicButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
+		startButton.update(touchPoint.x, touchPoint.y, game.isInputTouched());
+		musicButton.update(touchPoint.x, touchPoint.y, game.isInputTouched());
 
 		//Update tile and background offsets
 		tileOffset -= delta * 2.0f;
@@ -109,9 +113,6 @@ public class MainMenuScreen implements Screen {
 	public void	draw () {
 		cam.update();
 		game.batch.setProjectionMatrix(cam.combined);
-
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		game.batch.begin();
 		game.batch.disableBlending();

@@ -1,20 +1,18 @@
 package com.DramaCow.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen implements Screen {
 
 	public static enum GameState {
-		WORLD,
+		PLAY,
 		PAUSE,
 		GAME_OVER
 	}
 
 	private final GDXgame game;
 	private GameState state;
-	//private OrthographicCamera cam;
+	private OrthographicCamera cam;
 
 	private final World world;
 	private final WorldRenderer worldRenderer;
@@ -22,15 +20,15 @@ public class GameScreen implements Screen {
 	public GameScreen(GDXgame game){
 		this.game = game;
 
-		this.state = GameState.WORLD;
+		this.state = GameState.PLAY;
 
-		//float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		//cam = new OrthographicCamera(10.0f * ((float) w/h), 10.0f);
-		//cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
-		//cam.update();
+		float w = game.getScreenWidth(), h = game.getScreenHeight();
+		cam = new OrthographicCamera(16.0f * ((float) w/h), 16.0f);
+		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		cam.update();
 
 		this.world = new World();
-		this.worldRenderer = new WorldRenderer(game.batch, this.world);
+		this.worldRenderer = new WorldRenderer(game, this.world);
 	}
 
 	@Override
@@ -41,12 +39,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void update(float deltaTime){
-		// WHAT SHOULD THE DELTA TIME COMPARISON BE???
-		if (deltaTime > 0.1f) deltaTime = 0.1f;
-
 		switch (state) {
-			case WORLD:
-				// Let world deal with its state
+			case PLAY:
 				world.update(deltaTime);
 				break;
 
@@ -67,15 +61,17 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void draw(){
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		worldRenderer.render();
 	}
 
 	@Override
 	public void resize(int w, int h) {
 		worldRenderer.resize(w, h);
+
+		cam.viewportWidth = 16.0f * ((float) w/h);
+		cam.viewportHeight = 16.0f;
+		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
+		cam.update();
 	}
 
 	@Override
@@ -95,6 +91,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		
+		world.dispose();
 	}
 }

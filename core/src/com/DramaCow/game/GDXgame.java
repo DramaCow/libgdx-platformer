@@ -3,6 +3,7 @@ package com.DramaCow.game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 public class GDXgame implements ApplicationListener {	
 
@@ -18,6 +19,10 @@ public class GDXgame implements ApplicationListener {
 	@Override
 	public void render() {
 		screen.update(Gdx.graphics.getDeltaTime());
+
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		screen.draw();
 	}
 
@@ -48,5 +53,25 @@ public class GDXgame implements ApplicationListener {
         screen = s;
         screen.show(); 														// load assets (MAKE SURE TO NOT INITIALISE LOGIC HERE)
         screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	public int getScreenWidth() {
+		return Gdx.graphics.getWidth();
+	}
+
+	public int getScreenHeight() {
+		return Gdx.graphics.getHeight();
+	}
+
+	public float getInputX() {
+		return Gdx.input.getX();
+	}
+
+	public float getInputY() {
+		return Gdx.input.getY();
+	}	
+
+	public boolean isInputTouched() {
+		return Gdx.input.isTouched();
 	}
 }

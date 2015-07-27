@@ -6,12 +6,10 @@ import java.util.HashMap;
 public class World {
 
 	public static enum WorldState {
-		INIT, 
 		READY,			// \ 
 		RUNNING, 		// |-- Loop between these states
 		END,			// |
-		TRANSITION,		// /
-		GAME_OVER
+		TRANSITION		// /
 	}
 
 	private /*volatile*/ WorldState state;
@@ -26,9 +24,9 @@ public class World {
 	private long elapsedTime;
 	private int score;
 
-	public World() {
-		this.state = WorldState.INIT;
+	private boolean gameover = false;
 
+	public World() {
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
@@ -40,10 +38,11 @@ public class World {
 		levelNumber = 0;
 		elapsedTime = 0L;
 		score = 0; 
+
+		this.state = WorldState.READY;
 	}
 
 	public void init() {
-		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER)); // loading screen texture	
 		loadNextLevelAssets();
 	}
 
@@ -61,15 +60,7 @@ public class World {
 	}
 
 	public void update(float dt) {
-		switch (state) {
-			case INIT:
-				// nextLevel = new Level(getNextBiome(), 1024, 16);
-				// Level.generateMap(nextLevel);
-				// loadNextLevelAssets();	
-				state = WorldState.READY;
-				System.out.println("ready");
-				break;
-			
+		switch (state) {			
 			case READY:
 				levelNumber++;
 				currentLevel = nextLevel;
@@ -80,6 +71,7 @@ public class World {
 
 			case RUNNING:
 				currentLevel.update(dt);
+				// set game over here
 				break;
 
 			case END:
@@ -91,8 +83,6 @@ public class World {
 				if (nextLevel.isReady()) state = WorldState.READY;	
 				break;
 
-			case GAME_OVER:
-				break;
 		}
 	}
 
@@ -111,9 +101,8 @@ public class World {
 
 		return true;
 	}
-	
 
-	private void disposeLevelAssets() {
+	public void dispose() {
 		for (String assetId : currentLevel.getBlueprintIDs()) {
 			TextureManager.disposeTexture(assetId);
 			//AnimationManager.disposeAnimation(assetId);
