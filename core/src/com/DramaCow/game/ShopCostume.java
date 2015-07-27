@@ -5,11 +5,24 @@ import com.badlogic.gdx.graphics.Texture;
 public class ShopCostume{
 	private String id;
 	private Texture image;
-	private int price;
+	private float price;
 
-	public ShopCostume(Texture image, int price){
+	public ShopCostume(String id, Texture image, float price){
+		this.id = id;
 		this.image = image;
 		this.price = price;
-		this.id = id;
+		
+	}
+
+	public Texture getTexture(){
+		return image;
+	}
+
+	public float getPrice(){
+		return price;
+	}
+
+	public String getId(){
+		return id;
 	}
 }

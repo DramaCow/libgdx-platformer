@@ -19,6 +19,7 @@ public class MainMenuScreen implements Screen {
 	private Vector3 touchPoint;
 	private Button startButton;
 	private Button musicButton;
+	private Button shopButton;
 	private Tileset menuTiles;
 	private float tileOffset;
 	private float bgOffset;
@@ -72,6 +73,13 @@ public class MainMenuScreen implements Screen {
 			}
 		};
 
+		shopButton = new Button("button", 64, 32, buttonsX, 2.0f, 4.0f, 1.0f){
+			@Override
+			public void onClick(){
+				game.setScreen(new ShopScreen(game));
+			}
+		};
+
 		//Load temp menu tiles and bg
 		TextureManager.loadTexture("tiles","tileset.png");
 		menuTiles = new Tileset(TextureManager.getTexture("tiles"),32,32);
@@ -95,7 +103,7 @@ public class MainMenuScreen implements Screen {
 		// Update buttons
 		startButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
 		musicButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
-
+		shopButton.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
 		//Update tile and background offsets
 		tileOffset -= delta * 2.0f;
 		if(tileOffset < -1.0f) tileOffset = 0.0f;
@@ -130,6 +138,7 @@ public class MainMenuScreen implements Screen {
 		//Draw buttons
 		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY(), startButton.getW(), startButton.getH());
 		game.batch.draw(musicButton.getTexture(),musicButton.getX(),musicButton.getY(), musicButton.getW(), musicButton.getH());
+		game.batch.draw(shopButton.getTexture(),shopButton.getX(),shopButton.getY(), shopButton.getW(), shopButton.getH());
 
 		//Draw running animation
 		game.batch.enableBlending();
