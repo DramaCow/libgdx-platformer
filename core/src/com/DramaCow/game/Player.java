@@ -6,25 +6,42 @@ public class Player extends DynamicGameObject{
 		RUN, JUMP, FALL, ATTACK, HURT, DEAD
 	}
 
-	public static final float PLAYER_WIDTH = 32.0f;
-	public static final float PLAYER_HEIGHT = 48.0f;
+	public static final float HURT_DELAY = 1.0f;
+
+	private final float RUN_SPEED = 3.0f;
+	private final float HURT_SPEED = -1.0f;
+	private final float JUMP_FORCE = 10.0f;
 
 	private PlayerState state;
 	private int health;
-	private float timeInState;
 
-	public Player(float x, float y){
-		super("Player",x,y,PLAYER_WIDTH,PLAYER_HEIGHT);
+	public Player(String id, float x, float y, float w, float h){
+		super(id,x,y,w,h);
 		setState(PlayerState.RUN); 
 	}
 
 	@Override
 	public void update(float deltaTime){
 		super.update(deltaTime);
-		timeInState += deltaTime;
-
-		// If enough time passed leave hurt state
-		if(state == PlayerState.HURT && timeInState > 2.0f) setState(PlayerState.RUN); 
+		switch (state){
+			case RUN:
+				velocity.x = RUN_SPEED;
+				break;
+			case JUMP:
+				velocity.y = JUMP_FORCE;
+				break;
+			case FALL:
+				break;
+			case ATTACK:
+				break;
+			case HURT:
+				// If enough time passed leave hurt state
+				velocity.x = HURT_SPEED;
+				if(t > HURT_DELAY) setState(PlayerState.RUN); 
+				break;
+			case DEAD:
+				break;
+		}
 	}
 
 	public void hurt(int damage){
@@ -37,15 +54,27 @@ public class Player extends DynamicGameObject{
 	}
 
 	//Sets state a resets state timer
-	private void setState (PlayerState s){
+	public void setState (PlayerState s){
 		state = s;
-		timeInState = 0;
+		t = 0;
 	}
 
-	private float getTimeInState(){
-		return timeInState;
+	public String getStateID(){
+		switch (state){
+			case RUN:
+				return "Run";
+			case JUMP:
+				return "Jump";
+			case FALL:
+				return "Fall";
+			case ATTACK:
+				return "Attack";
+			case HURT:
+				return "Hurt";
+			case DEAD:
+				return "Dead";
+			default:
+				return "Run";
+		}
 	}
-
-	//CLASS IS WORK IN PROGRESS
-
 }

@@ -49,6 +49,8 @@ public class WorldRenderer {
 				break;
 
 			case RUNNING:
+				updateCamPosition();
+
 				batch.disableBlending();
 				batch.begin();
 					renderLevelBackground();
@@ -58,6 +60,7 @@ public class WorldRenderer {
 				batch.begin();
 					renderLevelTiles();
 					renderLevelObjects();
+					renderPlayer();
 				batch.end();
 				break;
 
@@ -77,7 +80,8 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelBackground() {
-		batch.draw(TextureManager.getTexture("background"), 0.0f, 0.0f, cam.viewportWidth, cam.viewportHeight);
+		batch.draw(TextureManager.getTexture("background"), cam.position.x - cam.viewportWidth/2, cam.position.y - cam.viewportHeight/2, 
+				cam.viewportWidth, cam.viewportHeight);
 	}
 
 	private void renderLevelTiles() {
@@ -105,10 +109,19 @@ public class WorldRenderer {
 		}
 	}
 
+	private void renderPlayer() {
+		batch.draw(AnimationManager.getAnimation(world.PLAYER.getStateID()).getKeyFrame(world.PLAYER.getTime(),0), world.PLAYER.getX(),
+				world.PLAYER.getY(), world.PLAYER.getWidth(), world.PLAYER.getHeight());
+	}
+
 	public void resize(int w, int h) {
 		cam.viewportWidth = 16.0f * ((float) w/h);
 		cam.viewportHeight = 16.0f;
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
+	}
+
+	private void updateCamPosition(){
+		cam.position.set(cam.viewportWidth / 2.0f + world.PLAYER.getX() - 3.0f, cam.viewportHeight / 2.0f + world.PLAYER.getY() - 3.0f, 0.0f);
 	}
 }
