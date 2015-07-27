@@ -80,6 +80,7 @@ public class World {
 
 			case RUNNING:
 				currentLevel.update(cambounds, dt);
+				trackPlayer();
 				// set game over here
 				break;
 
@@ -121,5 +122,14 @@ public class World {
 
 	public void resize(float w, float h) {
 		cambounds.setSize(w, h);
+	}
+
+	public Rect getCamBounds(){
+		return cambounds;
+	}
+
+	private void trackPlayer(){
+		cambounds.setX(PLAYER.getX() - 5.0f);
+		cambounds.setY(PLAYER.getY() - 3.0f);
 	}
 }

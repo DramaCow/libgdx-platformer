@@ -65,4 +65,12 @@ public class Rect {
 		return ((x > this.x && x < this.x + this.w) && (x + w > this.x && x + w < this.x + this.w))
 			&& ((y > this.y && y < this.y + this.h) && (y + h > this.y && y + h < this.y + this.h));
 	}
+
+	public boolean overlaps(float x, float y, float w, float h) {
+		return this.x < x + w && this.x + this.w > x && this.y < y + h && this.y + this.h > y;
+	}
+
+	public boolean overlaps(Rect that) {
+		return this.x < that.x + that.w && this.x + this.w > that.x && this.y < that.y + that.h && this.y + this.h > that.y;
+	}
 }

@@ -105,7 +105,7 @@ public class Level {
 		 *	Update enemies
 		 */
 		for(GameObject object: objects){
-			if (bounds.contains(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				System.out.println("Bounds in");
 				object.update(dt);
 			}

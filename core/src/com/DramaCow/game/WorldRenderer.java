@@ -103,9 +103,10 @@ public class WorldRenderer {
 		cam.viewportHeight = 16.0f;
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
+		world.getCamBounds().setSize(cam.viewportWidth, cam.viewportHeight);
 	}
 
 	private void updateCamPosition(){
-		cam.position.set(cam.viewportWidth / 2.0f + world.PLAYER.getX() - 3.0f, cam.viewportHeight / 2.0f + world.PLAYER.getY() - 3.0f, 0.0f);
+		cam.position.set(world.getCamBounds().getX() + cam.viewportWidth/2, world.getCamBounds().getY() + cam.viewportHeight/2, 0.0f);
 	}
 }
