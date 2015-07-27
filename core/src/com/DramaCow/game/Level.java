@@ -15,11 +15,12 @@ public class Level {
 
 	private Map<String, GameObject> obstacleBlueprints;
 	private List<GameObject> objects;
-	// private Player player;
+	private Player player;
 
 	private boolean isReady;
 
-	public Level(String biome, int w, int h) {
+	public Level(String biome, Player player, int w, int h) {
+		this.player = player;
 		this.BIOME_ID = biome;
 
 		this.LEVEL_WIDTH = w; this.LEVEL_HEIGHT = h;
@@ -106,5 +107,6 @@ public class Level {
 		for(GameObject object: objects){
 			object.update(dt);
 		}
+		player.update(dt);
 	}		
 }

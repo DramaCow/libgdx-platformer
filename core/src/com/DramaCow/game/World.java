@@ -23,6 +23,7 @@ public class World {
 	private int levelNumber;
 	private long elapsedTime;
 	private int score;
+	public final Player PLAYER;
 
 	private boolean gameover = false;
 
@@ -30,9 +31,9 @@ public class World {
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
-		// this.player = new Player();
+		this.PLAYER = new Player("Player",3.0f,3.0f,1.0f,1.5f);
 
-		nextLevel = new Level(getNextBiome(), 1024, 16);
+		nextLevel = new Level(getNextBiome(), PLAYER, 1024, 16);
 		Level.generateMap(nextLevel);	
  
 		levelNumber = 0;
@@ -43,6 +44,10 @@ public class World {
 	}
 
 	public void init() {
+		TextureManager.loadTexture("Player","frog.png");
+		Tileset playerTiles = new Tileset(TextureManager.getTexture("Player"),70,52);
+		AnimationManager.loadAnimation("Run", new Animation(0.1f,playerTiles.getTiles()));
+
 		loadNextLevelAssets();
 	}
 
@@ -64,7 +69,7 @@ public class World {
 			case READY:
 				levelNumber++;
 				currentLevel = nextLevel;
-				nextLevel = new Level(getNextBiome(), 1024, 16);
+				nextLevel = new Level(getNextBiome(), PLAYER, 1024, 16);
 				Level.generateMapInBackground(nextLevel);
 				state = WorldState.RUNNING;
 				break;

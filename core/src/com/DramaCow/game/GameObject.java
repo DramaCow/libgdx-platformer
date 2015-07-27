@@ -8,7 +8,7 @@ abstract public class GameObject {
 	public final Rectangle bounds;
 	public final String id;
 
-	private float t = 0.0f;
+	protected float t = 0.0f;
 	
 	public GameObject (String id, float x, float y, float width, float height) {
 		this.position = new Vector2(x, y);
