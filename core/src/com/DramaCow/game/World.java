@@ -35,7 +35,7 @@ public class World {
 		this.DEFAULT_BIOME = XReader.getDefaultLevel(Terms.LEVEL_MASTER);
 		this.BIOMES = XReader.getAllLevels(Terms.LEVEL_MASTER);
 
-		this.PLAYER = new Player("Player",3.0f,3.0f,1.0f,1.5f);
+		this.PLAYER = new Player("Player",3.0f,3.0f,(float) 70/32,(float) 52/32);
 
 		nextLevel = new Level(getNextBiome(), PLAYER, 64, 16);
 		Level.generateMap(nextLevel);	
@@ -50,7 +50,9 @@ public class World {
 	public void init() {
 		TextureManager.loadTexture("Player","frog.png");
 		Tileset playerTiles = new Tileset(TextureManager.getTexture("Player"),70,52);
-		AnimationManager.loadAnimation("Run", new Animation(0.1f,playerTiles.getTiles()));
+		AnimationManager.loadAnimation("Run", new Animation(0.0625f,playerTiles.getTiles()));
+
+		TextureManager.loadTexture("end", "jagged.png");
 
 		loadNextLevelAssets();
 	}
@@ -129,7 +131,12 @@ public class World {
 	}
 
 	private void trackPlayer(){
-		cambounds.setX(PLAYER.getX() - 5.0f);
-		cambounds.setY(PLAYER.getY() - 3.0f);
+		float camx = PLAYER.getX() + PLAYER.getWidth() / 2  - cambounds.getW() / 4;
+		float camy = PLAYER.getY() + PLAYER.getHeight() / 2 - cambounds.getH() / 2;
+
+		float ymax = currentLevel.LEVEL_HEIGHT - cambounds.getH();
+
+		cambounds.setX( camx >= 0.0f ? camx : 0.0f ); 
+		cambounds.setY( camy >= 0.0f ? ( camy <= ymax ? camy : ymax ) : 0.0f );
 	}
 }

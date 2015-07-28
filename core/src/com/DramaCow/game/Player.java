@@ -8,9 +8,9 @@ public class Player extends DynamicGameObject{
 
 	public static final float HURT_DELAY = 1.0f;
 
-	private final float RUN_SPEED = 3.0f;
+	private final float RUN_SPEED = 5.0f;
 	private final float HURT_SPEED = -1.0f;
-	private final float JUMP_FORCE = 10.0f;
+	private final float JUMP_SPEED = 10.0f;
 
 	private PlayerState state;
 	private int health;
@@ -28,7 +28,7 @@ public class Player extends DynamicGameObject{
 				velocity.x = RUN_SPEED;
 				break;
 			case JUMP:
-				velocity.y = JUMP_FORCE;
+				velocity.y = JUMP_SPEED;
 				break;
 			case FALL:
 				break;
