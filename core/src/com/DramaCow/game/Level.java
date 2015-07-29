@@ -30,20 +30,17 @@ public class Level {
 	}
 
 	private boolean generate() {
-		/* Proper map generation will go here
-		for (int r = 0; r < LEVEL_HEIGHT; r++) {
-			for (int c = 0; c < LEVEL_WIDTH; c++) {
-				REGION_MAP[r][c] = r < 3 ? 1 : 0;
-			}
-		}*/
-
+		// Proper map generation will go here
 		Random rn = new Random();
 		for (int r = 0; r < LEVEL_HEIGHT; r++) {
 			for (int c = 0; c < LEVEL_WIDTH; c++) {
-				REGION_MAP[r][c] = rn.nextInt(2);
+				if(r<3) REGION_MAP[r][c] = 1;
+				else{
+					int rand = rn.nextInt(4);
+					REGION_MAP[r][c] = rand == 0 ? 1 : 0;
+				}
 			}
 		}
-
 		return true;
 	}
 
@@ -113,7 +110,7 @@ public class Level {
 		 */
 		for(GameObject object: objects){
 			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
-				System.out.println("Bounds in");
+				//System.out.println("Bounds in");
 				object.update(dt);
 			}
 		}

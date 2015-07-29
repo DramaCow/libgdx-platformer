@@ -42,7 +42,7 @@ public class WorldRenderer {
 
 				game.batch.disableBlending();
 				game.batch.begin();
-					//renderLevelBackground();
+					renderLevelBackground();
 				game.batch.end();
 
 				game.batch.enableBlending();

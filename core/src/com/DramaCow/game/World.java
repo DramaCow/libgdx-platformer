@@ -48,8 +48,8 @@ public class World {
 	}
 
 	public void init() {
-		TextureManager.loadTexture("Player","frog.png");
-		Tileset playerTiles = new Tileset(TextureManager.getTexture("Player"),70,52);
+		TextureManager.loadTexture("Player","running.png");
+		Tileset playerTiles = new Tileset(TextureManager.getTexture("Player"),32,48);
 		AnimationManager.loadAnimation("Run", new Animation(0.1f,playerTiles.getTiles()));
 
 		loadNextLevelAssets();
