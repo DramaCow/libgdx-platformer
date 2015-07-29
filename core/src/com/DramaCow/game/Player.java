@@ -8,7 +8,7 @@ public class Player extends DynamicGameObject{
 
 	public static final float HURT_DELAY = 1.0f;
 
-	private final float RUN_SPEED = 5.0f;
+	private final float RUN_SPEED = 8.0f;
 	private final float HURT_SPEED = -1.0f;
 	private final float JUMP_SPEED = 10.0f;
 

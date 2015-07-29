@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
 		switch (state) {
 			case PLAY:
 				world.update(deltaTime);
+				if (world.isGameover()) state = GameState.GAME_OVER;
 				break;
 
 			case PAUSE:
@@ -55,6 +56,8 @@ public class GameScreen implements Screen {
 
 			case GAME_OVER:
 				// pass the score and goto game over screen 
+
+				game.setScreen(new MainMenuScreen(game));
 				break;
 		}
 	}

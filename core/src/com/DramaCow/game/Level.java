@@ -108,14 +108,25 @@ public class Level {
 		// Regular loop needed to remove elements from map with concurrency exception
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
+			if (object.getX() + object.getWidth() < bounds.getX() 	|| 
+				object.getX() + object.getWidth() > LEVEL_WIDTH		||
+				object.getX() + object.getWidth() < 0.0f) {
+				objects.remove(i);
+			}
 			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				object.update(dt);
-			}
-			else if (object.getX() < bounds.getX() || object.getX() > LEVEL_WIDTH) {
-				objects.remove(i);
 			}
 			else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
 		}
 		player.update(dt);
-	}		
+	}	
+
+	public static void printmap(Level level) {
+		for (int r = 0; r < level.LEVEL_HEIGHT; r++) {
+			for (int c = 0; c < level.LEVEL_WIDTH; c++) {
+				System.out.print(level.REGION_MAP[r][c]);
+			}
+			System.out.println();
+		}
+	}	
 }

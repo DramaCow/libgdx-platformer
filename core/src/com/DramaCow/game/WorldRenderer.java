@@ -2,6 +2,8 @@ package com.DramaCow.game;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import java.util.List;
 
@@ -10,6 +12,8 @@ public class WorldRenderer {
 	private final GDXgame game;
 	private World world;
 	private OrthographicCamera cam;
+
+	private ShapeRenderer shapeRenderer;
 
 	private Tileset tileset;
 
@@ -23,6 +27,8 @@ public class WorldRenderer {
 		this.world.resize(16.0f * ((float) w/h), 16.0f);
 
 		this.game = game;
+
+		this.shapeRenderer = new ShapeRenderer();
 	}	
 
 	public void init() {
@@ -36,21 +42,29 @@ public class WorldRenderer {
 		switch (world.getState()) {
 			case READY:
 				// Display same stuff as transition state?
+				game.batch.begin();
+					renderPlayer();					
+				game.batch.end();
+				break;
+			
+			case START:
+				game.batch.begin();
+					renderPlayer();					
+				game.batch.end();
 				break;
 
 			case RUNNING:
-				updateCamPosition();
+				renderLevel();
 
-				game.batch.disableBlending();
 				game.batch.begin();
-					renderLevelBackground();
+					renderPlayer();					
 				game.batch.end();
+				break;
 
-				game.batch.enableBlending();
+			case END:
+				renderLevel();
+
 				game.batch.begin();
-					renderLevelTiles();
-					renderLevelObjects();
-					renderLevelEnd();
 					renderPlayer();					
 				game.batch.end();
 				break;
@@ -59,43 +73,49 @@ public class WorldRenderer {
 				// Render fade in/out sequence here (keep player animation on screen)
 				break;
 
-			case END:
-				break;
-
 		}
 	}
 
+	private void renderLevel() {
+		updateCamPosition();
+
+		game.batch.begin();
+			game.batch.disableBlending();
+			renderLevelBackground();
+
+			game.batch.enableBlending();
+			renderLevelTiles();
+			renderLevelObjects();
+			renderLevelBorder();
+		game.batch.end();
+
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+			renderLevelBounds();	
+		shapeRenderer.end();		
+	}
+
 	private void renderLevelBackground() {
+		// To be optimised
+
 		final float p = 2.0f; // Background moves p times slower than foreground
 
-		final float bx = world.getCamBounds().getX();
-		final float bw = world.getCamBounds().getW();
+		final float camx = world.getCamBounds().getX();
+		final float camw = world.getCamBounds().getW();
 
 		final float LEVEL_WIDTH  = world.getCurrentLevel().LEVEL_WIDTH;
 		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
 
-		final float w = TextureManager.getTextureWidth("background") / 32.0f; // Where 32px == 1.0m
-		final float h = TextureManager.getTextureHeight("background") / 32.0f;			
+		final float w = TextureManager.getTextureWidth("background") / 32.0f; // Where 32px == 1.0m	
 
-		final float dx = (bx / p) % w;
-		final float x  = bx - dx;
+		final float base = camx < 0.0f ? 0.0f : camx;								// Where we want the background to start
+		final float limit = LEVEL_WIDTH < camx + camw ? LEVEL_WIDTH : camx + camw;	// Where we want the background to end
 
-		//Exceptional background drawing cases
-		if (bx >= LEVEL_WIDTH) {
-			return;
-		}
-		else if (bx + bw > LEVEL_WIDTH) {
-			int i;
-			for (i = 0; (x + w) + (i * w) < LEVEL_WIDTH; i++) {
-				game.batch.draw(TextureManager.getTexture("background"), x + (i * w), 0.0f, w, LEVEL_HEIGHT);
-			}
-			float d = LEVEL_WIDTH - (x + (i * w));
-			game.batch.draw(TextureManager.getTexture("background"), x + (i * w), 0.0f, d, LEVEL_HEIGHT,
-				0.0f, 1.0f, d/w, 0.0f);
-			return;
-		}
+		final float dx = Math.abs( (camx / p) % w ); 								// Background distance (absolute) 
+																					//     caused by camera offset from level start
+		final float x  = base - dx;													// Where background start at if we weren't clipping
 
-		for (int i = 0; x + (i * w) < bx + bw; i++) {
+		for (int i = 0; x + (i * w) < limit; i++) {
 			game.batch.draw(TextureManager.getTexture("background"), x + (i * w), 0.0f, w, LEVEL_HEIGHT);
 		}
 	}
@@ -144,8 +164,27 @@ public class WorldRenderer {
 		}
 	}
 
-	private void renderLevelEnd() {
+	private void renderLevelBorder() {
+		game.batch.draw(TextureManager.getTexture("start"), 0.0f, 0.0f, 2.0f, 16.0f);
 		game.batch.draw(TextureManager.getTexture("end"), world.getCurrentLevel().LEVEL_WIDTH - 2.0f, 0.0f, 2.0f, 16.0f);
+	}
+
+	private void renderLevelBounds() {
+		final float camx = world.getCamBounds().getX();
+		final float camw = world.getCamBounds().getW();
+	
+		final float LEVEL_WIDTH = world.getCurrentLevel().LEVEL_WIDTH;
+		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
+
+		shapeRenderer.setColor(0, 0, 0, 1);
+
+		if (camx < 0.0f) {
+			shapeRenderer.rect(camx, 0.0f, -camx, LEVEL_HEIGHT);
+		}
+
+		if (camx + camw > LEVEL_WIDTH) {
+			shapeRenderer.rect(LEVEL_WIDTH, 0.0f, camx + camw - LEVEL_WIDTH, LEVEL_HEIGHT);
+		}
 	}
 
 	private void renderPlayer() {
