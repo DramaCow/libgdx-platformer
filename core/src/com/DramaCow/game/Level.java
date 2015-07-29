@@ -30,10 +30,17 @@ public class Level {
 	}
 
 	private boolean generate() {
-		// Proper map generation will go here
+		/* Proper map generation will go here
 		for (int r = 0; r < LEVEL_HEIGHT; r++) {
 			for (int c = 0; c < LEVEL_WIDTH; c++) {
 				REGION_MAP[r][c] = r < 3 ? 1 : 0;
+			}
+		}*/
+
+		Random rn = new Random();
+		for (int r = 0; r < LEVEL_HEIGHT; r++) {
+			for (int c = 0; c < LEVEL_WIDTH; c++) {
+				REGION_MAP[r][c] = rn.nextInt(2);
 			}
 		}
 

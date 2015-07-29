@@ -69,7 +69,7 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelTiles() {
-		// EXAMPLE CODE
+		/* EXAMPLE CODE
 		int tile = 0;
 		float width = tileset.TILE_X / 32;		// Where 32px == 1.0m
 		float height = tileset.TILE_Y / 32;
@@ -79,6 +79,31 @@ public class WorldRenderer {
 				tile = world.getCurrentLevel().getMap()[r][c];
 				if (tile != 0) {
 					game.batch.draw(tileset.getTile(tile-1), c * width, r * height, 
+						width, height);
+				}
+			}
+		}
+		*/
+
+		// EXAMPLE CODE
+		int tile = 0;
+		float width = tileset.TILE_X / 32;		// Where 32px == 1.0m
+		float height = tileset.TILE_Y / 32;
+
+		for (int r = 0; r < world.getCurrentLevel().LEVEL_HEIGHT; r++) {
+			for (int c = 0; c < world.getCurrentLevel().LEVEL_WIDTH; c++) {
+				// Get current tile
+				tile = world.getCurrentLevel().getMap()[r][c];
+				// Get surrounding tiles
+				int tileUp = r > world.getCurrentLevel().LEVEL_HEIGHT - 2 ? 1 : world.getCurrentLevel().getMap()[r+1][c];
+				int tileDown = r < 1 ? 1 : world.getCurrentLevel().getMap()[r-1][c];
+				int tileRight = c >	world.getCurrentLevel().LEVEL_WIDTH - 2	? 1 : world.getCurrentLevel().getMap()[r][c+1];
+				int tileLeft = c < 1 ? 1 : world.getCurrentLevel().getMap()[r][c-1];
+				// Draw the tile
+				if (tile != 0) {
+					int index = 1 * tileUp + 2 * tileRight + 4 * tileDown + 8 * tileLeft;
+					//System.out.println("Index: " + index);
+					game.batch.draw(tileset.getTile(index), c * width, r * height, 
 						width, height);
 				}
 			}
