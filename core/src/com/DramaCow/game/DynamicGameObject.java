@@ -43,4 +43,10 @@ abstract public class DynamicGameObject extends GameObject {
 		bounds.x = position.x;
 		bounds.y = position.y;
 	}
+
+	public void setPosition(float x, float y) {
+		position.set(x,y);
+		bounds.x = x;
+		bounds.y = y;
+	}
 }

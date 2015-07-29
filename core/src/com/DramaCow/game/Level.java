@@ -60,7 +60,7 @@ public class Level {
 			pick = rn.nextInt(obstacleHat.size());
 			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
 			if (obstacle instanceof Enemy) {
-				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*10.0f, 5.0f));
+				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*1.0f, 5.0f));
 			}
 		}
 
@@ -108,12 +108,30 @@ public class Level {
 		/*	Check collisions???
 		 *	Update enemies
 		 */
-		for(GameObject object: objects){
+		
+		// Regular loop needed to remove elements from map with concurrency exception
+		for (int i = 0; i < objects.size(); i++) {
+			GameObject object = objects.get(i);
+			if (object.getX() + object.getWidth() < bounds.getX() 	|| 
+				object.getX() + object.getWidth() > LEVEL_WIDTH		||
+				object.getX() + object.getWidth() < 0.0f) {
+				objects.remove(i);
+			}
 			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				//System.out.println("Bounds in");
 				object.update(dt);
 			}
+			else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
 		}
 		player.update(dt);
-	}		
+	}	
+
+	public static void printmap(Level level) {
+		for (int r = 0; r < level.LEVEL_HEIGHT; r++) {
+			for (int c = 0; c < level.LEVEL_WIDTH; c++) {
+				System.out.print(level.REGION_MAP[r][c]);
+			}
+			System.out.println();
+		}
+	}	
 }

@@ -1,6 +1,9 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import java.util.List;
 
@@ -9,6 +12,8 @@ public class WorldRenderer {
 	private final GDXgame game;
 	private World world;
 	private OrthographicCamera cam;
+
+	private ShapeRenderer shapeRenderer;
 
 	private Tileset tileset;
 
@@ -22,6 +27,8 @@ public class WorldRenderer {
 		this.world.resize(16.0f * ((float) w/h), 16.0f);
 
 		this.game = game;
+
+		this.shapeRenderer = new ShapeRenderer();
 	}	
 
 	public void init() {
@@ -35,21 +42,30 @@ public class WorldRenderer {
 		switch (world.getState()) {
 			case READY:
 				// Display same stuff as transition state?
+				game.batch.begin();
+					renderPlayer();					
+				game.batch.end();
+				break;
+			
+			case START:
+				game.batch.begin();
+					renderPlayer();					
+				game.batch.end();
 				break;
 
 			case RUNNING:
-				updateCamPosition();
+				renderLevel();
 
-				game.batch.disableBlending();
 				game.batch.begin();
-					renderLevelBackground();
+					renderPlayer();					
 				game.batch.end();
+				break;
 
-				game.batch.enableBlending();
+			case END:
+				renderLevel();
+
 				game.batch.begin();
-					renderLevelTiles();
-					renderLevelObjects();
-					renderPlayer();
+					renderPlayer();					
 				game.batch.end();
 				break;
 
@@ -57,41 +73,70 @@ public class WorldRenderer {
 				// Render fade in/out sequence here (keep player animation on screen)
 				break;
 
-			case END:
-				break;
-
 		}
+	}
+
+	private void renderLevel() {
+		updateCamPosition();
+
+		game.batch.begin();
+			game.batch.disableBlending();
+			renderLevelBackground();
+
+			game.batch.enableBlending();
+			renderLevelTiles();
+			renderLevelObjects();
+			renderLevelBorder();
+		game.batch.end();
+
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+			renderLevelBounds();	
+		shapeRenderer.end();		
 	}
 
 	private void renderLevelBackground() {
-		game.batch.draw(TextureManager.getTexture("background"), cam.position.x - cam.viewportWidth/2, cam.position.y - cam.viewportHeight/2, 
-				cam.viewportWidth, cam.viewportHeight);
+		// To be optimised
+
+		final float p = 2.0f; // Background moves p times slower than foreground
+
+		final float camx = world.getCamBounds().getX();
+		final float camw = world.getCamBounds().getW();
+
+		final float LEVEL_WIDTH  = world.getCurrentLevel().LEVEL_WIDTH;
+		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
+
+		final float w = TextureManager.getTextureWidth("background") / 32.0f; // Where 32px == 1.0m	
+
+		final float base = camx < 0.0f ? 0.0f : camx;								// Where we want the background to start
+		final float limit = LEVEL_WIDTH < camx + camw ? LEVEL_WIDTH : camx + camw;	// Where we want the background to end
+
+		final float dx = Math.abs( (camx / p) % w ); 								// Background distance (absolute) 
+																					//     caused by camera offset from level start
+		final float x  = base - dx;													// Where background start at if we weren't clipping
+
+		for (int i = 0; x + (i * w) < limit; i++) {
+			game.batch.draw(TextureManager.getTexture("background"), x + (i * w), 0.0f, w, LEVEL_HEIGHT);
+		}
 	}
 
-	private void renderLevelTiles() {
-		/* EXAMPLE CODE
+	private void renderLevelTiles() {	
+		int c0 = (int) world.getCamBounds().getX(); 
+			c0 = c0 >= 0 ? c0 : 0;
+		int cmax = (int) (world.getCamBounds().getX() + world.getCamBounds().getW() + 1);
+			cmax = cmax <= world.getCurrentLevel().LEVEL_WIDTH ? cmax : world.getCurrentLevel().LEVEL_WIDTH; 
+
+		int r0 = (int) world.getCamBounds().getY(); r0 = r0 >= 0 ? r0 : 0;
+			r0 = r0 >= 0 ? r0 : 0;
+		int rmax = (int) (world.getCamBounds().getY() + world.getCamBounds().getH() + 1);
+			rmax = rmax <= world.getCurrentLevel().LEVEL_HEIGHT ? rmax : world.getCurrentLevel().LEVEL_HEIGHT; 
+
 		int tile = 0;
 		float width = tileset.TILE_X / 32;		// Where 32px == 1.0m
 		float height = tileset.TILE_Y / 32;
 
-		for (int r = 0; r < world.getCurrentLevel().LEVEL_HEIGHT; r++) {
-			for (int c = 0; c < world.getCurrentLevel().LEVEL_WIDTH; c++) {
-				tile = world.getCurrentLevel().getMap()[r][c];
-				if (tile != 0) {
-					game.batch.draw(tileset.getTile(tile-1), c * width, r * height, 
-						width, height);
-				}
-			}
-		}
-		*/
-
-		// EXAMPLE CODE
-		int tile = 0;
-		float width = tileset.TILE_X / 32;		// Where 32px == 1.0m
-		float height = tileset.TILE_Y / 32;
-
-		for (int r = 0; r < world.getCurrentLevel().LEVEL_HEIGHT; r++) {
-			for (int c = 0; c < world.getCurrentLevel().LEVEL_WIDTH; c++) {
+		for (int r = r0; r < rmax; r++) {
+			for (int c = c0; c < cmax; c++) {
 				// Get current tile
 				tile = world.getCurrentLevel().getMap()[r][c];
 				// Get surrounding tiles
@@ -112,9 +157,42 @@ public class WorldRenderer {
 
 	private void renderLevelObjects() {
 		List<GameObject> objects = world.getCurrentLevel().getObjects();
-		for(GameObject object: objects){
-			game.batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
-				object.getY(), object.getWidth(), object.getHeight());
+		Rect bounds = world.getCamBounds();
+
+		// Regular loop needed to remove elements from map with concurrency exception
+		for (int i = 0; i < objects.size(); i++) {
+			GameObject object = objects.get(i);
+			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+				game.batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
+					object.getY(), object.getWidth(), object.getHeight());
+			}
+			else if (object.getX() < bounds.getX() || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
+				continue;
+			}
+			else break;
+		}
+	}
+
+	private void renderLevelBorder() {
+		game.batch.draw(TextureManager.getTexture("start"), 0.0f, 0.0f, 2.0f, 16.0f);
+		game.batch.draw(TextureManager.getTexture("end"), world.getCurrentLevel().LEVEL_WIDTH - 2.0f, 0.0f, 2.0f, 16.0f);
+	}
+
+	private void renderLevelBounds() {
+		final float camx = world.getCamBounds().getX();
+		final float camw = world.getCamBounds().getW();
+	
+		final float LEVEL_WIDTH = world.getCurrentLevel().LEVEL_WIDTH;
+		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
+
+		shapeRenderer.setColor(0, 0, 0, 1);
+
+		if (camx < 0.0f) {
+			shapeRenderer.rect(camx, 0.0f, -camx, LEVEL_HEIGHT);
+		}
+
+		if (camx + camw > LEVEL_WIDTH) {
+			shapeRenderer.rect(LEVEL_WIDTH, 0.0f, camx + camw - LEVEL_WIDTH, LEVEL_HEIGHT);
 		}
 	}
 
@@ -132,6 +210,7 @@ public class WorldRenderer {
 	}
 
 	private void updateCamPosition(){
+		// Change to translate later
 		cam.position.set(world.getCamBounds().getX() + cam.viewportWidth/2, world.getCamBounds().getY() + cam.viewportHeight/2, 0.0f);
 	}
 }

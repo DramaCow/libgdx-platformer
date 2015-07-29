@@ -13,16 +13,14 @@ public class GDXgame implements ApplicationListener {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
+		setColour(0.0f, 0.0f, 0.0f, 1.0f);
 		setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
 	public void render() {
 		screen.update(Gdx.graphics.getDeltaTime());
-
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		clear();
 		screen.draw();
 	}
 
@@ -53,6 +51,15 @@ public class GDXgame implements ApplicationListener {
         screen = s;
         screen.show(); 														// load assets (MAKE SURE TO NOT INITIALISE LOGIC HERE)
         screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	public void setColour(float r, float g, float b, float a) {
+		Gdx.gl.glClearColor(r, g, b, a);
+	}
+
+	// Only needs to be called once per frame
+	public void clear() {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
 
 	public int getScreenWidth() {
