@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 public class XReader {
 	
@@ -91,5 +93,35 @@ public class XReader {
 
 		return new Enemy(obstacleId, 0.0f, 0.0f, attributes.getFloatAttribute("width"), attributes.getFloatAttribute("height"),
 			Ai.getAI(attributes.getAttribute("ai"), attributes.getIntAttribute("difficulty")));
+	}
+
+	public static List<ShopCostume> getShopItems(String filename){
+		XmlReader.Element items = getRoot(filename).getChildByName("ITEMS");
+		List shopItems = new ArrayList<ShopCostume>();
+		for(int i = 0; i < items.getChildCount(); i++){
+			String id = items.getChild(i).getAttribute("id");
+			TextureManager.loadTexture(id, items.getChild(i).getAttribute("image"));
+			Float price = items.getChild(i).getFloatAttribute("price");
+			shopItems.add(new ShopCostume(id, TextureManager.getTexture(id), price));
+		}
+		return shopItems;
+	}
+
+	public static List<String> getHiddenItems(String filename){
+		XmlReader.Element items = getRoot(filename).getChildByName("ITEMS");
+		List<String> hiddenItems = new ArrayList<String>();
+		for(int i = 0; i < items.getChildCount(); i++){
+			if(items.getChild(i).getAttribute("status").equals("hidden")) hiddenItems.add(items.getChild(i).getAttribute("id"));
+		}
+		return hiddenItems;
+	}
+
+	public static List<String> getLockedItems(String filename){
+		XmlReader.Element items = getRoot(filename).getChildByName("ITEMS");
+		List<String> lockedItems = new ArrayList<String>();
+		for(int i = 0; i < items.getChildCount(); i++){
+			if(items.getChild(i).getAttribute("status").equals("locked")) lockedItems.add(items.getChild(i).getAttribute("id"));
+		}
+		return lockedItems;
 	}
 }

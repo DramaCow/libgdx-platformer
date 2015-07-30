@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<SHOP>
+	<ITEMS>
+		<ITEM id="default"   image="player.png"    price="0.00"	    status="unlocked"/>
+		<ITEM id="1"		 image="ex1.png"	   price="0.00"     status="unlocked"/>
+		<ITEM id="2"		 image="ex2.png"       price="0.00"     status="hidden"/>
+	</ITEMS>	
+</SHOP>
