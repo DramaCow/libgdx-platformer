@@ -50,6 +50,7 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void show() {
 		TextureManager.loadTexture("button","startbutton.png");
+		TextureManager.loadTexture("shopButton", "characterselectbttn.png");
 		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
 			@Override 
 			public void onClick() {
@@ -73,7 +74,7 @@ public class MainMenuScreen implements Screen {
 			}
 		};
 
-		shopButton = new Button("button", 64, 32, buttonsX, 2.0f, 4.0f, 1.0f){
+		shopButton = new Button("shopButton", 64, 32, 9.0f, 2.0f, 4.0f, 2.0f){
 			@Override
 			public void onClick(){
 				game.setScreen(new ShopScreen(game));

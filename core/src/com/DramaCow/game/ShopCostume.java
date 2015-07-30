@@ -11,7 +11,6 @@ public class ShopCostume{
 		this.id = id;
 		this.image = image;
 		this.price = price;
-		
 	}
 
 	public Texture getTexture(){

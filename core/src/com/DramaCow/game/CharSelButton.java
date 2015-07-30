@@ -6,13 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class CharSelButton {
 
-	public static enum ButtonState {
-		IDLE, 
-		HOVER, 
-		CLICK
-	}
-
-	private ButtonState state;
 	private float x, y;
 	private float w, h;
 
@@ -22,7 +15,6 @@ public class CharSelButton {
 	boolean hasClicked; // Used to prevent repeated onClick calls when button is held
 
 	public CharSelButton(ShopCostume costume, float x, float y, float w, float h) {
-		this.state = ButtonState.IDLE;
 		this.x = x; this.y = y;
 		this.w = w; this.h = h;
 		this.costume = costume;
@@ -33,32 +25,17 @@ public class CharSelButton {
 	//To be called in the update function of the screen class
 	public final void update(float x, float y, boolean down) {
 		if (hasClicked && !down) hasClicked = false;
+		if (bounds.contains(x, y) && down && !hasClicked) {
+				hasClicked = true;
+				onClick();
+		}	
+	} 
+			
+
 		
-		//If the mouse/touchscreen is on the button
-		if (bounds.contains(x, y)) {
-			//Check if touched or hovered
-			if (down) {
-				state = ButtonState.CLICK;
-				if (!hasClicked) {
-					hasClicked = true;
-					onClick();
-				}
-			} 
-			else {
-				state = ButtonState.HOVER;
-			}
-		} 
-		else {
-			state = ButtonState.IDLE;
-		}
-	}
+
 
 	public final Texture getTexture() {
-		switch(state) {
-			case IDLE: 	return costume.getTexture();
-			case HOVER: return costume.getTexture();
-			case CLICK: return costume.getTexture();
-		}
 		return costume.getTexture();
 	}
 
