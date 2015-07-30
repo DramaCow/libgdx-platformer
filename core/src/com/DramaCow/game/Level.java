@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Random;
+import java.lang.Math;
 
 public class Level {
 	public final String BIOME_ID; 
@@ -32,15 +33,64 @@ public class Level {
 	private boolean generate() {
 		// Proper map generation will go here
 		Random rn = new Random();
-		for (int r = 0; r < LEVEL_HEIGHT; r++) {
-			for (int c = 0; c < LEVEL_WIDTH; c++) {
-				if(r<3) REGION_MAP[r][c] = 1;
-				else{
-					int rand = rn.nextInt(4);
-					REGION_MAP[r][c] = rand == 0 ? 1 : 0;
-				}
+		float jumpSpeed = player.JUMP_SPEED;
+		float runSpeed = player.RUN_SPEED;
+		float gravity = -9.81f;
+		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
+
+		final int MAX_PLATFORM_HEIGHT = 10;
+		final int MIN_PLATFORM_HEIGHT = 3;
+		final int MAX_PLATFORM_WIDTH = 12;
+
+		//X and Y are used to mark the top right block of each platform
+		//R and C are used to traverse the array
+		int x = 0, y = 0, r = 0, c = 0;
+
+		//Always generate first platform at height 3.0f
+		for (r = 0; r < MIN_PLATFORM_HEIGHT; r++){
+			for (c = 0; c < 8; c++){
+				REGION_MAP[r][c] = 1;
 			}
 		}
+		//Set pointers
+		x = c;
+		y = r;
+
+		//Create other platforms
+		while(x < LEVEL_WIDTH){
+			System.out.println("Y: " + y);
+			//Generate new height of platform
+			int newHeight = rn.nextInt((int)(maxJumpHeight + y) - MIN_PLATFORM_HEIGHT) + MIN_PLATFORM_HEIGHT;
+			if(newHeight > MAX_PLATFORM_HEIGHT) newHeight = MAX_PLATFORM_HEIGHT;
+			int heightDifference = newHeight - y;
+			//Work out time to reach that height
+			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);			//Work out distance travelled in X in that time
+			//Work out max distance to new platform
+			float maxDistance = runSpeed * timeToReachHeight;
+			//Generate new x of platform
+			int newX = x + rn.nextInt((int)maxDistance);
+			//Generate the width of the platform
+			int newWidth = rn.nextInt(MAX_PLATFORM_WIDTH/2) + rn.nextInt(MAX_PLATFORM_WIDTH/2);
+
+			//Place platform in array
+			for (r = 0; r < newHeight; r++){
+				for (c = newX; c < newX+newWidth; c++){
+					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT) break;
+					REGION_MAP[r][c] = 1;
+				}
+			}
+			//Update pointers again
+			x = c;
+			y = r;
+		}
+
+		//Always generate end platform
+		for (r = 0; r < LEVEL_HEIGHT; r++){
+			for (c = LEVEL_WIDTH-5; c < LEVEL_WIDTH; c++){
+				REGION_MAP[r][c] = r<MIN_PLATFORM_HEIGHT ? 1 : 0;
+			}
+		}
+
 		return true;
 	}
 
