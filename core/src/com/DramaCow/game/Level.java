@@ -31,7 +31,7 @@ public class Level {
 	}
 
 	private boolean generate() {
-		// Proper map generation will go here
+
 		Random rn = new Random();
 		float jumpSpeed = player.JUMP_SPEED;
 		float runSpeed = player.RUN_SPEED;
@@ -42,13 +42,15 @@ public class Level {
 		final int MIN_PLATFORM_HEIGHT = 3;
 		final int MAX_PLATFORM_WIDTH = 12;
 
+		int previousPlatformWidth = 8;
+
 		//X and Y are used to mark the top right block of each platform
 		//R and C are used to traverse the array
 		int x = 0, y = 0, r = 0, c = 0;
 
 		//Always generate first platform at height 3.0f
 		for (r = 0; r < MIN_PLATFORM_HEIGHT; r++){
-			for (c = 0; c < 8; c++){
+			for (c = 0; c < previousPlatformWidth; c++){
 				REGION_MAP[r][c] = 1;
 			}
 		}
@@ -58,20 +60,20 @@ public class Level {
 
 		//Create other platforms
 		while(x < LEVEL_WIDTH){
-			System.out.println("Y: " + y);
 			//Generate new height of platform
 			int newHeight = rn.nextInt((int)(maxJumpHeight + y) - MIN_PLATFORM_HEIGHT) + MIN_PLATFORM_HEIGHT;
 			if(newHeight > MAX_PLATFORM_HEIGHT) newHeight = MAX_PLATFORM_HEIGHT;
 			int heightDifference = newHeight - y;
 			//Work out time to reach that height
 			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);			//Work out distance travelled in X in that time
-			//Work out max distance to new platform
-			float maxDistance = runSpeed * timeToReachHeight;
+			//Work out max and min distance to new platform
+			int maxDistance = (int)(runSpeed * timeToReachHeight);
+			int minDistance = maxDistance - (previousPlatformWidth - 1);
+			if(minDistance < 0) minDistance = 0;
 			//Generate new x of platform
-			int newX = x + rn.nextInt((int)maxDistance);
-			//Generate the width of the platform
-			int newWidth = rn.nextInt(MAX_PLATFORM_WIDTH/2) + rn.nextInt(MAX_PLATFORM_WIDTH/2);
-
+			int newX = maxDistance == minDistance ? x + maxDistance : x + rn.nextInt(maxDistance - minDistance) + minDistance;
+			//Generate the width of the platform - normally distributed
+			int newWidth = rn.nextInt(MAX_PLATFORM_WIDTH/2) + rn.nextInt(MAX_PLATFORM_WIDTH/2) + 1;
 			//Place platform in array
 			for (r = 0; r < newHeight; r++){
 				for (c = newX; c < newX+newWidth; c++){
@@ -82,6 +84,7 @@ public class Level {
 			//Update pointers again
 			x = c;
 			y = r;
+			previousPlatformWidth = newWidth;
 		}
 
 		//Always generate end platform

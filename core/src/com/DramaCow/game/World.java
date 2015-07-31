@@ -38,7 +38,7 @@ public class World {
 
 		this.PLAYER = new Player("Player",3.0f,3.0f,(float) 70/32,(float) 52/32);
 
-		nextLevel = new Level(getNextBiome(), PLAYER, 50, 16);
+		nextLevel = new Level(getNextBiome(), PLAYER, 400, 16);
 		Level.generateMap(nextLevel);	
  
 		levelNumber = 0;
@@ -83,7 +83,7 @@ public class World {
 				//Assign next level to current level and begin generating next level
 				levelNumber++;
 				currentLevel = nextLevel;
-				nextLevel = new Level(getNextBiome(), PLAYER, 50, 16);
+				nextLevel = new Level(getNextBiome(), PLAYER, 400, 16);
 				Level.generateMapInBackground(nextLevel);
 
 				state = WorldState.START;
