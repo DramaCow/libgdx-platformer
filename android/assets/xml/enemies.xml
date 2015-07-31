@@ -83,4 +83,18 @@
 			difficulty="1"
 		/>
 	</sonic2>
+
+	<spike>
+		<assets
+			spritesheet="spike.png"
+			width="32" height="32"
+			animspeed="0"		
+			sound="spike.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="static"
+			difficulty="1"
+		/>
+	</spike>
 </ENEMIES>	

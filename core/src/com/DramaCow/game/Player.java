@@ -11,6 +11,7 @@ public class Player extends DynamicGameObject{
 	public final float RUN_SPEED = 5.0f;
 	public final float HURT_SPEED = -1.0f;
 	public final float JUMP_SPEED = 8.0f;
+	public final float JUMP_DELAY = 1.0f; //??
 
 	private PlayerState state;
 	private int health;

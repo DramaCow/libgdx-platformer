@@ -6,6 +6,6 @@
 		bgm="bgm.ogg"
 	/>
 	<obstacles>
-		<obstacle id="parasprite" 	priority="10"/>
+		<obstacle id="spike" 	priority="10"/>
 	</obstacles>	
 </GRASSLAND>	

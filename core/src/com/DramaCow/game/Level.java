@@ -39,8 +39,9 @@ public class Level {
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
 
 		final int MAX_PLATFORM_HEIGHT = 10;
-		final int MIN_PLATFORM_HEIGHT = 3;
+		final int MIN_PLATFORM_HEIGHT = 1;
 		final int MAX_PLATFORM_WIDTH = 12;
+		final int START_HEIGHT = 3;
 
 		int previousPlatformWidth = 8;
 
@@ -49,7 +50,7 @@ public class Level {
 		int x = 0, y = 0, r = 0, c = 0;
 
 		//Always generate first platform at height 3.0f
-		for (r = 0; r < MIN_PLATFORM_HEIGHT; r++){
+		for (r = 0; r < START_HEIGHT; r++){
 			for (c = 0; c < previousPlatformWidth; c++){
 				REGION_MAP[r][c] = 1;
 			}
@@ -90,7 +91,7 @@ public class Level {
 		//Always generate end platform
 		for (r = 0; r < LEVEL_HEIGHT; r++){
 			for (c = LEVEL_WIDTH-5; c < LEVEL_WIDTH; c++){
-				REGION_MAP[r][c] = r<MIN_PLATFORM_HEIGHT ? 1 : 0;
+				REGION_MAP[r][c] = r < START_HEIGHT ? 1 : 0;
 			}
 		}
 
@@ -108,14 +109,22 @@ public class Level {
 
 		Random rn = new Random();
 
-		int pick; GameObject obstacle;
+		// RUn through and mark 'safe zones' needed to keep the level solvable
+
+
+		// Fill in the non-safe areas with random static obstacles
+
+
+		// Place enemys
+
+		/*int pick; GameObject obstacle;
 		for (int i = 0; i < 50; i++) {
 			pick = rn.nextInt(obstacleHat.size());
 			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
 			if (obstacle instanceof Enemy) {
 				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*1.0f, 5.0f));
 			}
-		}
+		}*/
 
 		return true;
 	}
