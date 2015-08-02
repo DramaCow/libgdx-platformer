@@ -138,12 +138,13 @@ public class WorldRenderer {
 		for (int r = r0; r < rmax; r++) {
 			for (int c = c0; c < cmax; c++) {
 				// Get current tile
-				tile = world.getCurrentLevel().getMap()[r][c];
+				if(world.getCurrentLevel().getMap()[r][c] == 1) tile = 1; else tile = 0;
 				// Get surrounding tiles
-				int tileUp = r > world.getCurrentLevel().LEVEL_HEIGHT - 2 ? 1 : world.getCurrentLevel().getMap()[r+1][c];
-				int tileDown = r < 1 ? 1 : world.getCurrentLevel().getMap()[r-1][c];
-				int tileRight = c >	world.getCurrentLevel().LEVEL_WIDTH - 2	? 1 : world.getCurrentLevel().getMap()[r][c+1];
-				int tileLeft = c < 1 ? 1 : world.getCurrentLevel().getMap()[r][c-1];
+				int tileUp = 0, tileDown = 0, tileLeft = 0, tileRight = 0;
+				if (r > world.getCurrentLevel().LEVEL_HEIGHT - 2 || world.getCurrentLevel().getMap()[r+1][c] == 1) tileUp = 1;
+				if (r < 1 || world.getCurrentLevel().getMap()[r-1][c] == 1) tileDown = 1;
+				if (c >	world.getCurrentLevel().LEVEL_WIDTH - 2	|| world.getCurrentLevel().getMap()[r][c+1] == 1) tileRight = 1;
+				if (c < 1 || world.getCurrentLevel().getMap()[r][c-1] == 1) tileLeft = 1;
 				// Draw the tile
 				if (tile != 0) {
 					int index = 1 * tileUp + 2 * tileRight + 4 * tileDown + 8 * tileLeft;

@@ -16,6 +16,7 @@ public class Level {
 
 	private Map<String, GameObject> obstacleBlueprints;
 	private List<GameObject> objects;
+	private List<LevelTemplateObject> templateObjects;
 	private Player player;
 
 	private boolean isReady;
@@ -31,6 +32,16 @@ public class Level {
 	}
 
 	private boolean generate() {
+		//Get test template and put them in a list
+		LevelTemplate template1 = XReader.getLevelTemplate("tmx/testTemplate1.tmx");
+		LevelTemplate template2 = XReader.getLevelTemplate("tmx/testTemplate2.tmx");
+		LevelTemplate template3 = XReader.getLevelTemplate("tmx/testTemplate3.tmx");
+		List<LevelTemplate> levelTemplates = new ArrayList();
+		levelTemplates.add(template1);
+		levelTemplates.add(template2);
+		levelTemplates.add(template3);
+
+		templateObjects = new ArrayList<LevelTemplateObject>();
 
 		Random rn = new Random();
 		float jumpSpeed = player.JUMP_SPEED;
@@ -38,59 +49,89 @@ public class Level {
 		float gravity = -9.81f;
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
 
-		final int MAX_PLATFORM_HEIGHT = 10;
-		final int MIN_PLATFORM_HEIGHT = 1;
-		final int MAX_PLATFORM_WIDTH = 12;
-		final int START_HEIGHT = 3;
+		final int MAX_HEIGHT = 10;
+		final int MIN_HEIGHT = 5;
+		final int START_HEIGHT = 5;
+		final int START_WIDTH = 8;
 
-		int previousPlatformWidth = 8;
-
-		//X and Y are used to mark the top right block of each platform
-		//R and C are used to traverse the array
-		int x = 0, y = 0, r = 0, c = 0;
+		//rx and ry are keep track of the position of the right marker of a template
+		int rx = 0, ry = 0;
 
 		//Always generate first platform at height 3.0f
-		for (r = 0; r < START_HEIGHT; r++){
-			for (c = 0; c < previousPlatformWidth; c++){
+		for (int r = 0; r < START_HEIGHT; r++){
+			for (int c = 0; c < START_WIDTH; c++){
 				REGION_MAP[r][c] = 1;
 			}
 		}
 		//Set pointers
-		x = c;
-		y = r;
+		rx = START_WIDTH;
+		ry = START_HEIGHT;
 
-		//Create other platforms
-		while(x < LEVEL_WIDTH){
-			//Generate new height of platform
-			int newHeight = rn.nextInt((int)(maxJumpHeight + y) - MIN_PLATFORM_HEIGHT) + MIN_PLATFORM_HEIGHT;
-			if(newHeight > MAX_PLATFORM_HEIGHT) newHeight = MAX_PLATFORM_HEIGHT;
-			int heightDifference = newHeight - y;
+		//Place templates in level
+		while(rx < LEVEL_WIDTH){
+			//Generate new height of template
+			int newY = rn.nextInt((int)(maxJumpHeight + ry) - MIN_HEIGHT) + MIN_HEIGHT;
+			if(newY > MAX_HEIGHT) newY = MAX_HEIGHT;
+			int heightDifference = newY - ry;
 			//Work out time to reach that height
-			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);			//Work out distance travelled in X in that time
-			//Work out max and min distance to new platform
+			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
+			//Work out max and min distance to new template
 			int maxDistance = (int)(runSpeed * timeToReachHeight);
-			int minDistance = maxDistance - (previousPlatformWidth - 1);
-			if(minDistance < 0) minDistance = 0;
-			//Generate new x of platform
-			int newX = maxDistance == minDistance ? x + maxDistance : x + rn.nextInt(maxDistance - minDistance) + minDistance;
-			//Generate the width of the platform - normally distributed
-			int newWidth = rn.nextInt(MAX_PLATFORM_WIDTH/2) + rn.nextInt(MAX_PLATFORM_WIDTH/2) + 1;
-			//Place platform in array
-			for (r = 0; r < newHeight; r++){
-				for (c = newX; c < newX+newWidth; c++){
-					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT) break;
-					REGION_MAP[r][c] = 1;
+			int minDistance = 1;
+			//Generate new x of template
+			int newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
+
+			//Pick a random template to place
+			LevelTemplate template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
+			//Find left marker and work out template coordinates
+			int lx = 0, ly = 0;
+			for(int r = 0; r < template.getHeight(); r++){
+				for(int c = 0; c < template.getWidth(); c++){
+					if(template.getMap()[r][c] == 2){
+						lx = c;
+						ly = r;
+					}
 				}
 			}
-			//Update pointers again
-			x = c;
-			y = r;
-			previousPlatformWidth = newWidth;
+			int templateX = newX - lx;
+			int templateY = newY - ly;
+
+			//Place platform in array
+			for(int r = templateY; r < templateY + template.getHeight(); r++){
+				for(int c = templateX; c < templateX + template.getWidth(); c++){
+					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+					REGION_MAP[r][c] = template.getMap()[r - templateY][c - templateX];
+				}
+			}
+			//Join the bottom row to the ground
+			for(int r = 0; r < templateY; r++){
+				for(int c = templateX; c < templateX + template.getWidth(); c++){
+					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+					REGION_MAP[r][c] = template.getMap()[0][c - templateX];
+				}
+			}
+
+			//Update right marker
+			for(int r = 0; r < template.getHeight(); r++){
+				for(int c = 0; c < template.getWidth(); c++){
+					if(template.getMap()[r][c] == 3){
+						rx = templateX + c;
+						ry = templateY + r;
+					}
+				}
+			}
+
+			//Update positions of the objects for the template and add them to the list
+			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
+			for(LevelTemplateObject object : currentTemplateObjects){
+				object.transpose(templateX, templateY);
+				templateObjects.add(object);
+			}
 		}
 
 		//Always generate end platform
-		for (r = 0; r < LEVEL_HEIGHT; r++){
-			for (c = LEVEL_WIDTH-5; c < LEVEL_WIDTH; c++){
+		for (int r = 0; r < LEVEL_HEIGHT; r++){
+			for (int c = LEVEL_WIDTH-5; c < LEVEL_WIDTH; c++){
 				REGION_MAP[r][c] = r < START_HEIGHT ? 1 : 0;
 			}
 		}
