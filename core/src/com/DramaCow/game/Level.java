@@ -33,13 +33,12 @@ public class Level {
 
 	private boolean generate() {
 		//Get test template and put them in a list
-		LevelTemplate template1 = XReader.getLevelTemplate("tmx/testTemplate1.tmx");
-		LevelTemplate template2 = XReader.getLevelTemplate("tmx/testTemplate2.tmx");
-		LevelTemplate template3 = XReader.getLevelTemplate("tmx/testTemplate3.tmx");
 		List<LevelTemplate> levelTemplates = new ArrayList();
-		levelTemplates.add(template1);
-		levelTemplates.add(template2);
-		levelTemplates.add(template3);
+		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate1.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate2.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate3.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate4.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate5.tmx"));
 
 		templateObjects = new ArrayList<LevelTemplateObject>();
 
@@ -49,8 +48,8 @@ public class Level {
 		float gravity = -9.81f;
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
 
-		final int MAX_HEIGHT = 10;
-		final int MIN_HEIGHT = 5;
+		final int MAX_HEIGHT = 12;
+		final int MIN_HEIGHT = 3;
 		final int START_HEIGHT = 5;
 		final int START_WIDTH = 8;
 
@@ -74,27 +73,28 @@ public class Level {
 			if(newY > MAX_HEIGHT) newY = MAX_HEIGHT;
 			int heightDifference = newY - ry;
 			//Work out time to reach that height
-			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
+			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt(
+				(double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
 			//Work out max and min distance to new template
 			int maxDistance = (int)(runSpeed * timeToReachHeight);
 			int minDistance = 1;
 			//Generate new x of template
 			int newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
 
-			//Pick a random template to place
-			LevelTemplate template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
+			//Pick a random template to place, marking sure there is space
+			LevelTemplate template = null;		Boolean selectingTemplate = true;
+			while(selectingTemplate){
+				template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
+				//Ensure that the L and R markers are within MIN_HEIGHT and MAX_HEIGHT
+				//And ensure that the whole template is within the level
+				if(newY + template.getRightY() - template.getLeftY() <= MAX_HEIGHT 
+					&& newY + template.getRightY() - template.getLeftY() >= MIN_HEIGHT
+					&& newY - template.getLeftY() >= 0 
+					&& newY + template.getHeight() - template.getLeftY() < LEVEL_HEIGHT) selectingTemplate = false;
+			}	
 			//Find left marker and work out template coordinates
-			int lx = 0, ly = 0;
-			for(int r = 0; r < template.getHeight(); r++){
-				for(int c = 0; c < template.getWidth(); c++){
-					if(template.getMap()[r][c] == 2){
-						lx = c;
-						ly = r;
-					}
-				}
-			}
-			int templateX = newX - lx;
-			int templateY = newY - ly;
+			int templateX = newX - template.getLeftX();
+			int templateY = newY - template.getLeftY();
 
 			//Place platform in array
 			for(int r = templateY; r < templateY + template.getHeight(); r++){
@@ -112,14 +112,8 @@ public class Level {
 			}
 
 			//Update right marker
-			for(int r = 0; r < template.getHeight(); r++){
-				for(int c = 0; c < template.getWidth(); c++){
-					if(template.getMap()[r][c] == 3){
-						rx = templateX + c;
-						ry = templateY + r;
-					}
-				}
-			}
+			rx = templateX + template.getRightX();
+			ry = templateY + template.getRightY();
 
 			//Update positions of the objects for the template and add them to the list
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
@@ -149,14 +143,6 @@ public class Level {
 		if (obstacleHat.isEmpty()) return false;
 
 		Random rn = new Random();
-
-		// RUn through and mark 'safe zones' needed to keep the level solvable
-
-
-		// Fill in the non-safe areas with random static obstacles
-
-
-		// Place enemys
 
 		/*int pick; GameObject obstacle;
 		for (int i = 0; i < 50; i++) {
