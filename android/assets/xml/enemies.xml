@@ -97,4 +97,32 @@
 			difficulty="1"
 		/>
 	</spike>
+
+	<rockcrab>
+		<assets
+			spritesheet="rockcrab.png"
+			width="32" height="32"
+			animspeed="0"		
+			sound="rockcrab.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="linear"
+			difficulty="2"
+		/>
+	</rockcrab>
+
+	<chick>
+		<assets
+			spritesheet="chick.png"
+			width="32" height="32"
+			animspeed="0.1"		
+			sound="chick.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="wave"
+			difficulty="1"
+		/>
+	</chick>
 </ENEMIES>	

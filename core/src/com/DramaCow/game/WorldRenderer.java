@@ -163,14 +163,14 @@ public class WorldRenderer {
 		// Regular loop needed to remove elements from map with concurrency exception
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
-			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			//if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				game.batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
 					object.getY(), object.getWidth(), object.getHeight());
-			}
-			else if (object.getX() < bounds.getX() || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
-				continue;
-			}
-			else break;
+			//}
+			//else if (object.getX() < bounds.getX() || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
+			//	continue;
+			//}
+			//else break;
 		}
 	}
 

@@ -53,6 +53,7 @@ public class Level {
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate6.tmx"));
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate7.tmx"));
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate8.tmx"));
+		//levelTemplates.add(XReader.getLevelTemplate("tmx/test/probTest.tmx"));
 
 		//Make sure there are templates, otherwise just draw a flat surface
 		if(levelTemplates.size() == 0){
@@ -185,24 +186,27 @@ public class Level {
 		Random rn = new Random();
 
 		for(LevelTemplateObject templateObject: templateObjects){
+			if(rn.nextFloat() <= templateObject.getProbability()){
 			String name = templateObject.getName();
-			/*if(name.equals("coin")){
-				objects.add(new Coin(templateObject.getX(), templateObject.getY()));
-			}
-			if(name.equals("heart")){
-				objects.add(new Heart(templateObject.getX(), templateObject.getY()));
-			}*/
-			if(name.equals("static")){
-				if(staticEnemies.size() != 0) objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),
-					templateObject.getX(), templateObject.getY()));
-			}
-			if(name.equals("linear")){
-				if(linearEnemies.size() != 0) objects.add(new Enemy(linearEnemies.get(rn.nextInt(linearEnemies.size())),
-					templateObject.getX(), templateObject.getY()));
-			}
-			if(name.equals("wave")){
-				if(waveEnemies.size() != 0) objects.add(new Enemy(waveEnemies.get(rn.nextInt(waveEnemies.size())),
-					templateObject.getX(), templateObject.getY()));
+				/*if(name.equals("coin")){
+					objects.add(new Coin(templateObject.getX(), templateObject.getY()));
+				}
+				if(name.equals("heart")){
+					objects.add(new Heart(templateObject.getX(), templateObject.getY()));
+				}*/
+				if(name.equals("static")){
+					if(staticEnemies.size() != 0) 
+						objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),
+						templateObject.getX(), templateObject.getY()));
+				}
+				if(name.equals("linear")){
+					if(linearEnemies.size() != 0) objects.add(new Enemy(linearEnemies.get(rn.nextInt(linearEnemies.size())),
+						templateObject.getX(), templateObject.getY()));
+				}
+				if(name.equals("wave")){
+					if(waveEnemies.size() != 0) objects.add(new Enemy(waveEnemies.get(rn.nextInt(waveEnemies.size())),
+						templateObject.getX(), templateObject.getY()));
+				}
 			}
 		}
 
@@ -265,11 +269,12 @@ public class Level {
 				objects.remove(i);
 			}
 			*/
-			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			//if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				//System.out.println("Bounds in");
+				System.out.println(object);
 				object.update(dt);
-			}
-			else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
+			//}
+			//else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
 		}
 		player.update(dt);
 	}	

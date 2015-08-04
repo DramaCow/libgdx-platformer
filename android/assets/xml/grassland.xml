@@ -7,5 +7,7 @@
 	/>
 	<obstacles>
 		<obstacle id="spike" 	priority="10"/>
+		<obstacle id="rockcrab" 	priority="10"/>
+		<obstacle id="chick" 	priority="10"/>
 	</obstacles>	
 </GRASSLAND>	
