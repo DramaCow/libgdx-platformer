@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Random;
 
+import com.DramaCow.maths.Rect;
+
 public class Level {
 	public final String BIOME_ID; 
 
@@ -19,8 +21,7 @@ public class Level {
 
 	private boolean isReady;
 
-	public Level(String biome, Player player, int w, int h) {
-		this.player = player;
+	public Level(String biome, int w, int h) {
 		this.BIOME_ID = biome;
 
 		this.LEVEL_WIDTH = w; this.LEVEL_HEIGHT = h;
@@ -33,19 +34,18 @@ public class Level {
 		// Proper map generation will go here
 		for (int r = 0; r < LEVEL_HEIGHT; r++) {
 			for (int c = 0; c < LEVEL_WIDTH; c++) {
-				REGION_MAP[r][c] = r < 3 ? 1 : 0;
+				REGION_MAP[r][c] = r < 3 || (r == 6 && c <= 40 && c >= 20) ? 1 : 0;
 			}
 		}
 
 		return true;
 	}
 
-	private boolean populate() {
+	private boolean populate(final Level level) {
 		// Proper population to be implemented here
 		objects = new ArrayList<GameObject>();
 
 		List<String> obstacleHat = new ArrayList<String>(getBlueprintIDs());
-		System.out.println("Obstacle Hat: " + obstacleHat);
 
 		if (obstacleHat.isEmpty()) return false;
 
@@ -56,7 +56,7 @@ public class Level {
 			pick = rn.nextInt(obstacleHat.size());
 			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
 			if (obstacle instanceof Enemy) {
-				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*1.0f, 5.0f));
+				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*1.0f, 5.0f, level));
 			}
 		}
 
@@ -65,23 +65,36 @@ public class Level {
 
 	// INTERFACES FOR GENERATING LEVEL MAP
 	public static void generateMap(final Level level) {
-		System.out.println("Generating map");
-
 		level.isReady = false;
 		level.generate();
 		level.obstacleBlueprints = XReader.getLevelObstacles(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, level.BIOME_ID));
-		level.populate();
+		level.populate(level);
 		level.isReady = true;
 	}
 
 	public static void generateMapInBackground(final Level level) {
 		Thread t = new Thread(new Runnable() {
-		  public void run() {
-			Level.generateMap(level);
-		  }
+			public void run() {
+				Level.generateMap(level);
+			}
 		});
 		t.start();
 	}
+
+	public static Player generatePlayer(final Level level, Rect cambounds) {
+		if (level.player == null) {
+			float w = 2.1875f;
+			float h = 1.625f;
+
+			level.player = new Player("Player", 3.0f - cambounds.w, level.LEVEL_HEIGHT/2 - h/2, w, h, level);
+			level.player.toggleExistence(false);
+
+			return level.player;
+		}
+		return null;
+	}
+
+	// --------------------------------------------------
 
 	public int[][] getMap() {	
 		return REGION_MAP;
@@ -108,16 +121,17 @@ public class Level {
 		// Regular loop needed to remove elements from map with concurrency exception
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
-			if (object.getX() + object.getWidth() < bounds.getX() 	|| 
+			if (object.getX() + object.getWidth() < bounds.x 		|| 
 				object.getX() + object.getWidth() > LEVEL_WIDTH		||
 				object.getX() + object.getWidth() < 0.0f) {
 				objects.remove(i);
 			}
-			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {		
 				object.update(dt);
 			}
 			else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
 		}
+		
 		player.update(dt);
 	}	
 

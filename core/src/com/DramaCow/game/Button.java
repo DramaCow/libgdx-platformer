@@ -1,8 +1,9 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import com.DramaCow.maths.Rect;
 
 public class Button {
 
@@ -16,7 +17,7 @@ public class Button {
 	private float x, y;
 	private float w, h;
 
-	private Rectangle bounds;
+	private Rect bounds;
 
 	private String texId;
 	private Tileset tiles;
@@ -28,7 +29,7 @@ public class Button {
 		this.x = x; this.y = y;
 		this.w = w; this.h = h;
 
-		this.bounds = new Rectangle(x,y,w,h);
+		this.bounds = new Rect(x,y,w,h);
 
 		this.texId = texId;
 		this.tiles = new Tileset(TextureManager.getTexture(texId), texw, texh);

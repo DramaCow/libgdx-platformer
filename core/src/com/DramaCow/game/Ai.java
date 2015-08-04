@@ -30,7 +30,7 @@ abstract public class Ai {
 
 		@Override
 		public void create(Enemy enemy) {
-			enemy.velocity.x = -1.0f * difficulty;
+			enemy.getVelocity().x = -1.0f * difficulty;
 		}
 
 		@Override

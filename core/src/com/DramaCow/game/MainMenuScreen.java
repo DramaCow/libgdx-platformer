@@ -38,7 +38,7 @@ public class MainMenuScreen implements Screen {
 		this.game = game;
 
 		float w = game.getScreenWidth(), h = game.getScreenHeight();
-		cam = new OrthographicCamera(10.0f * ((float) w/h), 10.0f);
+		cam = new OrthographicCamera(16.0f * ((float) w/h), 16.0f);
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
 		System.out.println(cam.viewportWidth + ", " + cam.viewportHeight);
@@ -119,13 +119,14 @@ public class MainMenuScreen implements Screen {
 
 		//Draw background
 		for(float i = 0.0f; i < cam.viewportWidth + bgWidth ; i += bgWidth) {
-			game.batch.draw(TextureManager.getTexture("background"),i+bgOffset,0.0f,bgWidth,bgHeight);
+			game.batch.draw(TextureManager.getTexture("background"),i+bgOffset,0.0f,bgWidth,cam.viewportHeight);
 		}
 
 		//Draw tiles
 		for(float i = 0.0f; i < cam.viewportWidth + 1.0f ; i += 1.0f) {
 			game.batch.draw(menuTiles.getTile(5),i+tileOffset,0.0f,1.0f,1.0f);
-			game.batch.draw(menuTiles.getTile(1),i+tileOffset,1.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(5),i+tileOffset,1.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(1),i+tileOffset,2.0f,1.0f,1.0f);
 		}
 
 		//Draw buttons
@@ -141,8 +142,8 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void resize(int w, int h) {
-		cam.viewportWidth = 10.0f * ((float) w/h);
-		cam.viewportHeight = 10.0f;
+		cam.viewportWidth = 16.0f * ((float) w/h);
+		cam.viewportHeight = 16.0f;
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		startButton.setX(cam.viewportWidth - buttonsX);
 		cam.update();

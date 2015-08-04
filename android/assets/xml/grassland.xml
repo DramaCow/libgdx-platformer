@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <GRASSLAND>
 	<assets
-		tileset="tileset.png"
-		background="background2.png"
+		tileset="tileset3.png"
+		background="background4.png"
 		bgm="bgm.ogg"
 	/>
 	<obstacles>
-		<obstacle id="parasprite" 	priority="10"/>
+		<!-- <obstacle id="parasprite2" 	priority="10"/> -->
 	</obstacles>	
 </GRASSLAND>	

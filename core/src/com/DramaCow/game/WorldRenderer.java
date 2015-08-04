@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import java.util.List;
 
+import com.DramaCow.maths.Rect;
+
 public class WorldRenderer {
 	
 	private final GDXgame game;
@@ -14,8 +16,6 @@ public class WorldRenderer {
 	private OrthographicCamera cam;
 
 	private ShapeRenderer shapeRenderer;
-
-	private Tileset tileset;
 
 	public WorldRenderer(GDXgame game, World world) {
 		this.world = world;
@@ -32,7 +32,7 @@ public class WorldRenderer {
 	}	
 
 	public void init() {
-		tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
+		// Do nothing
 	}
 
 	public void render() {
@@ -40,14 +40,16 @@ public class WorldRenderer {
 		game.batch.setProjectionMatrix(cam.combined);
 
 		switch (world.getState()) {
-			case READY:
-				// Display same stuff as transition state?
+			case LOADING:
 				game.batch.begin();
-					renderPlayer();					
+					if (world.player == null) renderLoadingScreen();
+					else 					  renderPlayer();					
 				game.batch.end();
 				break;
 			
 			case START:
+				renderLevel();
+	
 				game.batch.begin();
 					renderPlayer();					
 				game.batch.end();
@@ -68,12 +70,12 @@ public class WorldRenderer {
 					renderPlayer();					
 				game.batch.end();
 				break;
-
-			case TRANSITION:
-				// Render fade in/out sequence here (keep player animation on screen)
-				break;
-
 		}
+	}
+
+	private void renderLoadingScreen() {
+		game.batch.draw(TextureManager.getTexture("loading"), world.getCamBounds().x, world.getCamBounds().y, 
+			world.getCamBounds().w, world.getCamBounds().h);
 	}
 
 	private void renderLevel() {
@@ -100,8 +102,8 @@ public class WorldRenderer {
 
 		final float p = 2.0f; // Background moves p times slower than foreground
 
-		final float camx = world.getCamBounds().getX();
-		final float camw = world.getCamBounds().getW();
+		final float camx = world.getCamBounds().x;
+		final float camw = world.getCamBounds().w;
 
 		final float LEVEL_WIDTH  = world.getCurrentLevel().LEVEL_WIDTH;
 		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
@@ -121,25 +123,25 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelTiles() {	
-		int c0 = (int) world.getCamBounds().getX(); 
+		int c0 = (int) world.getCamBounds().x; 
 			c0 = c0 >= 0 ? c0 : 0;
-		int cmax = (int) (world.getCamBounds().getX() + world.getCamBounds().getW() + 1);
+		int cmax = (int) (world.getCamBounds().x + world.getCamBounds().w + 1);
 			cmax = cmax <= world.getCurrentLevel().LEVEL_WIDTH ? cmax : world.getCurrentLevel().LEVEL_WIDTH; 
 
-		int r0 = (int) world.getCamBounds().getY(); r0 = r0 >= 0 ? r0 : 0;
+		int r0 = (int) world.getCamBounds().y; r0 = r0 >= 0 ? r0 : 0;
 			r0 = r0 >= 0 ? r0 : 0;
-		int rmax = (int) (world.getCamBounds().getY() + world.getCamBounds().getH() + 1);
+		int rmax = (int) (world.getCamBounds().y + world.getCamBounds().h + 1);
 			rmax = rmax <= world.getCurrentLevel().LEVEL_HEIGHT ? rmax : world.getCurrentLevel().LEVEL_HEIGHT; 
 
-		float width = tileset.TILE_X / 32;		// Where 32px == 1.0m
-		float height = tileset.TILE_Y / 32;
+		float width = world.tileset.TILE_X / 32;		// Where 32px == 1.0m
+		float height = world.tileset.TILE_Y / 32;
 		int tile = 0;
 
 		for (int r = r0; r < rmax; r++) {
 			for (int c = c0; c < cmax; c++) {
 				tile = world.getCurrentLevel().getMap()[r][c];
 				if (tile != 0) {
-					game.batch.draw(tileset.getTile(tile-1), c * width, r * height, 
+					game.batch.draw(world.tileset.getTile(tile-1), c * width, r * height, 
 						width, height);
 				}
 			}
@@ -157,7 +159,7 @@ public class WorldRenderer {
 				game.batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
 					object.getY(), object.getWidth(), object.getHeight());
 			}
-			else if (object.getX() < bounds.getX() || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
+			else if (object.getX() < bounds.x || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
 				continue;
 			}
 			else break;
@@ -170,8 +172,8 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelBounds() {
-		final float camx = world.getCamBounds().getX();
-		final float camw = world.getCamBounds().getW();
+		final float camx = world.getCamBounds().x;
+		final float camw = world.getCamBounds().w;
 	
 		final float LEVEL_WIDTH = world.getCurrentLevel().LEVEL_WIDTH;
 		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
@@ -188,8 +190,8 @@ public class WorldRenderer {
 	}
 
 	private void renderPlayer() {
-		game.batch.draw(AnimationManager.getAnimation(world.PLAYER.getStateID()).getKeyFrame(world.PLAYER.getTime(),0), world.PLAYER.getX(),
-				world.PLAYER.getY(), world.PLAYER.getWidth(), world.PLAYER.getHeight());
+		game.batch.draw(AnimationManager.getAnimation(world.player.getStateID()).getKeyFrame(world.player.getTime(),0), world.player.getX(),
+				world.player.getY(), world.player.getWidth(), world.player.getHeight());
 	}
 
 	public void resize(int w, int h) {
@@ -201,7 +203,7 @@ public class WorldRenderer {
 	}
 
 	private void updateCamPosition(){
-		// Change to translate later
-		cam.position.set(world.getCamBounds().getX() + cam.viewportWidth/2, world.getCamBounds().getY() + cam.viewportHeight/2, 0.0f);
+		// Change to translate 
+		cam.position.set(world.getCamBounds().x + cam.viewportWidth/2, world.getCamBounds().y + cam.viewportHeight/2, 0.0f);
 	}
 }

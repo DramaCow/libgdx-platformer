@@ -51,7 +51,8 @@ public class GameScreen implements Screen {
 
 				// or
 
-				// go back to RUNNING state
+				// go back to PLAY state
+				// NOTE: INPUT NEEDS TO BE DEFINED IN THIS CLASS BEFORE PAUSE STATE CAN BE ACCESSED
 				break;
 
 			case GAME_OVER:
