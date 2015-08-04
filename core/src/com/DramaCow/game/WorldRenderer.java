@@ -139,9 +139,18 @@ public class WorldRenderer {
 
 		for (int r = r0; r < rmax; r++) {
 			for (int c = c0; c < cmax; c++) {
-				tile = world.getCurrentLevel().getMap()[r][c];
+				// Get current tile
+				if(world.getCurrentLevel().getMap()[r][c] == 1) tile = 1; else tile = 0;
+				// Get surrounding tiles
+				int tileUp = 0, tileDown = 0, tileLeft = 0, tileRight = 0;
+				if (r > world.getCurrentLevel().LEVEL_HEIGHT - 2 || world.getCurrentLevel().getMap()[r+1][c] == 1) tileUp = 1;
+				if (r < 1 || world.getCurrentLevel().getMap()[r-1][c] == 1) tileDown = 1;
+				if (c >	world.getCurrentLevel().LEVEL_WIDTH - 2	|| world.getCurrentLevel().getMap()[r][c+1] == 1) tileRight = 1;
+				if (c < 1 || world.getCurrentLevel().getMap()[r][c-1] == 1) tileLeft = 1;
+				// Draw the tile
 				if (tile != 0) {
-					game.batch.draw(world.tileset.getTile(tile-1), c * width, r * height, 
+					int index = 1 * tileUp + 2 * tileRight + 4 * tileDown + 8 * tileLeft;
+					game.batch.draw(world.tileset.getTile(index), c * width, r * height, 
 						width, height);
 				}
 			}
@@ -155,14 +164,14 @@ public class WorldRenderer {
 		// Regular loop needed to remove elements from map with concurrency exception
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
-			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			//if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				game.batch.draw(AnimationManager.getAnimation(object.id).getKeyFrame(object.getTime(), 0), object.getX(), 
 					object.getY(), object.getWidth(), object.getHeight());
-			}
-			else if (object.getX() < bounds.x || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
-				continue;
-			}
-			else break;
+			//}
+			//else if (object.getX() < bounds.getX() || object.getX() > world.getCurrentLevel().LEVEL_WIDTH) {
+			//	continue;
+			//}
+			//else break;
 		}
 	}
 

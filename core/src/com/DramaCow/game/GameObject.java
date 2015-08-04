@@ -3,7 +3,7 @@ package com.DramaCow.game;
 import com.DramaCow.maths.Vector2D;
 import com.DramaCow.maths.Rect;
 
-abstract public class GameObject {
+abstract public class GameObject implements Comparable<GameObject>{
 	public final Vector2D position;
 	public final Rect bounds;
 	public final String id;
@@ -42,5 +42,9 @@ abstract public class GameObject {
 
 	public float getTime() {
 		return t;
+	}
+
+	public int compareTo(GameObject compareObject) {
+		return Math.round(this.getX() - compareObject.getX());
 	}
 }

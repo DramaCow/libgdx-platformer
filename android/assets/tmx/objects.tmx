@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="16" height="16" tilewidth="32" tileheight="32" nextobjectid="9">
+ <tileset firstgid="1" name="templateObjects" tilewidth="32" tileheight="32">
+  <image source="templateObjects.png" width="128" height="64"/>
+ </tileset>
+ <objectgroup name="Object Layer">
+  <object id="1" name="coin" gid="1" x="-128" y="-32" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="4" name="heart" gid="2" x="-64" y="-32" width="32" height="32">
+   <properties>
+    <property name="probability" value="0.5"/>
+   </properties>
+  </object>
+  <object id="5" name="static" gid="3" x="0" y="-32" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="6" name="linear" gid="4" x="64" y="-32" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="7" name="wave" gid="5" x="128" y="-32" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

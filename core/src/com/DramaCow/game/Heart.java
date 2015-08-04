@@ -2,7 +2,7 @@ package com.DramaCow.game;
 
 public class Heart extends GameObject{
 
-	public Heart(int x, int y){
+	public Heart(float x, float y){
 		super("Heart", x, y, 1.0f, 1.0f);
 	}
 

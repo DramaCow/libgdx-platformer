@@ -2,7 +2,7 @@ package com.DramaCow.game;
 
 public class Coin extends GameObject{
 
-	public Coin(int x, int y){
+	public Coin(float x, float y){
 	 	super("Coin", x, y, 1.0f, 1.0f);
 	}
 

@@ -1,4 +1,4 @@
-package com.DramaCow.game;
+	package com.DramaCow.game;
 
 import com.DramaCow.maths.Vector2D;
 import com.DramaCow.maths.Rect;
@@ -16,9 +16,9 @@ public class Player extends DynamicGameObject{
 	private float hurtTimer = 0.0f;
 	private boolean hurtTrigger = false;
 
-	private final float MAX_RUN_SPEED = 12.0f; // Could vary by level
-	private final float JUMP_SPEED = 4.875f;
-	private final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
+	public final float MAX_RUN_SPEED = 12.0f; // Could vary by level
+	public final float JUMP_SPEED = 4.875f;
+	public final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
 
 	private float gy = -9.81f; // g in y direction
 
