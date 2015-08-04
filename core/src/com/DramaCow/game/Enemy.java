@@ -28,4 +28,9 @@ public class Enemy extends DynamicGameObject{
 	public String getAiID(){
 		return ai.ID();
 	}
+
+	@Override 
+	public String toString() {
+		return this.getAiID() + ": " + Float.toString(position.x); 
+	}
 }

@@ -33,8 +33,18 @@ public class Level {
 	}
 
 	private boolean generate() {
+		//Constants
+		final int MAX_HEIGHT = 12;		//Max height of left markers
+		final int MIN_HEIGHT = 3;		//Min height of left markers
+		final int START_HEIGHT = 5;		//Height of start and end platform
+		final int START_WIDTH = 8;		//Width of start platform
+		final int END_WIDTH = 5;		//Width of end platform
+
 		//Get test template and put them in a list
 		List<LevelTemplate> levelTemplates = new ArrayList();
+		templateObjects = new ArrayList<LevelTemplateObject>();
+
+		//This to be replaced with loading from a folder?
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate1.tmx"));
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate2.tmx"));
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate3.tmx"));
@@ -44,19 +54,22 @@ public class Level {
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate7.tmx"));
 		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate8.tmx"));
 
-		templateObjects = new ArrayList<LevelTemplateObject>();
+		//Make sure there are templates, otherwise just draw a flat surface
+		if(levelTemplates.size() == 0){
+			for (int r = 0; r < START_HEIGHT; r++){
+				for (int c = 0; c < LEVEL_WIDTH; c++){
+					REGION_MAP[r][c] = 1;
+				}
+			}
+
+			return false;
+		}
 
 		Random rn = new Random();
 		float jumpSpeed = player.JUMP_SPEED;
 		float runSpeed = player.RUN_SPEED;
 		float gravity = -9.81f;
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
-
-		final int MAX_HEIGHT = 12;
-		final int MIN_HEIGHT = 3;
-		final int START_HEIGHT = 5;
-		final int START_WIDTH = 8;
-		final int END_WIDTH = 5;
 
 		//rx and ry are keep track of the position of the right marker of a template
 		int rx = 0, ry = 0;
@@ -72,23 +85,24 @@ public class Level {
 		ry = START_HEIGHT;
 
 		//Place templates in level
-		while(rx < LEVEL_WIDTH){
-			//Generate new height of template
-			int newY = rn.nextInt((int)(maxJumpHeight + ry) - MIN_HEIGHT) + MIN_HEIGHT;
-			if(newY > MAX_HEIGHT) newY = MAX_HEIGHT;
-			int heightDifference = newY - ry;
-			//Work out time to reach that height
-			float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt(
-				(double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
-			//Work out max and min distance to new template
-			int maxDistance = (int)(runSpeed * timeToReachHeight);
-			int minDistance = 1;
-			//Generate new x of template
-			int newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
-
+		while(rx < LEVEL_WIDTH - END_WIDTH){
 			//Pick a random template to place, marking sure there is space
 			LevelTemplate template = null;		Boolean selectingTemplate = true;
+			int newX = 0, newY = 0;
 			while(selectingTemplate){
+				//Generate new height of template
+				newY = rn.nextInt((int)(maxJumpHeight + ry) - MIN_HEIGHT) + MIN_HEIGHT;
+				if(newY > MAX_HEIGHT) newY = MAX_HEIGHT;
+				int heightDifference = newY - ry;
+				//Work out time to reach that height
+				float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt(
+					(double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
+				//Work out max and min distance to new template
+				int maxDistance = (int)(runSpeed * timeToReachHeight);
+				int minDistance = 1;
+				//Generate new x of template
+				newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
+
 				template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
 				//Ensure that the L and R markers are within MIN_HEIGHT and MAX_HEIGHT
 				//And ensure that the whole template is within the level
@@ -130,8 +144,8 @@ public class Level {
 			//Update positions of the objects for the template and add them to the list
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
 			for(LevelTemplateObject object : currentTemplateObjects){
-				object.transpose(templateX, templateY);
-				if(object.getX() < LEVEL_WIDTH - END_WIDTH) templateObjects.add(object);
+				if(object.getX() + templateX < LEVEL_WIDTH - END_WIDTH) templateObjects.add(new LevelTemplateObject(object.getName(),
+					object.getX() + templateX, object.getY() + templateY, object.getProbability()));
 			}
 		}
 
@@ -162,7 +176,7 @@ public class Level {
 			GameObject obstacle = obstacleBlueprints.get(obstacleHat.get(i));
 			if (obstacle instanceof Enemy) {
 				if(((Enemy)obstacle).getAiID().equals("static")) staticEnemies.add((Enemy)obstacle);
-				else if (((Enemy)obstacle).getAiID().equals("static")) linearEnemies.add((Enemy)obstacle);
+				else if (((Enemy)obstacle).getAiID().equals("linear")) linearEnemies.add((Enemy)obstacle);
 				else if (((Enemy)obstacle).getAiID().equals("wave")) waveEnemies.add((Enemy)obstacle);
 			}
 		}
@@ -194,13 +208,6 @@ public class Level {
 
 		//Sort the objects by X position
 		Collections.sort(objects);
-
-		System.out.println("There are " + objects.size() + " objects.");
-
-		//Print objects and locations
-		for(GameObject obj: objects){
-			System.out.println("obj: " + obj.id + "    x: " + obj.getX() + "    y: " + obj.getY());
-		}
 
 		return true;
 	}
@@ -248,13 +255,16 @@ public class Level {
 		 */
 		
 		// Regular loop needed to remove elements from map with concurrency exception
+		//System.out.println(objects.size());
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
+			/*
 			if (object.getX() + object.getWidth() < bounds.getX() 	|| 
 				object.getX() + object.getWidth() > LEVEL_WIDTH		||
 				object.getX() + object.getWidth() < 0.0f) {
 				objects.remove(i);
 			}
+			*/
 			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				//System.out.println("Bounds in");
 				object.update(dt);

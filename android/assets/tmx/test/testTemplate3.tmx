@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-up" width="10" height="10" tilewidth="32" tileheight="32" nextobjectid="18">
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="10" height="10" tilewidth="32" tileheight="32" nextobjectid="25">
  <tileset firstgid="1" name="templateTiles" tilewidth="32" tileheight="32">
-  <image source="../../../../Desktop/templateTiles.png" width="128" height="64"/>
+  <image source="../templateTiles.png" width="128" height="64"/>
  </tileset>
  <tileset firstgid="9" name="templateObjects" tilewidth="32" tileheight="32">
-  <image source="../../../../Desktop/templateObjects.png" width="128" height="64"/>
+  <image source="../templateObjects.png" width="128" height="64"/>
  </tileset>
  <layer name="Tile Layer" width="10" height="10">
   <data>
