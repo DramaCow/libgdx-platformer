@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Random;
 import java.lang.Math;
+import java.util.Collections;
 
 public class Level {
 	public final String BIOME_ID; 
@@ -34,11 +35,14 @@ public class Level {
 	private boolean generate() {
 		//Get test template and put them in a list
 		List<LevelTemplate> levelTemplates = new ArrayList();
-		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate1.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate2.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate3.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate4.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/testTemplate5.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate1.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate2.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate3.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate4.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate5.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate6.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate7.tmx"));
+		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate8.tmx"));
 
 		templateObjects = new ArrayList<LevelTemplateObject>();
 
@@ -52,6 +56,7 @@ public class Level {
 		final int MIN_HEIGHT = 3;
 		final int START_HEIGHT = 5;
 		final int START_WIDTH = 8;
+		final int END_WIDTH = 5;
 
 		//rx and ry are keep track of the position of the right marker of a template
 		int rx = 0, ry = 0;
@@ -110,6 +115,13 @@ public class Level {
 					REGION_MAP[r][c] = template.getMap()[0][c - templateX];
 				}
 			}
+			//Join the top row to the ceiling
+			for(int r = templateY + template.getHeight() - 1; r < LEVEL_WIDTH; r++){
+				for(int c = templateX; c < templateX + template.getWidth(); c++){
+					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+					REGION_MAP[r][c] = template.getMap()[template.getHeight() - 1][c - templateX];
+				}
+			}
 
 			//Update right marker
 			rx = templateX + template.getRightX();
@@ -119,13 +131,13 @@ public class Level {
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
 			for(LevelTemplateObject object : currentTemplateObjects){
 				object.transpose(templateX, templateY);
-				templateObjects.add(object);
+				if(object.getX() < LEVEL_WIDTH - END_WIDTH) templateObjects.add(object);
 			}
 		}
 
 		//Always generate end platform
 		for (int r = 0; r < LEVEL_HEIGHT; r++){
-			for (int c = LEVEL_WIDTH-5; c < LEVEL_WIDTH; c++){
+			for (int c = LEVEL_WIDTH-END_WIDTH; c < LEVEL_WIDTH; c++){
 				REGION_MAP[r][c] = r < START_HEIGHT ? 1 : 0;
 			}
 		}
@@ -142,16 +154,53 @@ public class Level {
 
 		if (obstacleHat.isEmpty()) return false;
 
+		List<Enemy> staticEnemies = new ArrayList<Enemy>();
+		List<Enemy> linearEnemies = new ArrayList<Enemy>();
+		List<Enemy> waveEnemies = new ArrayList<Enemy>();
+		// Sort enemies into AI types
+		for(int i = 0; i < obstacleHat.size(); i++){
+			GameObject obstacle = obstacleBlueprints.get(obstacleHat.get(i));
+			if (obstacle instanceof Enemy) {
+				if(((Enemy)obstacle).getAiID().equals("static")) staticEnemies.add((Enemy)obstacle);
+				else if (((Enemy)obstacle).getAiID().equals("static")) linearEnemies.add((Enemy)obstacle);
+				else if (((Enemy)obstacle).getAiID().equals("wave")) waveEnemies.add((Enemy)obstacle);
+			}
+		}
+
+		// Go through all template objects and covert them to game objects
 		Random rn = new Random();
 
-		/*int pick; GameObject obstacle;
-		for (int i = 0; i < 50; i++) {
-			pick = rn.nextInt(obstacleHat.size());
-			obstacle = obstacleBlueprints.get(obstacleHat.get(pick));
-			if (obstacle instanceof Enemy) {
-				objects.add(new Enemy((Enemy) obstacle, 10.0f + i*1.0f, 5.0f));
+		for(LevelTemplateObject templateObject: templateObjects){
+			String name = templateObject.getName();
+			/*if(name.equals("coin")){
+				objects.add(new Coin(templateObject.getX(), templateObject.getY()));
 			}
-		}*/
+			if(name.equals("heart")){
+				objects.add(new Heart(templateObject.getX(), templateObject.getY()));
+			}*/
+			if(name.equals("static")){
+				if(staticEnemies.size() != 0) objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),
+					templateObject.getX(), templateObject.getY()));
+			}
+			if(name.equals("linear")){
+				if(linearEnemies.size() != 0) objects.add(new Enemy(linearEnemies.get(rn.nextInt(linearEnemies.size())),
+					templateObject.getX(), templateObject.getY()));
+			}
+			if(name.equals("wave")){
+				if(waveEnemies.size() != 0) objects.add(new Enemy(waveEnemies.get(rn.nextInt(waveEnemies.size())),
+					templateObject.getX(), templateObject.getY()));
+			}
+		}
+
+		//Sort the objects by X position
+		Collections.sort(objects);
+
+		System.out.println("There are " + objects.size() + " objects.");
+
+		//Print objects and locations
+		for(GameObject obj: objects){
+			System.out.println("obj: " + obj.id + "    x: " + obj.getX() + "    y: " + obj.getY());
+		}
 
 		return true;
 	}

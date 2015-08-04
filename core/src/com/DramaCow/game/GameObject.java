@@ -3,7 +3,7 @@ package com.DramaCow.game;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-abstract public class GameObject {
+abstract public class GameObject implements Comparable<GameObject>{
 	public final Vector2 position;
 	public final Rectangle bounds;
 	public final String id;
@@ -42,5 +42,9 @@ abstract public class GameObject {
 
 	public float getTime() {
 		return t;
+	}
+
+	public int compareTo(GameObject compareObject) {
+		return Math.round(this.getX() - compareObject.getX());
 	}
 }

@@ -97,7 +97,9 @@ public class XReader {
 
 	// Level template parser
 	public static LevelTemplate getLevelTemplate(String templateFile){
-		return new LevelTemplate(getTemplateMap(templateFile), getTemplateObjects(templateFile));
+		int[][] map = getTemplateMap(templateFile);
+		int height = map.length;
+		return new LevelTemplate(map, getTemplateObjects(templateFile, height));
 	}
 
 	public static int[][] getTemplateMap(String templateFile) {
@@ -115,12 +117,12 @@ public class XReader {
 		return templateMap;
 	}
 
-	public static Set<LevelTemplateObject> getTemplateObjects(String templateFile){
+	public static Set<LevelTemplateObject> getTemplateObjects(String templateFile, int height){
 		Set<LevelTemplateObject> objects = new HashSet<LevelTemplateObject>();
 		XmlReader.Element node = getRoot(templateFile).getChildByName("objectgroup");
 		for(int i = 0; i < node.getChildCount(); i++){
 			objects.add(new LevelTemplateObject(node.getChild(i).get("name"), 
-				node.getChild(i).getFloatAttribute("x")/32.0f, node.getChild(i).getFloatAttribute("y")/32.0f, 
+				node.getChild(i).getFloatAttribute("x")/32.0f, height - node.getChild(i).getFloatAttribute("y")/32.0f, 
 				node.getChild(i).getChildByName("properties").getChild(0).getFloatAttribute("value")));
 		}
 		return objects;

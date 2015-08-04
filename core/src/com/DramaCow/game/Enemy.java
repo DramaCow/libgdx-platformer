@@ -24,4 +24,8 @@ public class Enemy extends DynamicGameObject{
 		this.ai = Ai.getAI(that.ai.ID(), that.ai.difficulty);
 		this.ai.create(this);
 	}
+
+	public String getAiID(){
+		return ai.ID();
+	}
 }
