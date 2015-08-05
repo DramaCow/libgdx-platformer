@@ -58,7 +58,7 @@ public class World {
 
 	public void init() {
 		// Load player assets here
-		TextureManager.loadTexture("player","frog.png");
+		TextureManager.loadTexture("player","tileset3.png");
 		Tileset playerTiles = new Tileset(TextureManager.getTexture("player"),70,52);
 
 		for (Player.PlayerState state : Player.PlayerState.values()) {

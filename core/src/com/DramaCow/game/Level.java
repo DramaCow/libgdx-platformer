@@ -68,9 +68,9 @@ public class Level {
 		}
 
 		Random rn = new Random();
-		float jumpSpeed = player.JUMP_SPEED;
-		float runSpeed = player.MAX_RUN_SPEED;
-		float gravity = -9.81f;
+		float jumpSpeed = 16.0f; //player.JUMP_SPEED;
+		float runSpeed = 12.0f; //player.MAX_RUN_SPEED;
+		float gravity = -50.0f; //-9.81f;
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
 
 		//rx and ry are keep track of the position of the right marker of a template

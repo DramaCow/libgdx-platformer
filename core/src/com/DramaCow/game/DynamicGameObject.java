@@ -54,10 +54,10 @@ abstract public class DynamicGameObject extends GameObject {
 			Vector2D.add( nextPosition, object.box.halfExtents ) );
 
 		int c0 = min.x >= 0.0f ? (int) min.x : 0; 
-		int cmax = (int) (max.x + 1) <= level.LEVEL_WIDTH - 1 ? (int) (max.x + 1) : level.LEVEL_WIDTH - 1;
+		int cmax = (int) Math.ceil(max.x) <= level.LEVEL_WIDTH - 1 ? (int) Math.ceil(max.x) : level.LEVEL_WIDTH - 1;
 
 		int r0 = min.y >= 0.0f ? (int) min.y : 0;
-		int rmax = (int) (max.y + 1) <= level.LEVEL_HEIGHT - 1 ? (int) (max.y + 1) : level.LEVEL_HEIGHT - 1;
+		int rmax = (int) Math.ceil(max.y) <= level.LEVEL_HEIGHT - 1 ? (int) Math.ceil(max.y) : level.LEVEL_HEIGHT - 1;
 
 		boolean north = false;
 		boolean south = false;
@@ -74,7 +74,7 @@ abstract public class DynamicGameObject extends GameObject {
 					// Contact plane represents collision data
 					Contact contact = Collision.AABBvsAABB(object.box, tileAabb);
 
-					if (!internalTileCheck(r, c, contact.normal)) {
+					if (!internalTileCheck(r, c, object.box, contact.normal)) {
 						//System.out.println("collision");
 						CollisionObject response = Collision.collisionResponse(object, contact, dt);
 						object.velocity = response.velocity; object.posCorrect = response.posCorrect;
@@ -109,13 +109,30 @@ abstract public class DynamicGameObject extends GameObject {
 		posCorrect.set(0.0f, 0.0f);
 	}
 
-	public boolean internalTileCheck(int r, int c, Vector2D normal) {
-		int tileX = c + (int) normal.x >= 0 ? c + (int) normal.x : 0;
-		int tileY = r + (int) normal.y >= 0 ? r + (int) normal.y : 0;
+	public boolean internalTileCheck(int r, int c, AABB box, Vector2D normal) {
+		// CHECK FOR OPTIMISATIONS OR METHOD IMPROVEMENTS
 
-		//System.out.println(normal);
-					
-		return level.getMap()[tileY][tileX] == 1;
+		// Get bounds of player in terms of tiles
+		Vector2D roundedAbsExtents = Vector2D.mult( Vector2D.scalar(2, box.halfExtents), normal ).abs();
+				 roundedAbsExtents.set( (float) Math.ceil(roundedAbsExtents.x), (float) Math.ceil(roundedAbsExtents.y) );
+		
+		// Check if any tiles exist within extent of player in direction of collision normal
+		// If so, disregard collision (this includes internal tiles)
+		int i = 1;
+		for ( Vector2D v = Vector2D.scalar(i, normal); 
+			  Math.abs(v.x) <= roundedAbsExtents.x && Math.abs(v.y) <= roundedAbsExtents.y;
+			  v = Vector2D.scalar(i, normal) ) 
+		{
+			int tileX = c + (int) v.x;
+			int tileY = r + (int) v.y;
+
+			if (tileX < 0 || tileY < 0) break;
+			if (level.getMap()[tileY][tileX] == 1) return true;
+
+			i++;
+		}
+
+		return false;
 	}
 
 	protected void northCollision(boolean touching) {}

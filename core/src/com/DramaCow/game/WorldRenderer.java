@@ -199,7 +199,9 @@ public class WorldRenderer {
 	}
 
 	private void renderPlayer() {
-		game.batch.draw(AnimationManager.getAnimation(world.player.getStateID()).getKeyFrame(world.player.getTime(),0), world.player.getX(),
+		//game.batch.draw(AnimationManager.getAnimation(world.player.getStateID()).getKeyFrame(world.player.getTime(),0), world.player.getX(),
+				//world.player.getY(), world.player.getWidth(), world.player.getHeight());
+		game.batch.draw(TextureManager.getTexture("player"), world.player.getX(),
 				world.player.getY(), world.player.getWidth(), world.player.getHeight());
 	}
 

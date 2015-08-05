@@ -141,6 +141,12 @@ public class Vector2D {
 		return this;
 	}
 
+	public Vector2D abs() {
+		this.x = x <= 0.0f ? 0.0f - x : x;
+		this.y = y <= 0.0f ? 0.0f - y : y;
+		return this;
+	}
+
 	// Other
 	@Override 
 	public String toString() {
