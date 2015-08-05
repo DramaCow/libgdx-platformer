@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
 
-public class CharSelButton {
+public class ShopButton {
 
 	private float x, y;
 	private float w, h;
@@ -14,7 +14,7 @@ public class CharSelButton {
 
 	boolean hasClicked; // Used to prevent repeated onClick calls when button is held
 
-	public CharSelButton(ShopCostume costume, float x, float y, float w, float h) {
+	public ShopButton(ShopCostume costume, float x, float y, float w, float h) {
 		this.x = x; this.y = y;
 		this.w = w; this.h = h;
 		this.costume = costume;
@@ -31,13 +31,10 @@ public class CharSelButton {
 		}	
 	} 
 			
-
-		
-
-
 	public final Texture getTexture() {
 		return costume.getTexture();
 	}
+
 
 	public ShopCostume getShopCostume(){
 		return costume;

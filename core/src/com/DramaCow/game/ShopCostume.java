@@ -24,4 +24,9 @@ public class ShopCostume{
 	public String getId(){
 		return id;
 	}
+
+	public void setImage(Texture image){
+		this.image = image;
+	}
+
 }

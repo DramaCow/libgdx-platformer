@@ -1,8 +1,18 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <SHOP>
 	<ITEMS>
-		<ITEM id="default"   image="player.png"    price="0.00"	    status="unlocked"/>
-		<ITEM id="1"		 image="ex1.png"	   price="0.00"     status="unlocked"/>
-		<ITEM id="2"		 image="ex2.png"       price="0.00"     status="hidden"/>
+		<ITEM id="default"   image="player.png"    price="0.00"	      status="unlocked"/>
+		<ITEM id="1"		 image="ex1.png"	   price="5.00"       status="hidden"/>
+		<ITEM id="2"		 image="ex2.png"       price="124.40"     status="locked"/>
+		<ITEM id="3"		 image="ex2.png"       price="124.40"     status="locked"/>
+		<ITEM id="4"		 image="ex2.png"       price="124.40"     status="hidden"/>
+		<ITEM id="5"		 image="ex2.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="6"		 image="player.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="7"		 image="ex2.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="8"		 image="ex1.png"       price="124.40"     status="hidden"/>
+		<ITEM id="9"		 image="ex2.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="10"		 image="ex2.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="11"		 image="ex1.png"       price="124.40"     status="unlocked"/>
+		<ITEM id="12"		 image="ex1.png"       price="124.40"     status="unlocked"/>
 	</ITEMS>	
 </SHOP>

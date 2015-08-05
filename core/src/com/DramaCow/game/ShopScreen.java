@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class ShopScreen implements Screen{
 	private final GDXgame game;
-	private List<CharSelButton> buttons;
+	private List<ShopButton> buttons;
 	private Button toMenu;
 	private Vector3 touchPoint;
 	private SpriteBatch batch;
@@ -24,7 +24,7 @@ public class ShopScreen implements Screen{
 	private BitmapFont current;
 	private BitmapFont price;
 	private	BitmapFont id;
-	private Texture currentTexture;
+	private String currentId = "default";
 	private List<ShopCostume> shopItems;
 	private List<String> hiddenItems;
 	private List<String> lockedItems;
@@ -34,31 +34,30 @@ public class ShopScreen implements Screen{
 		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
 		cam = new OrthographicCamera(16.0f * ((float) w/h), 16.0f);
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
-		cam.update();
-		TextureManager.loadTexture("default", "player.png");
-		currentTexture = TextureManager.getTexture("default");
-		buttons = new ArrayList<CharSelButton>();
+		buttons = new ArrayList<ShopButton>();
 		shopItems = XReader.getShopItems("xml/shop.xml");    
 		hiddenItems = XReader.getHiddenItems("xml/shop.xml");   //Loading shop items, hidden and locked from xml files
 		lockedItems = XReader.getLockedItems("xml/shop.xml");
 		current = new BitmapFont();
-		price = new BitmapFont();
+		price = new BitmapFont();    //Various statements required to be printed
 		id = new BitmapFont();
 		batch = new SpriteBatch();	
-		touchPoint = new Vector3();
+		touchPoint = new Vector3();    //For updating buttons
 	}
 
 	@Override
 	public void show(){
+		TextureManager.loadTexture("default", "player.png");
 		TextureManager.loadTexture("toMenu", "menucharacterset.png");
 		TextureManager.loadTexture("backgroundfs", "gameShopBackground.png");
 		TextureManager.loadTexture("hidden", "questionmark.png");
 		TextureManager.loadTexture("shading", "shading.png");
 		for(ShopCostume item : shopItems){
-			CharSelButton btn = new CharSelButton(item, 0.0f, 0.0f, 30.0f, 60.0f){
+			if(hiddenItems.contains(item.getId())) item.setImage(TextureManager.getTexture("hidden"));
+			ShopButton btn = new ShopButton(item, 0.0f, 0.0f, 30.0f, 60.0f){
 				@Override
 				public void onClick(){
-					if(!hiddenItems.contains(this.getShopCostume().getId()) && !lockedItems.contains(this.getShopCostume().getId())) currentTexture = this.getTexture();
+					if(!(hiddenItems.contains(this.getShopCostume().getId()) || lockedItems.contains(this.getShopCostume().getId()))) currentId = this.getShopCostume().getId();
 				}
 			};
 			buttons.add(btn);
@@ -75,7 +74,7 @@ public class ShopScreen implements Screen{
 	@Override
 	public void update(float dt){
 		cam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-		for(CharSelButton button : buttons){
+		for(ShopButton button : buttons){
 			button.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
 		}
 		toMenu.update(touchPoint.x, touchPoint.y, Gdx.input.isTouched());
@@ -87,23 +86,17 @@ public class ShopScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);       //Clearing frame
 		batch.begin();
 		batch.draw(TextureManager.getTexture("backgroundfs"), 0, 0, 480.0f * ((float) Gdx.graphics.getWidth()/Gdx.graphics.getHeight()), 480.0f); //Drawing Background
-		batch.draw(currentTexture, 30, 180, 60, 120);
+		batch.draw(TextureManager.getTexture(currentId), 30, 180, 60, 120);
 		current.draw(batch, "Your Current Selection", 20 ,320);
 		batch.draw(toMenu.getTexture(),toMenu.getX(),toMenu.getY(), toMenu.getW(), toMenu.getH());  //Drawing to menu button
 		Integer x = 300, y = 300;
-		for(CharSelButton button: buttons){
+		for(ShopButton button: buttons){
 			button.setX(x);
 			button.setY(y);
-			price.draw(batch, Float.toString(button.getShopCostume().getPrice()), x, y-15);   //Looping through set, drawing costume textures, price and ID
+			price.draw(batch, "£" + Float.toString(button.getShopCostume().getPrice()), x, y-15);   //Looping through set, drawing costume textures, price and ID
 			id.draw(batch, button.getShopCostume().getId(), x, y+70);
 
 			List<Integer> newLocs = updateLoc(x, y, button.getTexture());
-			if(hiddenItems.contains(button.getShopCostume().getId())) {
-				batch.draw(TextureManager.getTexture("hidden"), x, y, 30, 60);					//If item hidden draw hidden texture and update x and y
-				x = newLocs.get(0);
-				y = newLocs.get(1);	
-				continue;
-			}	
 			batch.draw(button.getShopCostume().getTexture(), button.getX(), button.getY(), button.getW(), button.getH());
 
 			if(lockedItems.contains(button.getShopCostume().getId())) batch.draw(TextureManager.getTexture("shading"), x, y, 30, 60);     //If item locked shade it
@@ -114,7 +107,6 @@ public class ShopScreen implements Screen{
 	}
 
 	public List<Integer> updateLoc(Integer x, Integer y, Texture tex){
-		System.out.println(x + " " + y + " " + tex);
 		List<Integer> newLocs = new ArrayList<Integer>();
 		x = x + tex.getWidth()+ 30;
 		if(x>=(int)Gdx.graphics.getWidth()-50) {
@@ -124,6 +116,10 @@ public class ShopScreen implements Screen{
 		newLocs.add(x);
 		newLocs.add(y);	
 		return newLocs;
+	}
+
+	public String getSelectedId(){
+		return currentId;
 	}
 
 	@Override
@@ -151,6 +147,7 @@ public class ShopScreen implements Screen{
 
 	@Override
 	public void dispose(){
+		TextureManager.disposeTexture("default");
 		TextureManager.disposeTexture("shading");
 		TextureManager.disposeTexture("hidden");
 		TextureManager.disposeTexture("toMenu");
