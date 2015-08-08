@@ -80,6 +80,7 @@ public class Player extends DynamicGameObject{
 	}
 
 	private void updateState(float dt) {
+		if(up) acceleration.y = gy; else acceleration.y = gy*3;
 		switch (state){
 			case RUN:
 				acceleration.x += ACCELERATION.x;
@@ -182,6 +183,6 @@ public class Player extends DynamicGameObject{
 	}
 
 	public static float getMaxRunSpeed() {
-		return 12.0f;
+		return 8.0f;
 	}
 }

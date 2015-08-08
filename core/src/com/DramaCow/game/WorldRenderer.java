@@ -150,8 +150,35 @@ public class WorldRenderer {
 				// Draw the tile
 				if (tile != 0) {
 					int index = 1 * tileUp + 2 * tileRight + 4 * tileDown + 8 * tileLeft;
-					game.batch.draw(world.tileset.getTile(index), c * width, r * height, 
-						width, height);
+					game.batch.draw(world.tileset.getTile(index), c * width, r * height, width, height);
+				} else {
+					// Draw carpet tiles
+					if (tileDown == 1 && r > 0) 	
+						game.batch.draw(world.tileset.getTile(16), c * width, r * height, width, height);
+					if (tileLeft == 1 && c > 0) 
+						game.batch.draw(world.tileset.getTile(17), c * width, r * height, width, height);
+					if (tileUp == 1 && r < world.getCurrentLevel().LEVEL_HEIGHT - 1) 	
+						game.batch.draw(world.tileset.getTile(18), c * width, r * height, width, height);
+					if (tileRight == 1 && c < world.getCurrentLevel().LEVEL_WIDTH - 1) 
+						game.batch.draw(world.tileset.getTile(19), c * width, r * height, width, height);
+				}
+				if(r > 0 && r < world.getCurrentLevel().LEVEL_HEIGHT - 1 && tile == 1){
+					// Draw inner corner
+					int tileUpLeft = 0; int tileUpRight = 0; int tileDownLeft = 0; int tileDownRight = 0;
+					if (r>0 && c>0 && world.getCurrentLevel().getMap()[r-1][c-1] == 1) tileDownLeft = 1;
+					if (r<world.getCurrentLevel().LEVEL_HEIGHT - 1 && c>0 && world.getCurrentLevel().getMap()[r+1][c-1] == 1) tileUpLeft = 1;
+					if (r>0 && c<world.getCurrentLevel().LEVEL_WIDTH - 1 && world.getCurrentLevel().getMap()[r-1][c+1] == 1) tileDownRight = 1;
+					if (r<world.getCurrentLevel().LEVEL_HEIGHT - 1 && c<world.getCurrentLevel().LEVEL_WIDTH - 1 
+						&& world.getCurrentLevel().getMap()[r+1][c+1] == 1) tileUpRight = 1;
+
+					if (tileRight == 1 && tileDown == 1 && tileDownRight == 0) 
+						game.batch.draw(world.tileset.getTile(20), c * width, r * height, width, height);
+					if (tileDown == 1 && tileLeft == 1 && tileDownLeft == 0) 
+						game.batch.draw(world.tileset.getTile(21), c * width, r * height, width, height);
+					if (tileLeft == 1 && tileUp == 1 && tileUpLeft == 0) 
+						game.batch.draw(world.tileset.getTile(22), c * width, r * height, width, height);
+					if (tileUp == 1 && tileRight == 1 && tileUpRight ==0) 
+						game.batch.draw(world.tileset.getTile(23), c * width, r * height, width, height);
 				}
 			}
 		}

@@ -172,7 +172,7 @@ public class World {
 	}
 
 	private void startGeneratingNextLevel() {
-		nextLevel = new Level(getNextBiome(), 64, 16);
+		nextLevel = new Level(getNextBiome(), 400, 20);
 		Level.generateMapInBackground(nextLevel);
 	}
 	// ----------------------------------------
