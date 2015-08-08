@@ -16,11 +16,11 @@ public class Player extends DynamicGameObject{
 	private float hurtTimer = 0.0f;
 	private boolean hurtTrigger = false;
 
-	public final float MAX_RUN_SPEED = 12.0f; // Could vary by level
-	public final float JUMP_SPEED = 16.0f;
-	public final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
+	private final float MAX_RUN_SPEED = Player.getMaxRunSpeed(); // Could vary by level
+	private final float JUMP_SPEED = Player.getJumpSpeed();
+	private final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
 
-	private float gy = -50.00f; // g in y direction
+	private final float gy;
 
 	private PlayerState state;
 	private int health;
@@ -33,7 +33,8 @@ public class Player extends DynamicGameObject{
 	public Player(String id, float x, float y, float w, float h, final Level level){
 		super(id,x,y,w,h,level);
 		collidable = true;
-		setState(PlayerState.RUN); 
+		setState(PlayerState.RUN);
+		gy = level.getGravity().y; 
 	}
 
 	@Override
@@ -174,5 +175,13 @@ public class Player extends DynamicGameObject{
 
 	public void setCollidable(boolean collidable) {
 		this.collidable = collidable;
+	}
+
+	public static float getJumpSpeed() {
+		return 16.0f;
+	}
+
+	public static float getMaxRunSpeed() {
+		return 12.0f;
 	}
 }

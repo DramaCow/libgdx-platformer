@@ -6,8 +6,12 @@
 		bgm="bgm.ogg"
 	/>
 	<obstacles>
-		<obstacle id="spike" 	priority="10"/>
+		<obstacle id="spike"        priority="10"/>
 		<obstacle id="rockcrab" 	priority="10"/>
-		<obstacle id="chick" 	priority="10"/>
-	</obstacles>	
+		<obstacle id="chick"        priority="10"/>
+	</obstacles>
+    <templateFolders>
+        <templateFolder path="tmx/test1"/>
+        <templateFolder path="tmx/test2"/>
+    </templateFolders>
 </GRASSLAND>	

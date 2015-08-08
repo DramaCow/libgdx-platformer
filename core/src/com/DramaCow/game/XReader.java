@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
+import java.io.File;
 
 public class XReader {
 	
@@ -95,7 +97,28 @@ public class XReader {
 			Ai.getAI(attributes.getAttribute("ai"), attributes.getIntAttribute("difficulty")));
 	}
 
+	public static List<String> getTemplateFolders(String filename){
+		XmlReader.Element node = getRoot(filename).getChildByName("templateFolders");
+
+		List<String> folders = new ArrayList<String>();
+		for(int i = 0; i < node.getChildCount(); i++) {
+			folders.add(node.getChild(i).getAttribute("path"));
+		}
+		return folders;
+	}
+
 	// Level template parser
+	public static List<LevelTemplate> getLevelTemplates(String folderString){
+		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
+		File folder = new File(folderString);
+		for (File fileEntry : folder.listFiles()) {
+			String fileName = fileEntry.getName();
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+			if(extension.equals("tmx")) levelTemplates.add(XReader.getLevelTemplate(fileEntry.getAbsolutePath()));
+    	}
+    	return levelTemplates;	
+	}
+
 	public static LevelTemplate getLevelTemplate(String templateFile){
 		int[][] map = getTemplateMap(templateFile);
 		int height = map.length;

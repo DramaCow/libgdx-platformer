@@ -10,6 +10,7 @@ import java.lang.Math;
 import java.util.Collections;
 
 import com.DramaCow.maths.Rect;
+import com.DramaCow.maths.Vector2D;
 
 public class Level {
 	public final String BIOME_ID; 
@@ -21,6 +22,7 @@ public class Level {
 	private List<GameObject> objects;
 	private List<LevelTemplateObject> templateObjects;
 	private Player player;
+	private Vector2D gravity = new Vector2D(0.0f,-50.0f);
 
 	private boolean isReady;
 
@@ -42,19 +44,12 @@ public class Level {
 		final int END_WIDTH = 5;		//Width of end platform
 
 		//Get test template and put them in a list
-		List<LevelTemplate> levelTemplates = new ArrayList();
-		templateObjects = new ArrayList<LevelTemplateObject>();
-
-		//This to be replaced with loading from a folder?
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate1.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate2.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate3.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate4.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate5.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate6.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate7.tmx"));
-		levelTemplates.add(XReader.getLevelTemplate("tmx/test/testTemplate8.tmx"));
-		//levelTemplates.add(XReader.getLevelTemplate("tmx/test/probTest.tmx"));
+		List<String> folders = XReader.getTemplateFolders(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
+		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
+		for(String folder: folders){
+			levelTemplates.addAll(XReader.getLevelTemplates(folder));
+		}
+		templateObjects = new ArrayList<LevelTemplateObject>();	
 
 		//Make sure there are templates, otherwise just draw a flat surface
 		if(levelTemplates.size() == 0){
@@ -68,10 +63,10 @@ public class Level {
 		}
 
 		Random rn = new Random();
-		float jumpSpeed = 16.0f; //player.JUMP_SPEED;
-		float runSpeed = 12.0f; //player.MAX_RUN_SPEED;
-		float gravity = -50.0f; //-9.81f;
-		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gravity);
+		float jumpSpeed = Player.getJumpSpeed();
+		float runSpeed = Player.getMaxRunSpeed();
+		float gy = gravity.y;
+		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gy);
 
 		//rx and ry are keep track of the position of the right marker of a template
 		int rx = 0, ry = 0;
@@ -98,7 +93,7 @@ public class Level {
 				int heightDifference = newY - ry;
 				//Work out time to reach that height
 				float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt(
-					(double)(jumpSpeed*jumpSpeed+2*gravity*heightDifference)))/gravity);
+					(double)(jumpSpeed*jumpSpeed+2*gy*heightDifference)))/gy);
 				//Work out max and min distance to new template
 				int maxDistance = (int)(runSpeed * timeToReachHeight);
 				int minDistance = 1;
@@ -197,17 +192,17 @@ public class Level {
 					objects.add(new Heart(templateObject.getX(), templateObject.getY()));
 				}*/
 				if(name.equals("static")){
-					if(staticEnemies.size() != 0) continue;
+					if(staticEnemies.size() == 0) continue;
 					objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),
 						templateObject.getX(), templateObject.getY(), this));
 				}
 				else if(name.equals("linear")){
-					if(linearEnemies.size() != 0) continue;
+					if(linearEnemies.size() == 0) continue;
 					objects.add(new Enemy(linearEnemies.get(rn.nextInt(linearEnemies.size())),
 						templateObject.getX(), templateObject.getY(), this));
 				}
 				else if(name.equals("wave")){
-					if(waveEnemies.size() != 0) continue;
+					if(waveEnemies.size() == 0) continue;
 					objects.add(new Enemy(waveEnemies.get(rn.nextInt(waveEnemies.size())),
 						templateObject.getX(), templateObject.getY(), this));
 				}
@@ -240,8 +235,8 @@ public class Level {
 
 	public static Player generatePlayer(final Level level, Rect cambounds) {
 		if (level.player == null) {
-			float w = 2.1875f;
-			float h = 1.625f;
+			float w = 1.0f;
+			float h = 1.5f;
 
 			level.player = new Player("Player", 3.0f - cambounds.w, level.LEVEL_HEIGHT/2 - h/2, w, h, level);
 			level.player.toggleExistence(false);
@@ -279,20 +274,10 @@ public class Level {
 		//System.out.println(objects.size());
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
-			/*
-			if (object.getX() + object.getWidth() < bounds.getX() 	|| 
-				object.getX() + object.getWidth() > LEVEL_WIDTH		||
-				object.getX() + object.getWidth() < 0.0f) {
-				objects.remove(i);
-			}
-
-			*/
-			//if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
+			if (bounds.overlaps(object.getX(), object.getY(), object.getWidth(), object.getHeight())) {
 				//System.out.println("Bounds in");
-				System.out.println(object);
 				object.update(dt);
-			//}
-			//else break; //Assumes list near linearly ordered by objects x position (excluding those already on screen)
+			}
 		}
 		
 		player.update(dt);
@@ -305,5 +290,9 @@ public class Level {
 			}
 			System.out.println();
 		}
+	}
+
+	public Vector2D getGravity(){
+		return gravity;
 	}	
 }
