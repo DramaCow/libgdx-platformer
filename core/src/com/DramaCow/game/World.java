@@ -10,6 +10,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
 
+import java.util.List;
+
 public class World {
 
 	public static enum WorldState {
@@ -29,7 +31,8 @@ public class World {
 	private Level currentLevel;
 	private Level nextLevel;
 
-	public Tileset tileset;
+	private Tileset tileset;
+	private List<Background> backgrounds;
 
 	public int levelNumber;
 	private long elapsedTime;
@@ -58,7 +61,7 @@ public class World {
 
 	public void init() {
 		// Load player assets here
-		TextureManager.loadTexture("player","player.png");
+		TextureManager.loadTexture("player","textures/player/player.png");
 		Tileset playerTiles = new Tileset(TextureManager.getTexture("player"),70,52);
 
 		for (Player.PlayerState state : Player.PlayerState.values()) {
@@ -66,11 +69,11 @@ public class World {
 		}
 
 		// Loading screen image should be loaded from a file
-		TextureManager.loadTexture("loading", "mark.png");
+		TextureManager.loadTexture("loading", "textures/mark.png");
 
 		// Borders should be loaded from a file
-		TextureManager.loadTexture("start", "jagged2.png");
-		TextureManager.loadTexture("end", "jagged.png");
+		TextureManager.loadTexture("start", "textures/jagged2.png");
+		TextureManager.loadTexture("end", "textures/jagged.png");
 	}
 
 	// ========================================
@@ -106,7 +109,7 @@ public class World {
 		
 		TextureManager.loadTexture("tiles", XReader.getLevelTileset(levelFilename));
 			tileset = new Tileset(TextureManager.getTexture("tiles"), 32, 32);
-		TextureManager.loadTexture("background", XReader.getLevelBackground(levelFilename));
+		backgrounds = XReader.getLevelBackgrounds(levelFilename);
 		SoundManager.loadMusic("bgm", XReader.getLevelBGM(levelFilename), true);
 
 		for (String obstacleId : nextLevel.getBlueprintIDs()) {
@@ -228,6 +231,11 @@ public class World {
 			AnimationManager.disposeAnimation(assetId);
 			SoundManager.disposeSound(assetId);
 		}
+		for (Background bg : backgrounds) {
+			TextureManager.disposeTexture(bg.id);
+		}
+		backgrounds.clear();
+		TextureManager.disposeTexture("tiles");
 	}
 	// ----------------------------------------
 
@@ -256,9 +264,14 @@ public class World {
 		else return DEFAULT_BIOME;
 	}
 
-	public void resize(float w, float h) {
-		cambounds.setSize(w, h);
+	public Tileset getTileset(){
+		return tileset;
 	}
+
+	public List<Background> getBackgrounds(){
+		return backgrounds;
+	} 
+
 
 	// ========================================
 	// ========== OTHER FUNCTIONS =============
@@ -278,5 +291,9 @@ public class World {
 
 		TextureManager.disposeTexture("start");
 		TextureManager.disposeTexture("end");
+	}
+
+	public void resize(float w, float h) {
+		cambounds.setSize(w, h);
 	}
 }

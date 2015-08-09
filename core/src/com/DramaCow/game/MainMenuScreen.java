@@ -52,7 +52,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		TextureManager.loadTexture("button","startbutton.png");
+		TextureManager.loadTexture("button","textures/ui/startbutton.png");
 		startButton = new Button("button",128,64,buttonsX,7.0f,4.0f,2.0f) {
 			@Override 
 			public void onClick() {
@@ -77,17 +77,17 @@ public class MainMenuScreen implements Screen {
 		};
 
 		//Load temp menu tiles and bg
-		TextureManager.loadTexture("tiles","tileset.png");
+		TextureManager.loadTexture("tiles","textures/tilesets/grasslandtiles.png");
 		menuTiles = new Tileset(TextureManager.getTexture("tiles"),32,32);
-		TextureManager.loadTexture("background","background2.png");
+		TextureManager.loadTexture("background","textures/backgrounds/grasslandbg1.png");
 
 		//Load and create running animation
-		TextureManager.loadTexture("run","frog.png");
-		runAnimationTiles = new Tileset(TextureManager.getTexture("run"),70,52);
+		TextureManager.loadTexture("run","textures/enemies/chick.png");
+		runAnimationTiles = new Tileset(TextureManager.getTexture("run"),32,32);
 		runAnimation = new Animation(0.15625f, runAnimationTiles.getTiles());
 
 		//Menu music
-		SoundManager.loadMusic("bgm","bgm.ogg", true);
+		SoundManager.loadMusic("bgm","sound/music/bgm.ogg", true);
 		SoundManager.getMusic("bgm").play();
 	}
 
@@ -122,12 +122,17 @@ public class MainMenuScreen implements Screen {
 			game.batch.draw(TextureManager.getTexture("background"),i+bgOffset,0.0f,bgWidth,cam.viewportHeight);
 		}
 
+		game.batch.enableBlending();
+
 		//Draw tiles
 		for(float i = 0.0f; i < cam.viewportWidth + 1.0f ; i += 1.0f) {
-			game.batch.draw(menuTiles.getTile(5),i+tileOffset,0.0f,1.0f,1.0f);
-			game.batch.draw(menuTiles.getTile(5),i+tileOffset,1.0f,1.0f,1.0f);
-			game.batch.draw(menuTiles.getTile(1),i+tileOffset,2.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(15),i+tileOffset,0.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(15),i+tileOffset,1.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(14),i+tileOffset,2.0f,1.0f,1.0f);
+			game.batch.draw(menuTiles.getTile(16),i+tileOffset,3.0f,1.0f,1.0f);
 		}
+
+	game.batch.disableBlending();
 
 		//Draw buttons
 		game.batch.draw(startButton.getTexture(),startButton.getX(),startButton.getY(), startButton.getW(), startButton.getH());
@@ -135,7 +140,7 @@ public class MainMenuScreen implements Screen {
 
 		//Draw running animation
 		game.batch.enableBlending();
-		game.batch.draw(runAnimation.getKeyFrame(animationTime,0),2.0f,2.0f,(float) 70/32,(float) 52/32);
+		game.batch.draw(runAnimation.getKeyFrame(animationTime,0),2.0f,4.0f,2.0f,2.0f);
 
 		game.batch.end();
 	}

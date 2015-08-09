@@ -43,7 +43,7 @@ public class Player extends DynamicGameObject{
 			acceleration.x 	= 0.0f;
 			acceleration.y 	= 0.0f;
 			velocity.x 	   	= MAX_RUN_SPEED; 
-			velocity.y 	   	= (level.LEVEL_HEIGHT/2 - bounds.w/2 - position.y) * 5;
+			velocity.y 	   	= (level.START_HEIGHT - position.y) * 5;
 
 			super.update(dt);
 			return;

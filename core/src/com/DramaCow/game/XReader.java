@@ -59,8 +59,15 @@ public class XReader {
 		return getRoot(filename).getChildByName("assets").getAttribute("tileset");
 	}
 
-	public static String getLevelBackground(String filename) {
-		return getRoot(filename).getChildByName("assets").getAttribute("background");
+	public static List<Background> getLevelBackgrounds(String filename) {
+		List<Background> bgs = new ArrayList<Background>();
+		XmlReader.Element node = getRoot(filename).getChildByName("backgrounds");
+		for(int i = 0; i < node.getChildCount(); i++){
+			if(TextureManager.loadTexture(node.getChild(i).getAttribute("id"),node.getChild(i).getAttribute("imgfile"))){
+				bgs.add(new Background(node.getChild(i).getAttribute("id"), node.getChild(i).getFloatAttribute("p")));
+			}
+		}
+		return bgs;
 	}
 
 	public static String getLevelBGM(String filename) {

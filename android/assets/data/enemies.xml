@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<ENEMIES>
+	<spike>
+		<assets
+			spritesheet="textures/enemies/spike.png"
+			width="32" height="32"
+			animspeed="0"		
+			sound="spike.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="static"
+			difficulty="1"
+		/>
+	</spike>
+
+	<rockcrab>
+		<assets
+			spritesheet="textures/enemies/rockcrab.png"
+			width="32" height="32"
+			animspeed="0"		
+			sound="rockcrab.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="linear"
+			difficulty="2"
+		/>
+	</rockcrab>
+
+	<chick>
+		<assets
+			spritesheet="textures/enemies/chick.png"
+			width="32" height="32"
+			animspeed="0.1"		
+			sound="chick.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="wave"
+			difficulty="1"
+		/>
+	</chick>
+</ENEMIES>	

@@ -26,6 +26,12 @@ public class Level {
 
 	private boolean isReady;
 
+	public static final int MAX_HEIGHT = 12;	//Max height of left markers
+	public static final int MIN_HEIGHT = 3;		//Min height of left markers
+	public static final int START_HEIGHT = 5;	//Height of start and end platform
+	public static final int START_WIDTH = 8;	//Width of start platform
+	public static final int END_WIDTH = 5;		//Width of end platform
+
 	public Level(String biome, int w, int h) {
 		this.BIOME_ID = biome;
 
@@ -36,13 +42,6 @@ public class Level {
 	}
 
 	private boolean generate() {
-		//Constants
-		final int MAX_HEIGHT = 12;		//Max height of left markers
-		final int MIN_HEIGHT = 3;		//Min height of left markers
-		final int START_HEIGHT = 5;		//Height of start and end platform
-		final int START_WIDTH = 8;		//Width of start platform
-		final int END_WIDTH = 5;		//Width of end platform
-
 		//Get test template and put them in a list
 		List<String> folders = XReader.getTemplateFolders(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
 		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
@@ -238,7 +237,7 @@ public class Level {
 			float w = 1.0f;
 			float h = 1.5f;
 
-			level.player = new Player("Player", 3.0f - cambounds.w, level.LEVEL_HEIGHT/2 - h/2, w, h, level);
+			level.player = new Player("Player", 3.0f - cambounds.w, level.START_HEIGHT, w, h, level);
 			level.player.toggleExistence(false);
 
 			return level.player;

@@ -83,9 +83,11 @@ public class WorldRenderer {
 
 		game.batch.begin();
 			game.batch.disableBlending();
-			renderLevelBackground();
+			List<Background> bgs = world.getBackgrounds();
+			if(!bgs.isEmpty()) renderLevelBackground(bgs.get(0).id,bgs.get(0).p);
 
 			game.batch.enableBlending();
+			for(int i = 1; i < bgs.size(); i++) renderLevelBackground(bgs.get(i).id,bgs.get(i).p);
 			renderLevelTiles();
 			renderLevelObjects();
 			renderLevelBorder();
@@ -97,28 +99,25 @@ public class WorldRenderer {
 		shapeRenderer.end();		
 	}
 
-	private void renderLevelBackground() {
+	private void renderLevelBackground(final String textureID, final float p) {
 		// To be optimised
-
-		final float p = 2.0f; // Background moves p times slower than foreground
-
 		final float camx = world.getCamBounds().x;
 		final float camw = world.getCamBounds().w;
 
 		final float LEVEL_WIDTH  = world.getCurrentLevel().LEVEL_WIDTH;
 		final float LEVEL_HEIGHT = world.getCurrentLevel().LEVEL_HEIGHT;
 
-		final float w = TextureManager.getTextureWidth("background") / 32.0f; // Where 32px == 1.0m	
+		final float w = TextureManager.getTextureWidth(textureID) / 32.0f; // Where 32px == 1.0m	
 
-		final float base = camx < 0.0f ? 0.0f : camx;								// Where we want the background to start
-		final float limit = LEVEL_WIDTH < camx + camw ? LEVEL_WIDTH : camx + camw;	// Where we want the background to end
+		final float base = camx; //< 0.0f ? 0.0f : camx;								// Where we want the background to start
+		final float limit = LEVEL_WIDTH <= camx + camw ? LEVEL_WIDTH : camx + camw;	// Where we want the background to end
 
-		final float dx = Math.abs( (camx / p) % w ); 								// Background distance (absolute) 
+		final float dx = (camx / p) % w; 								// Background distance (absolute) 
 																					//     caused by camera offset from level start
 		final float x  = base - dx;													// Where background start at if we weren't clipping
 
 		for (int i = 0; x + (i * w) < limit; i++) {
-			game.batch.draw(TextureManager.getTexture("background"), x + (i * w), 0.0f, w, LEVEL_HEIGHT);
+			game.batch.draw(TextureManager.getTexture(textureID), x + (i * w), 0.0f, w, LEVEL_HEIGHT);
 		}
 	}
 
@@ -133,8 +132,8 @@ public class WorldRenderer {
 		int rmax = (int) (world.getCamBounds().y + world.getCamBounds().h + 1);
 			rmax = rmax <= world.getCurrentLevel().LEVEL_HEIGHT ? rmax : world.getCurrentLevel().LEVEL_HEIGHT; 
 
-		float width = world.tileset.TILE_X / 32;		// Where 32px == 1.0m
-		float height = world.tileset.TILE_Y / 32;
+		float width = world.getTileset().TILE_X / 32;		// Where 32px == 1.0m
+		float height = world.getTileset().TILE_Y / 32;
 		int tile = 0;
 
 		for (int r = r0; r < rmax; r++) {
@@ -150,17 +149,17 @@ public class WorldRenderer {
 				// Draw the tile
 				if (tile != 0) {
 					int index = 1 * tileUp + 2 * tileRight + 4 * tileDown + 8 * tileLeft;
-					game.batch.draw(world.tileset.getTile(index), c * width, r * height, width, height);
+					game.batch.draw(world.getTileset().getTile(index), c * width, r * height, width, height);
 				} else {
 					// Draw carpet tiles
 					if (tileDown == 1 && r > 0) 	
-						game.batch.draw(world.tileset.getTile(16), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(16), c * width, r * height, width, height);
 					if (tileLeft == 1 && c > 0) 
-						game.batch.draw(world.tileset.getTile(17), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(17), c * width, r * height, width, height);
 					if (tileUp == 1 && r < world.getCurrentLevel().LEVEL_HEIGHT - 1) 	
-						game.batch.draw(world.tileset.getTile(18), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(18), c * width, r * height, width, height);
 					if (tileRight == 1 && c < world.getCurrentLevel().LEVEL_WIDTH - 1) 
-						game.batch.draw(world.tileset.getTile(19), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(19), c * width, r * height, width, height);
 				}
 
 				if(r > 0 && r < world.getCurrentLevel().LEVEL_HEIGHT - 1 && tile == 1){
@@ -173,13 +172,13 @@ public class WorldRenderer {
 						&& world.getCurrentLevel().getMap()[r+1][c+1] == 1) tileUpRight = 1;
 
 					if (tileRight == 1 && tileDown == 1 && tileDownRight == 0) 
-						game.batch.draw(world.tileset.getTile(20), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(20), c * width, r * height, width, height);
 					if (tileDown == 1 && tileLeft == 1 && tileDownLeft == 0) 
-						game.batch.draw(world.tileset.getTile(21), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(21), c * width, r * height, width, height);
 					if (tileLeft == 1 && tileUp == 1 && tileUpLeft == 0) 
-						game.batch.draw(world.tileset.getTile(22), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(22), c * width, r * height, width, height);
 					if (tileUp == 1 && tileRight == 1 && tileUpRight ==0) 
-						game.batch.draw(world.tileset.getTile(23), c * width, r * height, width, height);
+						game.batch.draw(world.getTileset().getTile(23), c * width, r * height, width, height);
 				}
 			}
 		}

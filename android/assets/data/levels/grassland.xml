@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<GRASSLAND>
+	<assets
+		tileset="textures/tilesets/grasslandtiles.png"
+		bgm="sound/music/bgm.ogg"
+	/>
+	<backgrounds>
+		<background id="bg1"	imgfile="textures/backgrounds/grasslandbg1.png"		p="4.0"/>
+		<background id="bg2"	imgfile="textures/backgrounds/grasslandbg2.png"		p="2.0"/>
+	</backgrounds>
+	<obstacles>
+		<obstacle id="spike"        priority="10"/>
+		<obstacle id="rockcrab" 	priority="10"/>
+		<obstacle id="chick"        priority="10"/>
+	</obstacles>
+    <templateFolders>
+        <templateFolder path="templates/test1"/>
+        <templateFolder path="templates/test2"/>
+    </templateFolders>
+</GRASSLAND>	
