@@ -53,14 +53,14 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void show() {
 		TextureManager.loadTexture("button","startbutton.png");
-		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
+		startButton = new Button("button",128,64,buttonsX,7.0f,4.0f,2.0f) {
 			@Override 
 			public void onClick() {
 				game.setScreen(new GameScreen(game));
 			}
 		};
 
-		musicButton = new Button("button",64,32,buttonsX,3.0f,4.0f,2.0f) {
+		musicButton = new Button("button",128,64,buttonsX,3.0f,4.0f,2.0f) {
 			private boolean musicOff = false;
 
 			@Override 

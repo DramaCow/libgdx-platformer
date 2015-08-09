@@ -162,6 +162,7 @@ public class WorldRenderer {
 					if (tileRight == 1 && c < world.getCurrentLevel().LEVEL_WIDTH - 1) 
 						game.batch.draw(world.tileset.getTile(19), c * width, r * height, width, height);
 				}
+
 				if(r > 0 && r < world.getCurrentLevel().LEVEL_HEIGHT - 1 && tile == 1){
 					// Draw inner corner
 					int tileUpLeft = 0; int tileUpRight = 0; int tileDownLeft = 0; int tileDownRight = 0;
@@ -227,9 +228,9 @@ public class WorldRenderer {
 
 	private void renderPlayer() {
 		//game.batch.draw(AnimationManager.getAnimation(world.player.getStateID()).getKeyFrame(world.player.getTime(),0), world.player.getX(),
-				//world.player.getY(), world.player.getWidth(), world.player.getHeight());
-		game.batch.draw(TextureManager.getTexture("player"), world.player.getX(),
-				world.player.getY(), world.player.getWidth(), world.player.getHeight());
+			//world.player.getY(), world.player.getWidth(), world.player.getHeight());
+		game.batch.draw(TextureManager.getTexture("player"), world.player.getX(), world.player.getY(), 
+			world.player.getWidth(), world.player.getHeight());
 	}
 
 	public void resize(int w, int h) {

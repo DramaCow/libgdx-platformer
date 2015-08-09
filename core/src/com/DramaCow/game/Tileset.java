@@ -9,13 +9,13 @@ import java.util.ArrayList;
 
 public class Tileset {
 	
-	public final int TILE_X;
-	public final int TILE_Y;
+	public float TILE_X;
+	public float TILE_Y;
 
 	private Texture tileset;
 	private List<TextureRegion> tiles;
 
-	public Tileset(Texture tileset, final int TILE_X, final int TILE_Y) {
+	public Tileset(Texture tileset, final int TILE_X, final int TILE_Y, boolean halfPixelCorrection) {
 		this.TILE_X = TILE_X;
 		this.TILE_Y = TILE_Y;
 		this.tileset = tileset;
@@ -26,10 +26,27 @@ public class Tileset {
 
 		for (int j = 0; j < rowSize; j++) {
 			for (int i = 0; i < columnSize; i++) {
-				tiles.add(new TextureRegion(tileset, i * TILE_X, j * TILE_Y, 
-					TILE_X, TILE_Y));
+				TextureRegion tr = new TextureRegion(tileset, i * TILE_X, j * TILE_Y, 
+					TILE_X, TILE_Y);
+				tiles.add(halfPixelCorrection ? halfPixelCorrection(tr) : tr); // fixes texel bleeding
 			}
 		}
+	}
+
+	public Tileset(Texture tileset, final int TILE_X, final int TILE_Y) {
+		this(tileset, TILE_X, TILE_Y, true);
+	}
+	
+	private TextureRegion halfPixelCorrection(TextureRegion region) {
+		float x = region.getRegionX();
+		float y = region.getRegionY();
+		float width = region.getRegionWidth();
+		float height = region.getRegionHeight();
+		float invTexWidth = 1.0f / region.getTexture().getWidth();
+		float invTexHeight = 1.0f / region.getTexture().getHeight();
+		region.setRegion((x + 0.5f) * invTexWidth, (y+0.5f) * invTexHeight, 			
+			(x + width - 0.5f) * invTexWidth, (y + height - 0.5f) * invTexHeight);
+		return region;       
 	}
 
 	public TextureRegion getTile(int i) {
