@@ -53,6 +53,19 @@ public class GDXgame implements ApplicationListener {
         screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
+	// DANGEROUS METHOD, only usable inside package
+	void assignScreen(Screen s) {
+        screen = s;
+	}
+
+	public void runEffects(ScreenEffect... effects) {
+		screen = EffectsScreen.applyEffects(this, screen, effects);
+	}
+
+	public void transition(Screen next, ScreenEffect... effects) {
+		screen = EffectsScreen.transition(this, screen, next, effects);
+	}
+
 	public void setColour(float r, float g, float b, float a) {
 		Gdx.gl.glClearColor(r, g, b, a);
 	}

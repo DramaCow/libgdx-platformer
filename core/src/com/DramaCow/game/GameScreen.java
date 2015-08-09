@@ -35,6 +35,8 @@ public class GameScreen implements Screen {
 	public void show() {
 		world.init();
 		worldRenderer.init();
+
+		game.runEffects(new EffectFadeIn(2.0f));
 	}
 
 	@Override

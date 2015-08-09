@@ -56,7 +56,8 @@ public class MainMenuScreen implements Screen {
 		startButton = new Button("button",64,32,buttonsX,7.0f,4.0f,2.0f) {
 			@Override 
 			public void onClick() {
-				game.setScreen(new GameScreen(game));
+				game.transition(new GameScreen(game), new EffectCircle(0.2f));
+				//game.setScreen(new GameScreen(game));
 			}
 		};
 
@@ -65,6 +66,8 @@ public class MainMenuScreen implements Screen {
 
 			@Override 
 			public void onClick() {
+				game.runEffects(new EffectCircle(0.2f), new EffectFadeIn(0.2f));
+				/*
 				if (!musicOff) {
 					SoundManager.getMusic("bgm").pause();
 					musicOff = true;
@@ -73,6 +76,7 @@ public class MainMenuScreen implements Screen {
 					SoundManager.getMusic("bgm").play();
 					musicOff = false;
 				}
+				*/
 			}
 		};
 
