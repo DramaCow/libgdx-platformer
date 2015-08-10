@@ -10,6 +10,15 @@
 		<ruins 		level_file="data/levels/grassland.xml" 	level_number="5"/>
 		<hell 		level_file="data/levels/grassland.xml"	level_number="6"/>
 	</levels>
+    
+    <assets
+        heart="textures/pickups/heart.png"
+        coin="textures/pickups/coin.png"
+        loading="textures/mark.png"
+        borderLeft="textures/jagged2.png"
+        borderRight="textures/jagged.png"
+    />
+        
 </LEVEL_MASTER>	
 
 

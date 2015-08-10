@@ -32,7 +32,23 @@ public class XReader {
 
 	// Level master parser
 	public static String getLoadingScreen(String filename) {
-		return getRoot(filename).getChildByName("default").getAttribute("loading");
+		return getRoot(filename).getChildByName("assets").getAttribute("loading");
+	}
+
+	public static String getBorderLeft(String filename){
+		return getRoot(filename).getChildByName("assets").getAttribute("borderLeft");
+	}
+
+	public static String getBorderRight(String filename){
+		return getRoot(filename).getChildByName("assets").getAttribute("borderRight");
+	}
+
+	public static String getHeartGraphic(String filename){
+		return getRoot(filename).getChildByName("assets").getAttribute("heart");
+	}
+
+	public static String getCoinGraphic(String filename){
+		return getRoot(filename).getChildByName("assets").getAttribute("coin");
 	}
 
 	public static String getFilenameOfLevel(String filename, String levelname) {

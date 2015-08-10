@@ -68,12 +68,16 @@ public class World {
 			AnimationManager.loadAnimation(player.getStateID(state), new Animation(0.0625f,playerTiles.getTiles()));
 		}
 
-		// Loading screen image should be loaded from a file
-		TextureManager.loadTexture("loading", "textures/mark.png");
-
-		// Borders should be loaded from a file
-		TextureManager.loadTexture("start", "textures/jagged2.png");
-		TextureManager.loadTexture("end", "textures/jagged.png");
+		//Load textures
+		TextureManager.loadTexture("loading", XReader.getLoadingScreen(Terms.LEVEL_MASTER));
+		TextureManager.loadTexture("start", XReader.getBorderLeft(Terms.LEVEL_MASTER));
+		TextureManager.loadTexture("end", XReader.getBorderRight(Terms.LEVEL_MASTER));
+		TextureManager.loadTexture("coin", XReader.getCoinGraphic(Terms.LEVEL_MASTER));
+		TextureManager.loadTexture("heart", XReader.getHeartGraphic(Terms.LEVEL_MASTER));
+		Tileset coinTiles = new Tileset(TextureManager.getTexture("coin"),32,32);
+		Tileset heartTiles = new Tileset(TextureManager.getTexture("heart"),32,32);
+		AnimationManager.loadAnimation("coin", new Animation(0.1f, coinTiles.getTiles()));
+		AnimationManager.loadAnimation("heart", new Animation(0.2f, heartTiles.getTiles()));
 	}
 
 	// ========================================

@@ -182,14 +182,12 @@ public class Level {
 		for(LevelTemplateObject templateObject: templateObjects){
 			if(rn.nextFloat() <= templateObject.getProbability()){
 				String name = templateObject.getName();
-
-				/*
 				if(name.equals("coin")){
 					objects.add(new Coin(templateObject.getX(), templateObject.getY()));
 				}
 				else if(name.equals("heart")){
 					objects.add(new Heart(templateObject.getX(), templateObject.getY()));
-				}*/
+				}
 				if(name.equals("static")){
 					if(staticEnemies.size() == 0) continue;
 					objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),

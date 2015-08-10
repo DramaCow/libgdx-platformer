@@ -3,7 +3,7 @@ package com.DramaCow.game;
 public class Coin extends GameObject{
 
 	public Coin(float x, float y){
-	 	super("Coin", x, y, 1.0f, 1.0f);
+	 	super("coin", x, y, 1.0f, 1.0f);
 	}
 
 	@Override
