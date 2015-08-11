@@ -11,9 +11,13 @@ abstract public class DynamicGameObject extends GameObject {
 	protected final Vector2D velocity;
 	protected final Vector2D acceleration;
 
-	protected Vector2D posCorrect = new Vector2D(); // Used for correcting penetration distance
+	protected static final Vector2D down_dir 	= new Vector2D(0.0f, -1.0f); // Do not set these
+	protected static final Vector2D up_dir 		= new Vector2D(0.0f,  1.0f);
+	protected static final Vector2D no_dir 		= new Vector2D(0.0f,  0.0f);
+	
+	protected final Vector2D g_dir = new Vector2D(0.0f, -1.0f);
 
-	protected boolean collidable = false;
+	protected boolean collidable = true;
 	protected boolean grounded = false;
 
 	protected Level level;
@@ -39,10 +43,16 @@ abstract public class DynamicGameObject extends GameObject {
 		}
 
 		// Pre-collision
+		acceleration.add( Vector2D.scalar(level.G_MAG, g_dir) );
 		velocity.add( Vector2D.scalar(dt, acceleration) );
 
+		// Used for correcting penetration distance (needs to be reset at start of every update)
+		Vector2D posCorrect = new Vector2D(0.0f, 0.0f); 
+
 		// Turn DynamicObject into CollisionObject
-		CollisionObject object = new CollisionObject(new AABB(bounds), velocity, acceleration, posCorrect);
+		CollisionObject object = new CollisionObject(new AABB(bounds), new Vector2D(velocity), 
+			new Vector2D(acceleration), new Vector2D(posCorrect));
+		CollisionDGO dgo = new CollisionDGO(object, level.G_MAG, new Vector2D(g_dir), collidable, grounded);
 
 		// Position after one frame if no collision were to occur
 		Vector2D nextPosition = Vector2D.add( object.box.position, Vector2D.scalar(dt, object.velocity) );
@@ -96,6 +106,7 @@ abstract public class DynamicGameObject extends GameObject {
 
 		// Post-collision
 		velocity.set(object.velocity.x, object.velocity.y);
+		g_dir.set(dgo.g_dir.x, dgo.g_dir.y);
 		posCorrect.add(object.posCorrect);
 
 		// Correct the velocity
@@ -104,9 +115,6 @@ abstract public class DynamicGameObject extends GameObject {
 		position.add( Vector2D.scalar(dt, velocity) );
 		bounds.x = position.x;
 		bounds.y = position.y;
-
-		// Reset posCorrect
-		posCorrect.set(0.0f, 0.0f);
 	}
 
 	public boolean internalTileCheck(int r, int c, AABB box, Vector2D normal) {
@@ -168,5 +176,26 @@ abstract public class DynamicGameObject extends GameObject {
 		position.set(x,y);
 		bounds.x = x;
 		bounds.y = y;
+	}
+
+	// Interface class
+	public static class CollisionDGO {
+		
+		public CollisionObject collisionObject;
+
+		public final float G_MAG;
+		public Vector2D g_dir;
+
+		public boolean collidable;
+		public boolean grounded;
+
+		public CollisionDGO(CollisionObject collisionObject, final float G_MAG, Vector2D g_dir, 
+							boolean collidable, boolean grounded) {
+			this.collisionObject = collisionObject;
+			this.G_MAG = G_MAG;
+			this.g_dir = g_dir;
+			this.collidable = collidable;
+			this.grounded = grounded;
+		}
 	}
 }
