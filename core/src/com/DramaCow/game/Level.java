@@ -22,7 +22,6 @@ public class Level {
 	private List<GameObject> objects;
 	private List<LevelTemplateObject> templateObjects;
 	private Player player;
-	private Vector2D gravity = new Vector2D(0.0f,-50.0f);
 
 	private boolean isReady;
 
@@ -31,6 +30,8 @@ public class Level {
 	public static final int START_HEIGHT = 5;	//Height of start and end platform
 	public static final int START_WIDTH = 8;	//Width of start platform
 	public static final int END_WIDTH = 5;		//Width of end platform
+
+	public final float G_MAG = 100.0f;
 
 	public Level(String biome, int w, int h) {
 		this.BIOME_ID = biome;
@@ -64,7 +65,7 @@ public class Level {
 		Random rn = new Random();
 		float jumpSpeed = Player.getJumpSpeed();
 		float runSpeed = Player.getMaxRunSpeed();
-		float gy = gravity.y;
+		float gy = -G_MAG; // Assumes direction (0, -1)
 		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gy);
 
 		//rx and ry are keep track of the position of the right marker of a template
@@ -288,8 +289,4 @@ public class Level {
 			System.out.println();
 		}
 	}
-
-	public Vector2D getGravity(){
-		return gravity;
-	}	
 }

@@ -1,4 +1,4 @@
-	package com.DramaCow.game;
+package com.DramaCow.game;
 
 import com.DramaCow.maths.Vector2D;
 import com.DramaCow.maths.Rect;
@@ -20,8 +20,6 @@ public class Player extends DynamicGameObject{
 	private final float JUMP_SPEED = Player.getJumpSpeed();
 	private final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
 
-	private final float gy;
-
 	private PlayerState state;
 	private int health;
 
@@ -34,7 +32,6 @@ public class Player extends DynamicGameObject{
 		super(id,x,y,w,h,level);
 		collidable = true;
 		setState(PlayerState.RUN);
-		gy = level.getGravity().y; 
 	}
 
 	@Override
@@ -50,8 +47,7 @@ public class Player extends DynamicGameObject{
 		}
 	
 		acceleration.x 	= 0.0f;
-		acceleration.y 	= gy; //grounded ? 0.0f : gy;
-		//velocity.y 	   	= grounded ? 0.0f : velocity.y;
+		acceleration.y 	= 0.0f;
 
 		updateState(dt);
 
@@ -80,7 +76,7 @@ public class Player extends DynamicGameObject{
 	}
 
 	private void updateState(float dt) {
-		if(up) acceleration.y = gy; else acceleration.y = gy*3;
+		if (down) g_dir.scalar(-1);
 		switch (state){
 			case RUN:
 				acceleration.x += ACCELERATION.x;
@@ -92,7 +88,7 @@ public class Player extends DynamicGameObject{
 
 			case JUMP:
 				acceleration.x += ACCELERATION.x;
-				if (up) acceleration.y += ACCELERATION.y;
+				if (up) acceleration.sub( Vector2D.scalar( 0.75f * level.G_MAG, g_dir) );
 				if (velocity.y <= 0.0f) state = PlayerState.FALL;
 				break;
 
@@ -129,6 +125,7 @@ public class Player extends DynamicGameObject{
 	public void toggleExistence(boolean exists) {
 		this.exists = exists;
 		this.collidable = exists;
+		this.g_dir.set( exists ? down_dir : no_dir );
 		// toggle scoring
 	}
 
@@ -183,6 +180,6 @@ public class Player extends DynamicGameObject{
 	}
 
 	public static float getMaxRunSpeed() {
-		return 8.0f;
+		return 12.0f;
 	}
 }
