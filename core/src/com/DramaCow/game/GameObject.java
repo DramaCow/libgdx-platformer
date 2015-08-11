@@ -1,18 +1,18 @@
 package com.DramaCow.game;
 
 import com.DramaCow.maths.Vector2D;
-import com.DramaCow.maths.Rect;
+import com.DramaCow.maths.AABB;
 
 abstract public class GameObject implements Comparable<GameObject>{
-	public final Vector2D position;
-	public final Rect bounds;
+	protected final Vector2D position; 	// Position for graphic placement
+	protected final AABB box; 			// Bounding box and center position
 	public final String id;
 
 	protected float t = 0.0f;
 	
-	public GameObject (String id, float x, float y, float width, float height) {
+	public GameObject (String id, float x, float y, float w, float h) {
 		this.position = new Vector2D(x, y);
-		this.bounds = new Rect(x, y, width, height);
+		this.box = new AABB(x + w/2, y + h/2, w/2, h/2);
 		this.id = id;
 	}
 
@@ -33,11 +33,11 @@ abstract public class GameObject implements Comparable<GameObject>{
 	}
 
 	public float getWidth() {
-		return bounds.w;
+		return box.halfExtents.x * 2;
 	}
 
 	public float getHeight() {
-		return bounds.h;
+		return box.halfExtents.y * 2;
 	}
 
 	public float getTime() {
@@ -45,6 +45,6 @@ abstract public class GameObject implements Comparable<GameObject>{
 	}
 
 	public int compareTo(GameObject compareObject) {
-		return Math.round(this.getX() - compareObject.getX());
+		return Math.round(this.box.position.x - compareObject.box.position.x);
 	}
 }

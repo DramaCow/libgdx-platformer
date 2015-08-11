@@ -27,7 +27,7 @@ public class Enemy extends DynamicGameObject{
 
 	// Allow repositioning cloned enemy
 	public Enemy(Enemy that, float x, float y, final Level level, float gdirx, float gdiry) {
-		super(that.id, x, y, that.bounds.w, that.bounds.h, level);
+		super(that.id, x, y, that.box.halfExtents.x * 2, that.box.halfExtents.y * 2, level);
 		this.g_dir.set(gdirx,gdiry);
 		this.ai = Ai.getAI(that.ai.ID(), that.ai.difficulty);
 		this.ai.create(this);

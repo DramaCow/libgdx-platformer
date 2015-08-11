@@ -70,9 +70,7 @@ public class Player extends DynamicGameObject{
 	}
 
 	public void printbools() {
-		System.out.println(acceleration);
-		System.out.println(velocity);
-		System.out.println(position);
+		System.out.println("Nothing to print");
 	}
 
 	private void updateState(float dt) {
@@ -130,7 +128,7 @@ public class Player extends DynamicGameObject{
 	}
 
 	public Rect bounds() {
-		return new Rect(bounds);
+		return box.toRect();
 	}
 
 	public void hurt(int damage){
