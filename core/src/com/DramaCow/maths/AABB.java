@@ -26,6 +26,11 @@ public class AABB {
 		this.position = new Vector2D(r.x + halfExtents.x, r.y + halfExtents.y);
 	}
 
+	public AABB(AABB box) {
+		this.position = new Vector2D(box.position);
+		this.halfExtents = new Vector2D(box.halfExtents);
+	}
+
 	public Rect toRect() {
 		return new Rect(position.x - halfExtents.x, position.y - halfExtents.y/2, halfExtents.x * 2, halfExtents.y * 2);
 	}

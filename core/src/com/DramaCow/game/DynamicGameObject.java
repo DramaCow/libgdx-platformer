@@ -38,8 +38,8 @@ abstract public class DynamicGameObject extends GameObject {
 		if (!collidable) {
 			velocity.add(acceleration.x * dt, acceleration.y * dt);
 			position.add(velocity.x * dt, velocity.y * dt);
-			bounds.x = position.x;
-			bounds.y = position.y;
+			box.position.x = position.x + box.halfExtents.x;
+			box.position.y = position.y + box.halfExtents.y;
 		}
 
 		// Pre-collision
@@ -50,7 +50,7 @@ abstract public class DynamicGameObject extends GameObject {
 		Vector2D posCorrect = new Vector2D(0.0f, 0.0f); 
 
 		// Turn DynamicObject into CollisionObject
-		CollisionObject object = new CollisionObject(new AABB(bounds), new Vector2D(velocity), 
+		CollisionObject object = new CollisionObject(new AABB(box), new Vector2D(velocity), 
 			new Vector2D(acceleration), new Vector2D(posCorrect));
 		CollisionDGO dgo = new CollisionDGO(object, level.G_MAG, new Vector2D(g_dir), collidable, grounded);
 
@@ -113,8 +113,8 @@ abstract public class DynamicGameObject extends GameObject {
 		velocity.add(posCorrect);
 
 		position.add( Vector2D.scalar(dt, velocity) );
-		bounds.x = position.x;
-		bounds.y = position.y;
+		box.position.x = position.x + box.halfExtents.x;
+		box.position.y = position.y + box.halfExtents.y;
 	}
 
 	public boolean internalTileCheck(int r, int c, AABB box, Vector2D normal) {
@@ -168,14 +168,14 @@ abstract public class DynamicGameObject extends GameObject {
 
 	public void setPosition(Vector2D p){
 		position.set(p);
-		bounds.x = position.x;
-		bounds.y = position.y;
+		box.position.x = position.x + box.halfExtents.x;
+		box.position.y = position.y + box.halfExtents.y;
 	}
 
 	public void setPosition(float x, float y) {
 		position.set(x,y);
-		bounds.x = x;
-		bounds.y = y;
+		box.position.x = x + box.halfExtents.x;
+		box.position.y = y + box.halfExtents.y;
 	}
 
 	// Interface class
