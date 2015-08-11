@@ -140,8 +140,8 @@ public class Level {
 			//Update positions of the objects for the template and add them to the list
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
 			for(LevelTemplateObject object : currentTemplateObjects){
-				if(object.getX() + templateX < LEVEL_WIDTH - END_WIDTH) templateObjects.add(new LevelTemplateObject(object.getName(),
-					object.getX() + templateX, object.getY() + templateY, object.getProbability()));
+				if(object.x + templateX < LEVEL_WIDTH - END_WIDTH) templateObjects.add(new LevelTemplateObject(object.name,
+					object.x + templateX, object.y + templateY, object.probability, object.gdirx, object.gdiry));
 			}
 		}
 
@@ -180,28 +180,28 @@ public class Level {
 		Random rn = new Random();
 
 		for(LevelTemplateObject templateObject: templateObjects){
-			if(rn.nextFloat() <= templateObject.getProbability()){
-				String name = templateObject.getName();
+			if(rn.nextFloat() <= templateObject.probability){
+				String name = templateObject.name;
 				if(name.equals("coin")){
-					objects.add(new Coin(templateObject.getX(), templateObject.getY()));
+					objects.add(new Coin(templateObject.x, templateObject.y));
 				}
 				else if(name.equals("heart")){
-					objects.add(new Heart(templateObject.getX(), templateObject.getY()));
+					objects.add(new Heart(templateObject.x, templateObject.y));
 				}
 				if(name.equals("static")){
 					if(staticEnemies.size() == 0) continue;
 					objects.add(new Enemy(staticEnemies.get(rn.nextInt(staticEnemies.size())),
-						templateObject.getX(), templateObject.getY(), this));
+						templateObject.x, templateObject.y, this));
 				}
 				else if(name.equals("linear")){
 					if(linearEnemies.size() == 0) continue;
 					objects.add(new Enemy(linearEnemies.get(rn.nextInt(linearEnemies.size())),
-						templateObject.getX(), templateObject.getY(), this));
+						templateObject.x, templateObject.y, this));
 				}
 				else if(name.equals("wave")){
 					if(waveEnemies.size() == 0) continue;
 					objects.add(new Enemy(waveEnemies.get(rn.nextInt(waveEnemies.size())),
-						templateObject.getX(), templateObject.getY(), this));
+						templateObject.x, templateObject.y, this));
 				}
 			}
 		}

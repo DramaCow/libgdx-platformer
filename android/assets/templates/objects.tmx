@@ -16,16 +16,25 @@
   </object>
   <object id="5" name="static" gid="3" x="0" y="-32" width="32" height="32">
    <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
   <object id="6" name="linear" gid="4" x="64" y="-32" width="32" height="32">
    <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="-1"/>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
   <object id="7" name="wave" gid="5" x="128" y="-32" width="32" height="32">
    <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
     <property name="probability" value="1.0"/>
    </properties>
   </object>

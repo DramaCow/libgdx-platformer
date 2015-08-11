@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-up" width="18" height="10" tilewidth="32" tileheight="32" nextobjectid="58">
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="18" height="10" tilewidth="32" tileheight="32" nextobjectid="112">
  <tileset firstgid="1" name="templateTiles" tilewidth="32" tileheight="32">
   <image source="../templateTiles.png" width="128" height="64"/>
  </tileset>
@@ -26,7 +26,7 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="4"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -191,167 +191,247 @@
   </data>
  </layer>
  <objectgroup name="Object Layer">
-  <object id="24" name="static" gid="11" x="128" y="288" width="32" height="32">
+  <object id="58" name="static" gid="11" x="128" y="288" width="32" height="32">
    <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="25" name="static" gid="11" x="192" y="288" width="32" height="32">
+  <object id="59" name="static" gid="11" x="160" y="288" width="32" height="32">
    <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="26" name="heart" gid="10" x="160" y="288" width="32" height="32">
+  <object id="60" name="static" gid="11" x="192" y="288" width="32" height="32">
+   <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="61" name="static" gid="11" x="384" y="288" width="32" height="32">
+   <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="62" name="static" gid="11" x="480" y="288" width="32" height="32">
+   <properties>
+    <property name="flip" value="0"/>
+    <property name="g-dir-x" value="0"/>
+    <property name="g-dir-y" value="0"/>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="63" name="heart" gid="10" x="448" y="288" width="32" height="32">
    <properties>
     <property name="probability" value="0.5"/>
    </properties>
   </object>
-  <object id="28" name="static" gid="11" x="416" y="288" width="32" height="32">
+  <object id="64" name="coin" gid="9" x="0" y="128" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="29" name="static" gid="11" x="448" y="288" width="32" height="32">
+  <object id="65" name="coin" gid="9" x="0" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="30" name="coin" gid="9" x="384" y="288" width="32" height="32">
+  <object id="66" name="coin" gid="9" x="0" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="31" name="coin" gid="9" x="480" y="288" width="32" height="32">
+  <object id="67" name="coin" gid="9" x="0" y="96" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="32" name="coin" gid="9" x="64" y="96" width="32" height="32">
+  <object id="68" name="coin" gid="9" x="0" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="33" name="coin" gid="9" x="64" y="128" width="32" height="32">
+  <object id="69" name="coin" gid="9" x="32" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="34" name="coin" gid="9" x="64" y="160" width="32" height="32">
+  <object id="70" name="coin" gid="9" x="32" y="96" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="35" name="coin" gid="9" x="96" y="96" width="32" height="32">
+  <object id="71" name="coin" gid="9" x="64" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="36" name="coin" gid="9" x="64" y="192" width="32" height="32">
+  <object id="72" name="coin" gid="9" x="32" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="37" name="coin" gid="9" x="128" y="96" width="32" height="32">
+  <object id="73" name="coin" gid="9" x="64" y="128" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="38" name="coin" gid="9" x="96" y="160" width="32" height="32">
+  <object id="74" name="coin" gid="9" x="64" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="39" name="coin" gid="9" x="128" y="160" width="32" height="32">
+  <object id="75" name="coin" gid="9" x="128" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="40" name="coin" gid="9" x="192" y="128" width="32" height="32">
+  <object id="76" name="coin" gid="9" x="128" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="41" name="coin" gid="9" x="192" y="160" width="32" height="32">
+  <object id="77" name="coin" gid="9" x="128" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="42" name="coin" gid="9" x="224" y="192" width="32" height="32">
+  <object id="78" name="coin" gid="9" x="160" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="43" name="coin" gid="9" x="256" y="128" width="32" height="32">
+  <object id="79" name="coin" gid="9" x="192" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="44" name="coin" gid="9" x="256" y="160" width="32" height="32">
+  <object id="80" name="coin" gid="9" x="192" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="45" name="coin" gid="9" x="352" y="128" width="32" height="32">
+  <object id="81" name="coin" gid="9" x="192" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="46" name="coin" gid="9" x="320" y="160" width="32" height="32">
+  <object id="82" name="coin" gid="9" x="256" y="96" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="47" name="coin" gid="9" x="352" y="192" width="32" height="32">
+  <object id="83" name="coin" gid="9" x="256" y="128" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="48" name="coin" gid="9" x="384" y="128" width="32" height="32">
+  <object id="84" name="coin" gid="9" x="256" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="49" name="coin" gid="9" x="384" y="192" width="32" height="32">
+  <object id="85" name="coin" gid="9" x="256" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="50" name="coin" gid="9" x="448" y="96" width="32" height="32">
+  <object id="86" name="coin" gid="9" x="288" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="51" name="coin" gid="9" x="448" y="128" width="32" height="32">
+  <object id="87" name="coin" gid="9" x="288" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="52" name="coin" gid="9" x="448" y="160" width="32" height="32">
+  <object id="88" name="coin" gid="9" x="320" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="53" name="coin" gid="9" x="448" y="192" width="32" height="32">
+  <object id="89" name="coin" gid="9" x="320" y="160" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="54" name="coin" gid="9" x="480" y="128" width="32" height="32">
+  <object id="90" name="coin" gid="9" x="384" y="128" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="55" name="coin" gid="9" x="512" y="96" width="32" height="32">
+  <object id="91" name="coin" gid="9" x="384" y="96" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="56" name="coin" gid="9" x="512" y="160" width="32" height="32">
+  <object id="92" name="coin" gid="9" x="384" y="192" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>
   </object>
-  <object id="57" name="coin" gid="9" x="512" y="192" width="32" height="32">
+  <object id="93" name="coin" gid="9" x="416" y="160" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="94" name="coin" gid="9" x="416" y="224" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="95" name="coin" gid="9" x="448" y="160" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="96" name="coin" gid="9" x="384" y="160" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="97" name="coin" gid="9" x="448" y="224" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="106" name="coin" gid="9" x="512" y="128" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="107" name="coin" gid="9" x="544" y="128" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="108" name="coin" gid="9" x="512" y="224" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="109" name="coin" gid="9" x="512" y="160" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="110" name="coin" gid="9" x="544" y="192" width="32" height="32">
+   <properties>
+    <property name="probability" value="1.0"/>
+   </properties>
+  </object>
+  <object id="111" name="coin" gid="9" x="544" y="224" width="32" height="32">
    <properties>
     <property name="probability" value="1.0"/>
    </properties>

@@ -14,6 +14,20 @@
 		/>
 	</spike>
 
+	<stake>
+		<assets
+			spritesheet="textures/enemies/stake.png"
+			width="32" height="32"
+			animspeed="0"		
+			sound="stake.ogg" 
+		/>
+		<attributes
+			width="1" height="1"
+			ai="static"
+			difficulty="1"
+		/>
+	</stake>
+
 	<rockcrab>
 		<assets
 			spritesheet="textures/enemies/rockcrab.png"

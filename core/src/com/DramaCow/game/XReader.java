@@ -167,9 +167,21 @@ public class XReader {
 		Set<LevelTemplateObject> objects = new HashSet<LevelTemplateObject>();
 		XmlReader.Element node = getRoot(templateFile).getChildByName("objectgroup");
 		for(int i = 0; i < node.getChildCount(); i++){
+			//get the properties
+			XmlReader.Element properties = node.getChild(i).getChildByName("properties");
+			float probability = 0.0f, gdirx = 0.0f, gdiry = 0.0f;
+			for(int j = 0; j < properties.getChildCount(); j++){
+				if(properties.getChild(j).get("name").equals("probability")) 
+					probability = properties.getChild(j).getFloatAttribute("value");
+				if(properties.getChild(j).get("name").equals("g-dir-x")) 
+					gdirx = properties.getChild(j).getFloatAttribute("value");
+				if(properties.getChild(j).get("name").equals("g-dir-y")) 
+					gdiry = properties.getChild(j).getFloatAttribute("value");
+			}
+			//create the object
 			objects.add(new LevelTemplateObject(node.getChild(i).get("name"), 
 				node.getChild(i).getFloatAttribute("x")/32.0f, height - node.getChild(i).getFloatAttribute("y")/32.0f, 
-				node.getChild(i).getChildByName("properties").getChild(0).getFloatAttribute("value")));
+				probability, gdirx, gdiry));
 		}
 		return objects;
 	}

@@ -4,7 +4,7 @@
 
 	<levels>
 		<grassland 	level_file="data/levels/grassland.xml" 	level_number="1"/>
-		<forest 	level_file="data/levels/grassland.xml" 	level_number="2"/>
+		<forest 	level_file="data/levels/forest.xml"     level_number="2"/>
 		<mountains  level_file="data/levels/grassland.xml" 	level_number="3"/>
 		<cave 		level_file="data/levels/grassland.xml" 	level_number="4"/>
 		<ruins 		level_file="data/levels/grassland.xml" 	level_number="5"/>
