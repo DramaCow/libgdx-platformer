@@ -5,7 +5,8 @@
 		bgm="sound/music/bgm.ogg"
 	/>
 	<backgrounds>
-		<background id="bg1"	imgfile="textures/backgrounds/forestbgtest.png"		p="4.0"/>
+		<background id="bg1"	imgfile="textures/backgrounds/forestbg1.png"		p="4.0"/>
+        <background id="bg2"	imgfile="textures/backgrounds/forestbg2.png"		p="2.0"/>
 	</backgrounds>
 	<obstacles>
 		<obstacle id="stake"        priority="10"/>
