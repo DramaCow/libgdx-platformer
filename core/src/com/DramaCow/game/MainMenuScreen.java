@@ -17,7 +17,7 @@ public class MainMenuScreen implements Screen {
 	private OrthographicCamera cam;
 
 	private Rectangle goToGameScreen;
-	private Vector3 touchPoint;
+	private Vector3 touchPoint = new Vector3();
 
 	private Button startButton;
 	private Button musicButton;
@@ -42,8 +42,6 @@ public class MainMenuScreen implements Screen {
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.update();
 		System.out.println(cam.viewportWidth + ", " + cam.viewportHeight);
-
-		touchPoint = new Vector3();
 
 		//Init offsets
 		tileOffset = 0.0f;

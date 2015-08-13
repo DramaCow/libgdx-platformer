@@ -14,7 +14,6 @@
 		<obstacle id="chick"        priority="10"/>
 	</obstacles>
     <templateFolders>
-        <templateFolder path="templates/test1"/>
-        <templateFolder path="templates/test2"/>
+        <templateFolder path="templates/test_s"/>
     </templateFolders>
 </GRASSLAND>	

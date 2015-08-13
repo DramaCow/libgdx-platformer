@@ -84,12 +84,12 @@ public class World {
 	// ========== STATE FUNCTIONS =============
 	// ========================================
 
-	public void update(float dt) {
+	public void update(float tx, float ty, boolean clicked, float dt) {
 		switch (state) {	
-			case LOADING:	loading(); 		break;
-			case START:		start(dt); 		break;
-			case RUNNING:	running(dt); 	break;
-			case END:		end(dt); 		break; 
+			case LOADING:	loading(); 						break;
+			case START:		start(dt); 						break;
+			case RUNNING:	running(tx, ty, clicked, dt); 	break;
+			case END:		end(dt); 						break; 
 		}
 	}
 
@@ -142,13 +142,13 @@ public class World {
 						player.up = true;
 						break;
 					case Keys.A:
-						player.left = true;
+						//player.left = true;
 						break;
 					case Keys.S:
-						player.down = true;
+						//player.down = true;
 						break;
 					case Keys.D:
-						player.right = true;
+						//player.right = true;
 						break;
 					case Keys.P:
 						player.printbools();
@@ -164,13 +164,13 @@ public class World {
 						player.up = false;
 						break;
 					case Keys.A:
-						player.left = false;
+						//player.left = false;
 						break;
 					case Keys.S:
-						player.down = false;
+						//player.down = false;
 						break;
 					case Keys.D:
-						player.right = false;
+						//player.right = false;
 						break;
 				}
 				return false;
@@ -197,7 +197,9 @@ public class World {
 	// ----------------------------------------
 
 	// RUNNING STATE FUNCTIONS --------------------
-	private void running(float dt) {
+	private void running(float tx, float ty, boolean clicked, float dt) {
+		player.up = clicked;
+
 		currentLevel.update(cambounds, dt);
 		trackPlayer();
 	

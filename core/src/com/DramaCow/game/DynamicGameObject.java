@@ -7,6 +7,9 @@ import com.DramaCow.maths.Collision;
 import com.DramaCow.maths.Rect;
 import com.DramaCow.maths.AABB;
 
+import java.util.List;
+import java.util.ArrayList;
+
 abstract public class DynamicGameObject extends GameObject {
 	protected final Vector2D velocity;
 	protected final Vector2D acceleration;
@@ -46,12 +49,9 @@ abstract public class DynamicGameObject extends GameObject {
 		acceleration.add( Vector2D.scalar(level.G_MAG, g_dir) );
 		velocity.add( Vector2D.scalar(dt, acceleration) );
 
-		// Used for correcting penetration distance (needs to be reset at start of every update)
-		Vector2D posCorrect = new Vector2D(0.0f, 0.0f); 
-
 		// Turn DynamicObject into CollisionObject
 		CollisionObject object = new CollisionObject(new AABB(box), new Vector2D(velocity), 
-			new Vector2D(acceleration), new Vector2D(posCorrect));
+			new Vector2D(acceleration), new Vector2D(0.0f, 0.0f));
 		CollisionDGO dgo = new CollisionDGO(object, level.G_MAG, new Vector2D(g_dir), collidable, grounded);
 
 		// Position after one frame if no collision were to occur
@@ -62,6 +62,9 @@ abstract public class DynamicGameObject extends GameObject {
 			Vector2D.sub( nextPosition, object.box.halfExtents ) );
 		Vector2D max = Vector2D.max( Vector2D.add( object.box.position, object.box.halfExtents ), 
 			Vector2D.add( nextPosition, object.box.halfExtents ) );
+
+		// Bounds rectangle
+		Rect bounds = new Rect(min, max);
 
 		int c0 = min.x >= 0.0f ? (int) min.x : 0; 
 		int cmax = (int) Math.ceil(max.x) <= level.LEVEL_WIDTH - 1 ? (int) Math.ceil(max.x) : level.LEVEL_WIDTH - 1;
@@ -98,6 +101,26 @@ abstract public class DynamicGameObject extends GameObject {
 			}
 		}
 
+		// Check collision on surrounding objects
+		List<GameObject> gos = level.getAllObjects();
+		gos.remove(this);
+
+		List<GameObject> remove = new ArrayList<GameObject>();
+
+		for (int i = 0; i < gos.size(); i++) {
+			GameObject go = gos.get(i);
+			if (go.box.toRect().overlaps(bounds)) {
+				if (go instanceof Coin || go instanceof Heart) {
+					remove.add(go); continue;
+				}
+				Contact contact = Collision.AABBvsAABB(object.box, go.box);
+				CollisionObject response = Collision.collisionResponse(object, contact, dt);
+				object.velocity = response.velocity; object.posCorrect = response.posCorrect;
+			}
+		}
+
+		level.getObjects().removeAll(remove);
+
 		// Set which faces of the object are in contact with a surface
 		northCollision(north); 
 		southCollision(south);
@@ -107,10 +130,16 @@ abstract public class DynamicGameObject extends GameObject {
 		// Post-collision
 		velocity.set(object.velocity.x, object.velocity.y);
 		g_dir.set(dgo.g_dir.x, dgo.g_dir.y);
-		posCorrect.add(object.posCorrect);
+
+		// Add immoveable flag
+		if (this instanceof Enemy) {
+			if ( ((Enemy)this).getAiID().equals("static") ) {
+				object.posCorrect.set(0.0f, 0.0f);
+			}
+		}
 
 		// Correct the velocity
-		velocity.add(posCorrect);
+		velocity.add( Vector2D.scalar( /*1.0f?*/ dt, object.posCorrect) );
 
 		position.add( Vector2D.scalar(dt, velocity) );
 		box.position.x = position.x + box.halfExtents.x;

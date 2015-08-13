@@ -203,8 +203,10 @@ public class WorldRenderer {
 	}
 
 	private void renderLevelBorder() {
-		game.batch.draw(TextureManager.getTexture("start"), 0.0f, 0.0f, 2.0f, 16.0f);
-		game.batch.draw(TextureManager.getTexture("end"), world.getCurrentLevel().LEVEL_WIDTH - 2.0f, 0.0f, 2.0f, 16.0f);
+		game.batch.draw(TextureManager.getTexture("start"), 0.0f, world.getCamBounds().y, 
+			2.0f, world.getCamBounds().h);
+		game.batch.draw(TextureManager.getTexture("end"), world.getCurrentLevel().LEVEL_WIDTH - 2.0f, world.getCamBounds().y, 
+			2.0f, world.getCamBounds().h);
 	}
 
 	private void renderLevelBounds() {

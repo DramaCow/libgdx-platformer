@@ -1,6 +1,7 @@
 package com.DramaCow.game;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen implements Screen {
 
@@ -12,7 +13,9 @@ public class GameScreen implements Screen {
 
 	private final GDXgame game;
 	private GameState state;
+
 	private OrthographicCamera cam;
+	private Vector3 touchPoint = new Vector3();
 
 	private final World world;
 	private final WorldRenderer worldRenderer;
@@ -39,9 +42,12 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void update(float deltaTime){
+		// Get mouse/touch point
+		cam.unproject(touchPoint.set(game.getInputX(), game.getInputY(), 0));
+
 		switch (state) {
 			case PLAY:
-				world.update(deltaTime);
+				world.update(touchPoint.x, touchPoint.y, game.isInputTouched(), deltaTime);
 				if (world.isGameover()) state = GameState.GAME_OVER;
 				break;
 

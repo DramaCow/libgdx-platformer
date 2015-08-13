@@ -38,6 +38,7 @@ public class Collision {
 		float nv = Vector2D.dot(velocity, contact.normal) + seperation/dt;
 
 		// Accumulate penetration correction
+		if (penetration != 0.0f) System.out.println(penetration);
 		posCorrect.sub( Vector2D.scalar(penetration/dt, contact.normal) );
 
 		if (nv < 0) {

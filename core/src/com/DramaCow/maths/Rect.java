@@ -19,6 +19,14 @@ public class Rect {
 		this.h = h;
 	}
 
+	public Rect(Vector2D bl, Vector2D tr) {
+		this.x = bl.x;
+		this.y = bl.y;
+
+		this.w = tr.x - bl.x;
+		this.h = tr.y - bl.y;
+	}
+
 	public Rect(Rect that) {
 		this.x = that.x;
 		this.y = that.y;

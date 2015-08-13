@@ -65,6 +65,7 @@ public class Player extends DynamicGameObject{
 
 		// Cap the velocity
 		velocity.x = velocity.x > MAX_RUN_SPEED ? MAX_RUN_SPEED : velocity.x;
+		velocity.x = velocity.x < -MAX_RUN_SPEED ? -MAX_RUN_SPEED : velocity.x;
 
 		super.update(dt);	
 	}
@@ -74,7 +75,6 @@ public class Player extends DynamicGameObject{
 	}
 
 	private void updateState(float dt) {
-		if (down) g_dir.scalar(-1);
 		switch (state){
 			case RUN:
 				acceleration.x += ACCELERATION.x;
@@ -86,12 +86,13 @@ public class Player extends DynamicGameObject{
 
 			case JUMP:
 				acceleration.x += ACCELERATION.x;
-				if (up) acceleration.sub( Vector2D.scalar( 0.75f * level.G_MAG, g_dir) );
+				if (up) acceleration.sub( Vector2D.scalar( 0.625f * level.G_MAG, g_dir) );
 				if (velocity.y <= 0.0f) state = PlayerState.FALL;
 				break;
 
 			case FALL:
 				acceleration.x += ACCELERATION.x;
+				if (up) acceleration.sub( Vector2D.scalar( 0.625f * level.G_MAG, g_dir) );
 				if (grounded) state = PlayerState.RUN;
 				break;
 

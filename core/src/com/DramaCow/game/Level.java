@@ -239,6 +239,8 @@ public class Level {
 			level.player = new Player("Player", 3.0f - cambounds.w, level.START_HEIGHT, w, h, level);
 			level.player.toggleExistence(false);
 
+			//level.objects.add(level.player);
+
 			return level.player;
 		}
 		return null;
@@ -255,6 +257,14 @@ public class Level {
 	}
 
 	public List<GameObject> getObjects() {
+		return objects;
+	}
+
+	public List<GameObject> getAllObjects() {
+		List<GameObject> objects = new ArrayList<GameObject>();
+		objects.addAll(this.objects);
+		objects.add(player);
+		
 		return objects;
 	}
 

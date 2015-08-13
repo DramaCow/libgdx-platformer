@@ -36,7 +36,9 @@ abstract public class Ai {
 		}
 
 		@Override
-		public void update(Enemy enemy, float deltaTime){};
+		public void update(Enemy enemy, float deltaTime){
+			enemy.getVelocity().x = -1.0f * difficulty;
+		};
 	}
 
 	// EXPERIMENTAL - Do not function precisely due to loss of accuracy using floating-point values
