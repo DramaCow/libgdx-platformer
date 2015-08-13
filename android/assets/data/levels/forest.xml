@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <GRASSLAND>
 	<assets
-		tileset="textures/tilesets/grasslandtiles.png"
+		tileset="textures/tilesets/foresttiles.png"
 		bgm="sound/music/bgm.ogg"
 	/>
 	<backgrounds>

@@ -43,7 +43,7 @@ public class Level {
 	}
 
 	private boolean generate() {
-		//Get test template and put them in a list
+		//Get test template and put them in a list, and make a list for the templace objects
 		List<String> folders = XReader.getTemplateFolders(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
 		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
 		for(String folder: folders){
@@ -53,53 +53,23 @@ public class Level {
 
 		//Make sure there are templates, otherwise just draw a flat surface
 		if(levelTemplates.size() == 0){
-			for (int r = 0; r < START_HEIGHT; r++){
-				for (int c = 0; c < LEVEL_WIDTH; c++){
-					REGION_MAP[r][c] = 1;
-				}
-			}
-
+			placePlatform(0,0,LEVEL_WIDTH,START_HEIGHT);
 			return false;
 		}
-
-		Random rn = new Random();
-		float jumpSpeed = Player.getJumpSpeed();
-		float runSpeed = Player.getMaxRunSpeed();
-		float gy = -G_MAG; // Assumes direction (0, -1)
-		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gy);
-
-		//rx and ry are keep track of the position of the right marker of a template
-		int rx = 0, ry = 0;
-
-		//Always generate first platform at height 3.0f
-		for (int r = 0; r < START_HEIGHT; r++){
-			for (int c = 0; c < START_WIDTH; c++){
-				REGION_MAP[r][c] = 1;
-			}
-		}
-		//Set pointers
-		rx = START_WIDTH;
-		ry = START_HEIGHT;
+		//Place the start platform
+		placePlatform(0,0,START_WIDTH,START_HEIGHT);
+		//Set pointers to ekep track of the position of the right marker of the previous template
+		int rx = START_WIDTH;
+		int ry = START_HEIGHT;
 
 		//Place templates in level
 		while(rx < LEVEL_WIDTH - END_WIDTH){
 			//Pick a random template to place, marking sure there is space
 			LevelTemplate template = null;		Boolean selectingTemplate = true;
-			int newX = 0, newY = 0;
+			int newX = 0, newY = 0; 			Random rn = new Random();
 			while(selectingTemplate){
-				//Generate new height of template
-				newY = rn.nextInt((int)(maxJumpHeight + ry) - MIN_HEIGHT) + MIN_HEIGHT;
-				if(newY > MAX_HEIGHT) newY = MAX_HEIGHT;
-				int heightDifference = newY - ry;
-				//Work out time to reach that height
-				float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt(
-					(double)(jumpSpeed*jumpSpeed+2*gy*heightDifference)))/gy);
-				//Work out max and min distance to new template
-				int maxDistance = (int)(runSpeed * timeToReachHeight);
-				int minDistance = 1;
-				//Generate new x of template
-				newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
-
+				Vector2D newPos = calcNewPosition(rx,ry,Player.getMaxRunSpeed(),Player.getJumpSpeed(),-G_MAG*(1-Player.JUMP_C));
+				newX = (int)newPos.x;	newY = (int)newPos.y;
 				template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
 				//Ensure that the L and R markers are within MIN_HEIGHT and MAX_HEIGHT
 				//And ensure that the whole template is within the level
@@ -108,31 +78,10 @@ public class Level {
 					&& newY - template.getLeftY() >= 0 
 					&& newY + template.getHeight() - template.getLeftY() < LEVEL_HEIGHT) selectingTemplate = false;
 			}	
-			//Find left marker and work out template coordinates
+			//Work out template coordinates and place the template
 			int templateX = newX - template.getLeftX();
 			int templateY = newY - template.getLeftY();
-
-			//Place platform in array
-			for(int r = templateY; r < templateY + template.getHeight(); r++){
-				for(int c = templateX; c < templateX + template.getWidth(); c++){
-					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
-					REGION_MAP[r][c] = template.getMap()[r - templateY][c - templateX];
-				}
-			}
-			//Join the bottom row to the ground
-			for(int r = 0; r < templateY; r++){
-				for(int c = templateX; c < templateX + template.getWidth(); c++){
-					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
-					REGION_MAP[r][c] = template.getMap()[0][c - templateX];
-				}
-			}
-			//Join the top row to the ceiling
-			for(int r = templateY + template.getHeight() - 1; r < LEVEL_WIDTH; r++){
-				for(int c = templateX; c < templateX + template.getWidth(); c++){
-					if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
-					REGION_MAP[r][c] = template.getMap()[template.getHeight() - 1][c - templateX];
-				}
-			}
+			placeTemplate(templateX, templateY, template);
 
 			//Update right marker
 			rx = templateX + template.getRightX();
@@ -147,14 +96,63 @@ public class Level {
 		}
 
 		//Always generate end platform
-		for (int r = 0; r < LEVEL_HEIGHT; r++){
-			for (int c = LEVEL_WIDTH-END_WIDTH; c < LEVEL_WIDTH; c++){
-				REGION_MAP[r][c] = r < START_HEIGHT ? 1 : 0;
-			}
-		}
-
+		placePlatform(LEVEL_WIDTH-END_WIDTH,0,LEVEL_WIDTH,START_HEIGHT);
 		return true;
 	}
+
+	private boolean placePlatform(int x, int y, int w, int h){
+		for (int r = y; r < LEVEL_HEIGHT; r++){
+			for (int c = x; c < w; c++){
+				REGION_MAP[r][c] = r < h ? 1 : 0;
+			}
+		}
+		return true;
+	}
+
+	private boolean placeTemplate(int x, int y, LevelTemplate template){
+		//Place platform in array
+		for(int r = y; r < y + template.getHeight(); r++){
+			for(int c = x; c < x + template.getWidth(); c++){
+				if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+				REGION_MAP[r][c] = template.getMap()[r - y][c - x];
+			}
+		}
+		//Join the bottom row to the ground
+		for(int r = 0; r < y; r++){
+			for(int c = x; c < x + template.getWidth(); c++){
+				if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+				REGION_MAP[r][c] = template.getMap()[0][c - x];
+			}
+		}
+		//Join the top row to the ceiling
+		for(int r = y + template.getHeight() - 1; r < LEVEL_WIDTH; r++){
+			for(int c = x; c < x + template.getWidth(); c++){
+				if(c>=LEVEL_WIDTH || r>=LEVEL_HEIGHT || c<0 || r<0) break;
+				REGION_MAP[r][c] = template.getMap()[template.getHeight() - 1][c - x];
+			}
+		}
+		return true;
+	}
+
+	// Calculate position of the left marker of the new templace
+	private Vector2D calcNewPosition(int rx, int ry, float runSpeed, float jumpSpeed, float gy){
+		Random rn = new Random();
+		int newX, newY;
+		float maxJumpHeight = (-jumpSpeed*jumpSpeed)/(2*gy);
+		//Generate new height of template
+		newY = maxJumpHeight+ry < MAX_HEIGHT ? rn.nextInt((int)(maxJumpHeight + ry) - MIN_HEIGHT) + MIN_HEIGHT 
+			: rn.nextInt(MAX_HEIGHT - MIN_HEIGHT) + MIN_HEIGHT;
+		int heightDifference = newY - ry;
+		//Work out time to reach that height
+		float timeToReachHeight = (float)((-jumpSpeed-Math.sqrt((double)(jumpSpeed*jumpSpeed+2*gy*heightDifference)))/gy);
+		//Work out max and min distance to new template
+		int maxDistance = (int)(runSpeed * timeToReachHeight);
+		int minDistance = 1;
+		//Generate new x of template
+		newX = rx + rn.nextInt(maxDistance - minDistance) + minDistance;
+		return new Vector2D(newX,newY);
+	}
+
 
 	private boolean populate(final Level level) {
 		// Proper population to be implemented here

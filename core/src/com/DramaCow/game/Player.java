@@ -19,6 +19,7 @@ public class Player extends DynamicGameObject{
 	private final float MAX_RUN_SPEED = Player.getMaxRunSpeed(); // Could vary by level
 	private final float JUMP_SPEED = Player.getJumpSpeed();
 	private final Vector2D ACCELERATION = new Vector2D(10.0f, 0.0f);
+	public static final float JUMP_C = 0.625f;
 
 	private PlayerState state;
 	private int health;
@@ -86,13 +87,13 @@ public class Player extends DynamicGameObject{
 
 			case JUMP:
 				acceleration.x += ACCELERATION.x;
-				if (up) acceleration.sub( Vector2D.scalar( 0.625f * level.G_MAG, g_dir) );
+				if (up) acceleration.sub( Vector2D.scalar( JUMP_C * level.G_MAG, g_dir) );
 				if (velocity.y <= 0.0f) state = PlayerState.FALL;
 				break;
 
 			case FALL:
 				acceleration.x += ACCELERATION.x;
-				if (up) acceleration.sub( Vector2D.scalar( 0.625f * level.G_MAG, g_dir) );
+				if (up) acceleration.sub( Vector2D.scalar( JUMP_C * level.G_MAG, g_dir) );
 				if (grounded) state = PlayerState.RUN;
 				break;
 
