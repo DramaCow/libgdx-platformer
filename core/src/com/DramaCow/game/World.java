@@ -198,7 +198,7 @@ public class World {
 
 	// RUNNING STATE FUNCTIONS --------------------
 	private void running(float tx, float ty, boolean clicked, float dt) {
-		player.up = clicked;
+		//player.up = clicked;
 
 		currentLevel.update(cambounds, dt);
 		trackPlayer();

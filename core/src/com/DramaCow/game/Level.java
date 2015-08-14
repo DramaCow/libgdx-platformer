@@ -43,6 +43,9 @@ public class Level {
 	}
 
 	private boolean generate() {
+		final float PLAYER_HEIGHT = 1.5f;
+		Boolean contiguous = true;
+
 		//Get test template and put them in a list, and make a list for the templace objects
 		List<String> folders = XReader.getTemplateFolders(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
 		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
@@ -62,6 +65,9 @@ public class Level {
 		int rx = START_WIDTH;
 		int ry = START_HEIGHT;
 
+		int cy = 0;
+		Boolean hadCeiling = false;
+
 		//Place templates in level
 		while(rx < LEVEL_WIDTH - END_WIDTH){
 			//Pick a random template to place, marking sure there is space
@@ -69,14 +75,17 @@ public class Level {
 			int newX = 0, newY = 0; 			Random rn = new Random();
 			while(selectingTemplate){
 				Vector2D newPos = calcNewPosition(rx,ry,Player.getMaxRunSpeed(),Player.getJumpSpeed(),-G_MAG*(1-Player.JUMP_C));
-				newX = (int)newPos.x;	newY = (int)newPos.y;
+				newX = contiguous ? rx+1 : (int)newPos.x;	newY = (int)newPos.y;
 				template = levelTemplates.get(rn.nextInt(levelTemplates.size()));
 				//Ensure that the L and R markers are within MIN_HEIGHT and MAX_HEIGHT
 				//And ensure that the whole template is within the level
 				if(newY + template.getRightY() - template.getLeftY() <= MAX_HEIGHT 
 					&& newY + template.getRightY() - template.getLeftY() >= MIN_HEIGHT
 					&& newY - template.getLeftY() >= 0 
-					&& newY + template.getHeight() - template.getLeftY() < LEVEL_HEIGHT) selectingTemplate = false;
+					&& newY + template.getHeight() - template.getLeftY() < LEVEL_HEIGHT
+					&& (!template.hasCeiling() || newY - template.getLeftY() + template.getCeilingL() > ry + PLAYER_HEIGHT)
+					&& (!hadCeiling || newY + PLAYER_HEIGHT < cy))
+					selectingTemplate = false;
 			}	
 			//Work out template coordinates and place the template
 			int templateX = newX - template.getLeftX();
@@ -86,6 +95,8 @@ public class Level {
 			//Update right marker
 			rx = templateX + template.getRightX();
 			ry = templateY + template.getRightY();
+			hadCeiling = template.hasCeiling();
+			cy = templateY + template.getCeilingR();
 
 			//Update positions of the objects for the template and add them to the list
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();

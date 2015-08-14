@@ -3,7 +3,7 @@
 	<default id="hell" loading="loading.png"/>
 
 	<levels>
-		<grassland 	level_file="data/levels/grassland.xml" 	level_number="1"/>
+        <grassland  level_file="data/levels/forest.xml" 	level_number="1"/>
 		<forest 	level_file="data/levels/forest.xml"     level_number="2"/>
 		<mountains  level_file="data/levels/grassland.xml" 	level_number="3"/>
 		<cave 		level_file="data/levels/grassland.xml" 	level_number="4"/>

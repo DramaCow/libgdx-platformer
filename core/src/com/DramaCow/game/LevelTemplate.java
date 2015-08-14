@@ -5,7 +5,8 @@ import java.util.Set;
 public class LevelTemplate{
 	private final int[][] map;
 	private final Set<LevelTemplateObject> objects;
-	private int lx,ly,rx,ry;
+	private int lx,ly,rx,ry,cr,cl;
+	private Boolean hasCeiling = false;
 
 	public LevelTemplate(int[][] map, Set<LevelTemplateObject> objects){
 		this.map = map;
@@ -20,8 +21,15 @@ public class LevelTemplate{
 				if(this.map[r][c] == 3) {
 					this.ry = r; this.rx = c;
 				}
+				if(this.map[r][c] == 4) {
+					this.cl = r + 1;
+				}
+				if(this.map[r][c] == 5) {
+					this.cr = r + 1;
+				}
 			}
 		}
+		if(cr != 0 && cl != 0) hasCeiling = true;
 	}
 
 	public int[][] getMap(){
@@ -54,6 +62,18 @@ public class LevelTemplate{
 
 	public int getLeftY(){
 		return ly;
+	}
+
+	public Boolean hasCeiling(){
+		return hasCeiling;
+	}
+
+	public int getCeilingL(){
+		return cl;
+	}
+
+	public int getCeilingR(){
+		return cr;
 	}
 
 }
