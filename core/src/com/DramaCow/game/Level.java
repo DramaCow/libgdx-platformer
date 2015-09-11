@@ -44,7 +44,7 @@ public class Level {
 
 	private boolean generate() {
 		final float PLAYER_HEIGHT = 1.5f;
-		Boolean contiguous = true;
+		Boolean contiguous = XReader.getContiguous(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
 
 		//Get test template and put them in a list, and make a list for the templace objects
 		List<String> folders = XReader.getTemplateFolders(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
@@ -62,7 +62,7 @@ public class Level {
 		//Place the start platform
 		placePlatform(0,0,START_WIDTH,START_HEIGHT);
 		//Set pointers to ekep track of the position of the right marker of the previous template
-		int rx = START_WIDTH;
+		int rx = START_WIDTH-1;
 		int ry = START_HEIGHT;
 
 		int cy = 0;

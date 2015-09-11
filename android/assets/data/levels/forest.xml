@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='us-ascii'?> 
-<GRASSLAND>
+<FOREST>
+    <properties contiguous = "false" />
 	<assets
 		tileset="textures/tilesets/foresttiles.png"
 		bgm="sound/music/bgm.ogg"
@@ -17,4 +18,4 @@
         <templateFolder path="templates/test1"/>
         <templateFolder path="templates/test2"/>
     </templateFolders>
-</GRASSLAND>	
+</FOREST>

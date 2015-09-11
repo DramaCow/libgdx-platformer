@@ -101,6 +101,10 @@ public class XReader {
 		return obstacles;
 	}
 
+	public static Boolean getContiguous(String filename) {
+		return getRoot(filename).getChildByName("properties").getBooleanAttribute("contiguous",false);
+	}
+
 	// Enemy parser
 	public static void loadObstacleAssets(String filename, String obstacleId) {
 		// Load assets into memory (uses obstacleId for id in all managers)
@@ -120,6 +124,7 @@ public class XReader {
 			Ai.getAI(attributes.getAttribute("ai"), attributes.getIntAttribute("difficulty")));
 	}
 
+	// Level template parser
 	public static List<String> getTemplateFolders(String filename){
 		XmlReader.Element node = getRoot(filename).getChildByName("templateFolders");
 
@@ -130,7 +135,6 @@ public class XReader {
 		return folders;
 	}
 
-	// Level template parser
 	public static List<LevelTemplate> getLevelTemplates(String folderString){
 		List<LevelTemplate> levelTemplates = new ArrayList<LevelTemplate>();
 		File folder = new File(folderString);
