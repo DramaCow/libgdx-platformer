@@ -61,11 +61,11 @@ public class World {
 
 	public void init() {
 		// Load player assets here
-		TextureManager.loadTexture("player","textures/player/player.png");
-		Tileset playerTiles = new Tileset(TextureManager.getTexture("player"),70,52);
+		TextureManager.loadTexture("player","textures/player/playerrun.png");
+		Tileset playerTiles = new Tileset(TextureManager.getTexture("player"),36,48,false);
 
 		for (Player.PlayerState state : Player.PlayerState.values()) {
-			AnimationManager.loadAnimation(player.getStateID(state), new Animation(0.0625f,playerTiles.getTiles()));
+			AnimationManager.loadAnimation(player.getStateID(state), new Animation(0.1f,playerTiles.getTiles()));
 		}
 
 		//Load textures
