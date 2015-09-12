@@ -105,6 +105,11 @@ public class XReader {
 		return getRoot(filename).getChildByName("properties").getBooleanAttribute("contiguous",false);
 	}
 
+	public static Boolean getCeiling(String filename) {
+		return getRoot(filename).getChildByName("properties").getBooleanAttribute("ceiling",false);
+	}
+
+
 	// Enemy parser
 	public static void loadObstacleAssets(String filename, String obstacleId) {
 		// Load assets into memory (uses obstacleId for id in all managers)

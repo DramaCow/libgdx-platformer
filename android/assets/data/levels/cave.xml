@@ -1,15 +1,16 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <CAVE>
-    <properties contiguous = "true" />
+    <properties contiguous = "true" ceiling = "true" />
 	<assets
 		tileset="textures/tilesets/cavetiles.png"
 		bgm="sound/music/bgm.ogg"
 	/>
 	<backgrounds>
 		<background id="bg1"	imgfile="textures/backgrounds/cavebg1.png"          p="4.0"/>
+        <background id="bg2"	imgfile="textures/backgrounds/cavebg2.png"          p="2.0"/>
 	</backgrounds>
 	<obstacles>
-		<obstacle id="stake"        priority="10"/>
+		<obstacle id="spike"        priority="10"/>
 		<obstacle id="rockcrab" 	priority="10"/>
 		<obstacle id="chick"        priority="10"/>
 	</obstacles>

@@ -29,7 +29,6 @@ public class Level {
 	public static final int MIN_HEIGHT = 3;		//Min height of left markers
 	public static final int START_HEIGHT = 5;	//Height of start and end platform
 	public static final int START_WIDTH = 8;	//Width of start platform
-	public static final int END_WIDTH = 5;		//Width of end platform
 
 	public final float G_MAG = 100.0f;
 
@@ -61,6 +60,9 @@ public class Level {
 		}
 		//Place the start platform
 		placePlatform(0,0,START_WIDTH,START_HEIGHT);
+		Boolean ceiling = XReader.getCeiling(XReader.getFilenameOfLevel(Terms.LEVEL_MASTER, this.BIOME_ID));
+		if(ceiling) placePlatform(0,START_HEIGHT + 4,START_WIDTH, LEVEL_HEIGHT);
+
 		//Set pointers to ekep track of the position of the right marker of the previous template
 		int rx = START_WIDTH-1;
 		int ry = START_HEIGHT;
@@ -69,7 +71,7 @@ public class Level {
 		Boolean hadCeiling = false;
 
 		//Place templates in level
-		while(rx < LEVEL_WIDTH - END_WIDTH){
+		while(rx < LEVEL_WIDTH){
 			//Pick a random template to place, marking sure there is space
 			LevelTemplate template = null;		Boolean selectingTemplate = true;
 			int newX = 0, newY = 0; 			Random rn = new Random();
@@ -101,13 +103,13 @@ public class Level {
 			//Update positions of the objects for the template and add them to the list
 			Set<LevelTemplateObject> currentTemplateObjects = template.getObjects();
 			for(LevelTemplateObject object : currentTemplateObjects){
-				if(object.x + templateX < LEVEL_WIDTH - END_WIDTH) templateObjects.add(new LevelTemplateObject(object.name,
+				if(object.x + templateX < LEVEL_WIDTH) templateObjects.add(new LevelTemplateObject(object.name,
 					object.x + templateX, object.y + templateY, object.probability, object.gdirx, object.gdiry));
 			}
 		}
 
 		//Always generate end platform
-		placePlatform(LEVEL_WIDTH-END_WIDTH,0,LEVEL_WIDTH,START_HEIGHT);
+		//placePlatform(LEVEL_WIDTH-END_WIDTH,0,LEVEL_WIDTH,START_HEIGHT);
 		return true;
 	}
 

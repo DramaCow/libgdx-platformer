@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <GRASSLAND>
-    <properties contiguous = "false" />
+    <properties contiguous = "false" ceiling = "false" />
 	<assets
 		tileset="textures/tilesets/grasslandtiles.png"
 		bgm="sound/music/bgm.ogg"
