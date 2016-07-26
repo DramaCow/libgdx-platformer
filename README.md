@@ -6,8 +6,8 @@ LibGDX based auto-running platformer game, specifically for Android, IOS, Linux,
 Credits
 -------
 
-*Sam Coward* (DramaCow) - Lead Programmer, Project Manager
+**8Sam Coward** (DramaCow) - Lead Programmer, Project Manager
 
-*Josh Anthony* (shadowsora211) - Programmer, Composer, Creative Lead
+**Josh Anthony** (shadowsora211) - Programmer, Composer, Creative Lead
 
-*Mark Elkommos* - Programmer, goes on holiday a lot
+**Mark Elkommos** - Programmer, goes on holiday a lot
