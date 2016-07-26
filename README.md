@@ -1,7 +1,7 @@
 project-majosan
 ===============
 
-LibGDX based auto-running platformer game, specifically for Android, IOS, Linux, Mac, and Windows.
+LibGDX based auto-running platformer game, specifically for Android, iOS, Linux, Mac, and Windows.
 
 Credits
 -------
